@@ -51,7 +51,7 @@ class CartService:
             product_type,
             attribute,
             quantity,
-        ) = self.product_service.validate_product(self, data)
+        ) = self.product_service.validate_product(data)
 
         cart_item, created = CartItem.objects.get_or_create(
             cart=self.cart, product=product, type=product_type, attribute=attribute

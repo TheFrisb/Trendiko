@@ -1,0 +1,51 @@
+{% load static %}
+<div class="dashboardContainer bg-dashboard-gray">
+    <div class="py-4 px-8 flex items-center justify-between bg-white shadow-md mb-3">
+        <div class="flex items-center gap-2">
+            <svg class="icon" width="22" height="22" fill="currentColor">
+                <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#home"></use>
+            </svg>
+            <h4 class="font-bold">{{ title }}</h4>
+        </div>
+        <div>
+            <p>{{ request.user.username }}</p>
+        </div>
+    </div>
+    <div class="py-4 px-8 flex flex-col items-start gap-4">
+        <div class="p-4 w-full bg-white rounded-xl shadow-md flex flex-col gap-4 ">
+            <div class="flex items-center justify-between">
+                <h4 class="text-xl font-bold">Продукти</h4>
+                {% include 'shop_manager/includes/dashboard_paginator.html' %}
+            </div>
+            <table class="table-auto w-full text-left">
+                <thead class="border-b border-gray-200">
+                <tr>
+                    <th class="font-normal">Thumbnail</th>
+                    <th class="font-normal">Title</th>
+                    <th class="font-normal">Stock</th>
+                    <th class="font-normal">Qr code</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in page_obj %}
+                    <tr class="border-b-2 border-gray-200">
+                        <td class="table_field">
+                            <img src="{{ item.thumbnail.url }}" alt="" class="w-24 h-24 object-cover">
+                        </td>
+                        <td class="table_field">
+                            <p>{{ item.title }}</p>
+                        </td>
+                        <td class="table_field">
+                            <p>{{ item.stock }}</p>
+                        </td>
+                        <td class="table_field">
+                            <img src="{{ item.qr_code.url }}" alt="" class="w-24 h-24 object-cover">
+                        </td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

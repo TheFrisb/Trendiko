@@ -1,8 +1,10 @@
-from django.db import models
-from shop.models import Product, ProductAttribute
-from common.models import TimeStampedModel
 from django.conf import settings
+from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+from common.models import TimeStampedModel
+from shop.models import Product, ProductAttribute
+
 
 # Create your models here.
 
@@ -116,9 +118,9 @@ class Order(TimeStampedModel):
     class OrderStatus(models.TextChoices):
         """Order Status"""
 
-        PROCESSING = "processing", _("Processing")
-        COMPLETED = "completed", _("Completed")
-        CANCELLED = "cancelled", _("Cancelled")
+        PENDING = "pending", _("непотврдени")
+        CONFIRMED = "confirmed", _("потврдени")
+        DELETED = "deleted", _("избришени")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -130,7 +132,7 @@ class Order(TimeStampedModel):
 
     session_key = models.CharField(max_length=40, null=True, blank=True, default=None)
     status = models.CharField(
-        max_length=20, choices=OrderStatus.choices, default=OrderStatus.PROCESSING
+        max_length=20, choices=OrderStatus.choices, default=OrderStatus.PENDING
     )
     has_free_shipping = models.BooleanField(default=False)
     subtotal_price = models.IntegerField(default=0)
@@ -172,6 +174,17 @@ class OrderItem(TimeStampedModel):
         """
         return self.price * self.quantity
 
+    @property
+    def get_readable_name(self):
+        """
+        Get the readable name of the order item.
+        :return: str: The readable name of the order item.
+        """
+        if self.attribute:
+            return f"{self.product.title} - {self.attribute.name}"
+
+        return self.product.title
+
 
 class ShippingDetails(TimeStampedModel):
     """
@@ -181,7 +194,7 @@ class ShippingDetails(TimeStampedModel):
     and phone number for shipping.
     """
 
-    order = models.ForeignKey(
+    order = models.OneToOneField(
         Order, on_delete=models.CASCADE, related_name="shipping_details"
     )
     first_name = models.CharField(max_length=50)

@@ -1,12 +1,13 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from common.models import TimeStampedModel
+
+from common.models import TimeStampedModel, BaseProduct
 
 
 # Create your models here.
 
 
-class Product(TimeStampedModel):
+class Product(BaseProduct):
     """Product Model"""
 
     class ProductStatus(models.TextChoices):
@@ -28,9 +29,12 @@ class Product(TimeStampedModel):
     type = models.CharField(
         max_length=20, choices=ProductType.choices, default=ProductType.SIMPLE
     )
-    title = models.CharField(max_length=140)
+
     regular_price = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField(null=True, blank=True)
+    stock_item = models.ForeignKey(
+        "stock.StockItem", on_delete=models.CASCADE, null=True
+    )
 
     @property
     def selling_price(self):

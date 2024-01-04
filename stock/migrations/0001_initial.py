@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Product",
+            name="Import",
             fields=[
                 (
                     "id",
@@ -25,6 +25,28 @@ class Migration(migrations.Migration):
                 ),
                 ("created", models.DateTimeField(auto_now_add=True)),
                 ("updated", models.DateTimeField(auto_now=True)),
+                ("title", models.CharField(max_length=255)),
+                ("description", models.TextField(blank=True, null=True)),
+            ],
+            options={
+                "abstract": False,
+            },
+        ),
+        migrations.CreateModel(
+            name="StockItem",
+            fields=[
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("updated", models.DateTimeField(auto_now=True)),
+                ("title", models.CharField(max_length=255)),
                 (
                     "thumbnail",
                     imagekit.models.fields.ProcessedImageField(
@@ -32,35 +54,20 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "status",
-                    models.CharField(
-                        choices=[
-                            ("published", "Published"),
-                            ("out_of_stock", "Out of Stock"),
-                            ("archived", "Archived"),
-                        ],
-                        default="published",
-                        max_length=20,
+                    "qr_code",
+                    models.ImageField(
+                        blank=True, upload_to="stock_items/qr_codes/%Y/%m/%d/"
                     ),
                 ),
-                (
-                    "type",
-                    models.CharField(
-                        choices=[("simple", "Simple"), ("variable", "Variable")],
-                        default="simple",
-                        max_length=20,
-                    ),
-                ),
-                ("title", models.CharField(max_length=140)),
-                ("regular_price", models.PositiveIntegerField()),
-                ("sale_price", models.PositiveIntegerField(blank=True, null=True)),
+                ("sku", models.CharField(max_length=255)),
+                ("stock", models.PositiveIntegerField(default=0)),
             ],
             options={
                 "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name="ProductAttribute",
+            name="ImportItem",
             fields=[
                 (
                     "id",
@@ -73,28 +80,19 @@ class Migration(migrations.Migration):
                 ),
                 ("created", models.DateTimeField(auto_now_add=True)),
                 ("updated", models.DateTimeField(auto_now=True)),
+                ("quantity", models.PositiveIntegerField(default=0)),
+                ("price", models.PositiveIntegerField(default=0)),
                 (
-                    "type",
-                    models.CharField(
-                        choices=[
-                            ("color", "Color"),
-                            ("size", "Size"),
-                            ("offer", "Offer"),
-                            ("cart_offer", "Cart Offer"),
-                        ],
-                        default="color",
-                        max_length=20,
+                    "parentImport",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="stock.import"
                     ),
                 ),
-                ("name", models.CharField(max_length=140)),
-                ("content", models.CharField(max_length=140)),
-                ("price", models.PositiveIntegerField(blank=True, null=True)),
                 (
-                    "product",
+                    "stock_item",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        related_name="attributes",
-                        to="shop.product",
+                        to="stock.stockitem",
                     ),
                 ),
             ],

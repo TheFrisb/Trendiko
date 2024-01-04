@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.sidebar-item {
+    @apply flex;
+    @apply items-center;
+    @apply justify-between;
+    @apply py-2;
+    @apply px-4;
+    @apply rounded-lg;
+    @apply cursor-pointer;
+}
+
+.sidebar-item.active {
+    @apply rounded-br-none;
+    @apply rounded-bl-none;
+    @apply bg-dashboard-item-active;
+    @apply text-white;
+}
+
+.sidebar-item-title {
+    @apply flex;
+    @apply items-center;
+    @apply gap-2;
+}
+
+.sidebar-item-content {
+    @apply flex;
+    @apply flex-col;
+    @apply items-start;
+    @apply justify-between;
+    @apply py-2;
+    @apply px-4;
+    @apply rounded-bl-lg;
+    @apply rounded-br-lg;
+    @apply bg-dashboard-item-active/30;
+    @apply cursor-pointer;
+}
+
+.sidebar-item-content-title {
+    @apply flex;
+    @apply items-center;
+    @apply gap-2;
+    @apply text-white/80;
+    @apply hover:text-white;
+    @apply py-2;
+
+}
+
+.table_field {
+    @apply py-2;
+    @apply break-all;
+}
+
+.paginator-number {
+    @apply text-dashboard-blue;
+    @apply py-1.5;
+    @apply px-4;
+    @apply rounded;
+    @apply hover:bg-dashboard-blue;
+    @apply hover:text-white;
+}
+
+.paginator-number.active {
+    @apply bg-dashboard-blue;
+    @apply text-white;
+}
+
+.paginator-arrow {
+    @apply text-dashboard-blue;
+    @apply p-1.5;
+    @apply rounded;
+    @apply border-gray-200;
+    @apply border;
+    @apply shadow-sm;
+    @apply hover:bg-dashboard-blue;
+    @apply hover:text-white;
+
+}
+
+.dateInput {
+    @apply py-2;
+    @apply px-4;
+    @apply rounded;
+    @apply border-gray-200;
+    @apply border;
+    @apply shadow-sm;
+    @apply focus:outline-none;
+    @apply focus:ring-2;
+    @apply focus:ring-blue-200;
+    @apply focus:border-transparent;
+    @apply w-full;
+    @apply text-dashboard-blue;
+    @apply text-sm;
+    @apply placeholder-gray-400;
+    @apply focus:placeholder-transparent;
+    @apply bg-white;
+}
+
+.sidebar-item-action-btn {
+    @apply text-white;
+    @apply py-1.5;
+    @apply px-4;
+    @apply font-bold;
+    @apply bg-dashboard-blue;
+    @apply rounded;
+    @apply border-gray-200;
+    @apply border;
+    @apply shadow-sm;
+    @apply hover:bg-dashboard-item-active/30;
+    @apply hover:text-white;
+}

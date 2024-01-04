@@ -1,0 +1,91 @@
+{% load static %}
+<div class="dashboardContainer bg-dashboard-gray">
+    <div class="py-4 px-8 flex items-center justify-between bg-white shadow-md mb-3">
+        <div class="flex items-center gap-2">
+            <svg class="icon" width="22" height="22" fill="currentColor">
+                <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#home"></use>
+            </svg>
+            <h4 class="font-bold">{{ title }}</h4>
+        </div>
+        <div>
+            <p>{{ request.user.username }}</p>
+        </div>
+    </div>
+    <div class="py-4 px-8 flex flex-col items-start gap-4">
+        <div class="p-4 w-full bg-white rounded-xl shadow-md flex flex-col gap-4 ">
+            <div class="flex items-center justify-between">
+                <h4 class="text-xl font-bold">Порачки</h4>
+                {% include 'shop_manager/includes/dashboard_paginator.html' %}
+            </div>
+            <table class="table-auto w-full text-left">
+                <thead class="border-b border-gray-200">
+                <tr>
+                    <th class="font-normal">Customer</th>
+                    <th class="font-normal">Items</th>
+                    <th class="font-normal">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for order in page_obj %}
+                    <tr class="border-b-2 border-gray-200">
+                        <td class="table_field">
+                            {{ order.shipping_details.first_name }} {{ order.shipping_details.last_name }}
+                            <br>
+                            {{ order.shipping_details.address }}
+                            <br>
+                            {{ order.shipping_details.city }}
+                            <br>
+                            {{ order.shipping_details.phone }}
+                        </td>
+                        <td class="table_field">
+                            {% for item in order.order_items.all %}
+                                <span class="font-bold">{{ item.get_readable_name }} x {{ item.quantity }}</span>
+                                <span> - {{ item.total_price }} ден</span>
+                                <br>
+                            {% endfor %}
+                            Цена без достава: {{ order.subtotal_price }} ден
+                            <br>
+                            Достава: Бесплатна достава
+                            <br>
+                            Вкупно: {{ order.total_price }} ден
+                        </td>
+                        <td class="table_field flex flex-col items-start grow justify-between gap-1">
+                            <p>{{ order.get_status_display }}</p>
+
+                            {% with button_classes="py-1.5 px-4 rounded-lg text-sm font-bold w-full max-w-[120px] changeOrderStatus" %}
+
+                                {% if order.status == OrderStatuses.PENDING %}
+                                    <button class="{{ button_classes }} bg-dashboard-blue text-white"
+                                            data-order-id="{{ order.id }}"
+                                            data-change-to-status="{{ OrderStatuses.CONFIRMED }}">ПОТВРДИ
+                                    </button>
+                                    <button class="{{ button_classes }} bg-black/20" data-order-id="{{ order.id }}"
+                                            data-change-to-status="{{ OrderStatuses.DELETED }}">
+                                        ОТСТРАНИ
+                                    </button>
+
+                                {% elif order.status == OrderStatuses.DELETED %}
+                                    <button class="{{ button_classes }} bg-dashboard-blue text-white"
+                                            data-order-id="{{ order.id }}"
+                                            data-change-to-status="{{ OrderStatuses.PENDING }}">ВРАТИ
+                                    </button>
+                                {% else %}
+                                    <button class="{{ button_classes }} bg-dashboard-blue text-white"
+                                            data-order-id="{{ order.id }}"
+                                            data-change-to-status="{{ OrderStatuses.PENDING }}">ВРАТИ
+                                    </button>
+                                    <button class="{{ button_classes }} bg-black/20" data-order-id="{{ order.id }}"
+                                            data-change-to-status="{{ OrderStatuses.DELETED }}">
+                                        ОТСТРАНИ
+                                    </button>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

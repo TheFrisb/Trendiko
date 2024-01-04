@@ -38,10 +38,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     #  Third party apps
     "rest_framework",
+    "imagekit",
     # Local apps
     "common.apps.CommonConfig",
     "shop.apps.ShopConfig",
+    "shop_manager.apps.ShopManagerConfig",
     "cart.apps.CartConfig",
+    "stock.apps.StockConfig",
 ]
 
 MIDDLEWARE = [

@@ -28,6 +28,7 @@ sitemaps = {
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("shop-manager/", include("shop_manager.urls")),
     path("api/cart/", include("cart.urls")),
 ]
 

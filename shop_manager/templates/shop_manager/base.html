@@ -1,0 +1,33 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'shop_manager/css/shop_manager.css' %}">
+
+    <title>{{ title }}</title>
+</head>
+<body>
+{% csrf_token %}
+
+<div class="pageContainer  min-h-screen grid grid-cols-dashboard-template">
+    {% csrf_token %}
+    {% include 'shop_manager/includes/sidebar/sidebar.html' %}
+ 
+    {% if template %}
+        {% with template_name=template|stringformat:"s"|add:".html" %}
+            {% include "shop_manager/dashboards/"|add:template_name %}
+        {% endwith %}
+    {% else %}
+        {% include "shop_manager/dashboards/orders.html" %}
+    {% endif %}
+
+</div>
+
+<script src="{% static 'shop_manager/js/shop_manager.js' %}"></script>
+{% block scripts %}{% endblock scripts %}
+</body>
+</html>

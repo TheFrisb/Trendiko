@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from shop.services.product_service import ProductService
-from .models import CartItem
 from .serializers import (
     AddProductToCartSerializer,
     CartItemSerializer,
@@ -11,7 +10,7 @@ from .serializers import (
     ShippingDetailsSerializer,
 )
 from cart.services.cart_service import CartService
-from .services.checkout_service import CheckoutService
+from cart.services.checkout_service import CheckoutService
 
 
 class CartItemView(APIView):
