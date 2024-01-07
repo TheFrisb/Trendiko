@@ -3,15 +3,23 @@ from django.views.generic import ListView
 from cart.models import Order
 from stock.models import StockItem
 from .forms.export_orders_form import ExportOrdersForm
-from .utils import ShopManagerRequiredMixin, SidebarItemsMixin
-
+from .utils import (
+    ShopManagerRequiredMixin,
+    SidebarItemsMixin,
+    StockManagerRequiredMixin,
+)
 
 # Create your views here.
+dashboards_dir = "shop_manager/dashboards"
 
 
-class ShopManagerHome(ShopManagerRequiredMixin, SidebarItemsMixin, ListView):
-    model = Order
+class BaseDashboardView(SidebarItemsMixin, ListView):
     template_name = "shop_manager/base.html"
+
+
+class ShopManagerHome(ShopManagerRequiredMixin, BaseDashboardView):
+    model = Order
+    template_name = f"{dashboards_dir}/orders.html"
     context_object_name = "orders"
     paginate_by = 2
 
@@ -55,13 +63,12 @@ class ShopManagerHome(ShopManagerRequiredMixin, SidebarItemsMixin, ListView):
         ] = f"{dict(Order.OrderStatus.choices)[self.status]} нарачки".capitalize()
         context["export_orders_form"] = ExportOrdersForm()
         context["OrderStatuses"] = Order.OrderStatus
-        print(context["OrderStatuses"].PENDING)
         return context
 
 
-class StockManagerHome(ShopManagerRequiredMixin, SidebarItemsMixin, ListView):
+class StockManagerHome(StockManagerRequiredMixin, BaseDashboardView):
     model = StockItem
-    template_name = "shop_manager/base.html"
+    template_name = f"{dashboards_dir}/stock_items.html"
     context_object_name = "stock_items"
     paginate_by = 2
 
@@ -72,4 +79,18 @@ class StockManagerHome(ShopManagerRequiredMixin, SidebarItemsMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Контрола на залиха"
         context["template"] = "stock_items"
+        return context
+
+
+class ScanStock(StockManagerRequiredMixin, BaseDashboardView):
+    model = StockItem
+    template_name = f"{dashboards_dir}/scan_stock.html"
+
+    def get_queryset(self):
+        # Fix
+        return StockItem.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Скенирај залиха"
         return context

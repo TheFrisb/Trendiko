@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .actions_views import ChangeOrderStatus
-from .views import ShopManagerHome, StockManagerHome
+from .views import ShopManagerHome, StockManagerHome, ScanStock
 
 app_name = "shop_manager"
 urlpatterns = [
@@ -11,6 +11,7 @@ urlpatterns = [
         StockManagerHome.as_view(),
         name="stock_dashboard",
     ),
+    path("dashboard/scan-stock-items/", ScanStock.as_view(), name="scan_stock"),
     path(
         "api/change-order-status/",
         ChangeOrderStatus.as_view(),

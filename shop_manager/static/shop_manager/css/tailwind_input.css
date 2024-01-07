@@ -112,3 +112,50 @@
     @apply hover:bg-dashboard-item-active/30;
     @apply hover:text-white;
 }
+
+.navigation {
+    @apply lg:sticky;
+    @apply lg:top-4;
+}
+
+#html5-qrcode-button-camera-stop, #html5-qrcode-button-camera-start {
+    @apply text-white;
+    @apply py-1.5;
+    @apply px-4;
+    @apply font-bold;
+    @apply bg-dashboard-blue;
+    @apply rounded;
+    @apply border-gray-200;
+    @apply border;
+    @apply shadow-sm;
+    @apply hover:bg-dashboard-item-active/30;
+    @apply hover:text-white;
+    @apply w-9/12;
+}
+
+#reader__scan_region > img {
+    @apply w-full;
+    @apply h-full;
+}
+
+#stockManagerCurrentAction {
+    @apply absolute;
+    @apply bottom-0;
+    @apply w-full;
+    @apply text-center;
+    @apply p-4;
+}
+
+.isAddingStock {
+    @apply bg-green-800;
+    @apply block;
+}
+
+.isRemovingStock {
+    @apply bg-red-800;
+    @apply block;
+}
+
+.isDoingNothing {
+    @apply hidden;
+}

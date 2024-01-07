@@ -10,15 +10,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'dashboard-blue': "#4759E4",
-        'dashboard-item-active': "#95A1FF",
-        'dashboard-gray': "#F8FAFF",
-        'brand-gray': "#F8FAFF",
+        'dashboard-blue': '#4759E4',
+        'dashboard-item-active': '#95A1FF',
+        'dashboard-gray': '#F8FAFF',
+        'brand-gray': '#F8FAFF',
         'error': '#FF0000',
-        'brand-yellow': "#F0DA1F",
-        'brand-primary': "#21872f",
-        'brand-secondary': "#17335E",
-        'brand-tertiary': "#53175E"
+        'brand-yellow': '#F0DA1F',
+        'brand-primary': '#21872f',
+        'brand-secondary': '#17335E',
+        'brand-tertiary': '#53175E',
       },
       gridTemplateColumns: {
         'dashboard-template': '300px 1fr',
@@ -27,11 +27,14 @@ module.exports = {
         'checkout-template-4': 'minmax(0, 1fr) minmax(0, 65rem) minmax(0, 45.5rem) minmax(0, 1fr)',
         'checkout-template-1': 'minmax(0, 1fr)',
       },
+      gridTemplateRows: {
+        'dashboard-mobile-template': 'auto 1fr',
+      },
       fontFamily: {
-        'montserrat': ['Montserrat', 'sans-serif']
-      }
+        'montserrat': ['Montserrat', 'sans-serif'],
+      },
     },
   },
   plugins: [],
-}
+};
 

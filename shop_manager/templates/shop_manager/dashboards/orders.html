@@ -1,17 +1,8 @@
+{% extends 'shop_manager/base.html' %}
 {% load static %}
-<div class="dashboardContainer bg-dashboard-gray">
-    <div class="py-4 px-8 flex items-center justify-between bg-white shadow-md mb-3">
-        <div class="flex items-center gap-2">
-            <svg class="icon" width="22" height="22" fill="currentColor">
-                <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#home"></use>
-            </svg>
-            <h4 class="font-bold">{{ title }}</h4>
-        </div>
-        <div>
-            <p>{{ request.user.username }}</p>
-        </div>
-    </div>
-    <div class="py-4 px-8 flex flex-col items-start gap-4">
+
+{% block dashboard %}
+    <div class="py-4 px-4 lg:px-8 flex flex-col items-start gap-4">
         <div class="p-4 w-full bg-white rounded-xl shadow-md flex flex-col gap-4 ">
             <div class="flex items-center justify-between">
                 <h4 class="text-xl font-bold">Порачки</h4>
@@ -88,4 +79,10 @@
             </table>
         </div>
     </div>
-</div>
+
+{% endblock dashboard %}
+
+{% block scripts %}
+    <script src="{% static 'shop_manager/js/shop_manager.js' %}"></script>
+{% endblock scripts %}
+ 

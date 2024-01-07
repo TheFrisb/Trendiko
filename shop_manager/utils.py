@@ -31,6 +31,20 @@ class ShopManagerRequiredMixin(ShopManagerBaseMixin, AccessMixin):
         return f"{resolve_url('admin:login')}?next={next_url}"
 
 
+class StockManagerRequiredMixin(AccessMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.groups.filter(name="stock_manager").exists():
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+    def handle_no_permission(self):
+        return HttpResponseRedirect(self.get_login_url())
+
+    def get_login_url(self):
+        next_url = self.request.get_full_path()
+        return f"{resolve_url('admin:login')}?next={next_url}"
+
+
 # Permission class for DRF views
 class IsShopManagerPermission(ShopManagerBaseMixin, BasePermission):
     def has_permission(self, request, view):
@@ -59,17 +73,17 @@ class SidebarItemsMixin:
             "icon": "cart",
             "items": [
                 {
-                    "name": "Непотврдени",
+                    "name": "Непотврдени порачки",
                     "url": f"{order_dashboard_url}?status={Order.OrderStatus.PENDING}",
                     "icon": "hourglass",
                 },
                 {
-                    "name": "Потврдени",
+                    "name": "Потврдени порачки",
                     "url": f"{order_dashboard_url}?status={Order.OrderStatus.CONFIRMED}",
                     "icon": "check",
                 },
                 {
-                    "name": "Избришани",
+                    "name": "Избришани порачки",
                     "url": f"{order_dashboard_url}?status={Order.OrderStatus.DELETED}",
                     "icon": "trash",
                 },
@@ -92,6 +106,11 @@ class SidebarItemsMixin:
             "icon": "layers",
             "items": [
                 {"name": "Залиха", "url": stock_dashboard_url, "icon": "sliders"},
+                {
+                    "name": "Скенири продукти",
+                    "url": reverse("shop_manager:scan_stock"),
+                    "icon": "scan",
+                },
                 {
                     "name": "Внеси увоз",
                     "url": reverse("admin:stock_import_add"),

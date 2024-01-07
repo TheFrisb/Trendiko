@@ -1,15 +1,23 @@
 {% load static %}
 
-<div class="navigationContainer bg-dashboard-blue p-4">
+<div class="navigationContainer bg-dashboard-blue p-4 h-auto">
     <div class="navigation text-white flex flex-col gap-8">
         <div class="flex items-center gap-2">
             <svg class="icon" width="32" height="32" fill="currentColor">
                 <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#box"></use>
             </svg>
             <h4 class="font-bold">Dashboard</h4>
+            <svg class="ml-auto lg:hidden" width="32" height="32" fill="currentColor" id="dashboard__menuIcon">
+                <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#menu"></use>
+            </svg>
+
+            <svg class="ml-auto hidden lg:hidden" width="32" height="32" fill="currentColor"
+                 id="dashboard__closeMenuIcon">
+                <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#close"></use>
+            </svg>
         </div>
 
-        <div class="flex flex-col gap-6">
+        <div class="hidden lg:flex flex-col gap-6" id="dashboard__menu">
             {% for item in sidebar_items %}
                 <div>
                     <div class="sidebar-item active">

@@ -13,21 +13,32 @@
 <body>
 {% csrf_token %}
 
-<div class="pageContainer  min-h-screen grid grid-cols-dashboard-template">
+<div class="pageContainer  min-h-screen grid grid-rows-dashboard-mobile-template lg:grid-cols-dashboard-template lg:grid-rows-none">
     {% csrf_token %}
     {% include 'shop_manager/includes/sidebar/sidebar.html' %}
- 
-    {% if template %}
-        {% with template_name=template|stringformat:"s"|add:".html" %}
-            {% include "shop_manager/dashboards/"|add:template_name %}
-        {% endwith %}
-    {% else %}
-        {% include "shop_manager/dashboards/orders.html" %}
-    {% endif %}
+
+    <div class="dashboardContainer bg-dashboard-gray">
+        <div class="py-4 px-4 lg:px-8 flex items-center justify-between bg-white shadow-md mb-3">
+            <div class="flex items-center gap-2">
+                <svg class="icon" width="22" height="22" fill="currentColor">
+                    <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#home"></use>
+                </svg>
+                <h4 class="font-bold">{{ title }}</h4>
+            </div>
+            <div>
+                <p>{{ request.user.username }}</p>
+            </div>
+        </div>
+        {% block dashboard %}
+        {% endblock dashboard %}
+    </div>
 
 </div>
 
-<script src="{% static 'shop_manager/js/shop_manager.js' %}"></script>
+{% block extra_content %}
+{% endblock extra_content %}
+
+<script src="{% static 'shop_manager/js/dashboards.js' %}"></script>
 {% block scripts %}{% endblock scripts %}
 </body>
 </html>
