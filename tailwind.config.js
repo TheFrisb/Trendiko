@@ -9,6 +9,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      animation: {
+        'spinner': 'spinner 0.75s infinite linear',
+      },
+      keyframes: {
+        spinner: {
+          '100%': {transform: 'rotate(360deg)'},
+        },
+      },
       colors: {
         'dashboard-blue': '#4759E4',
         'dashboard-item-active': '#95A1FF',

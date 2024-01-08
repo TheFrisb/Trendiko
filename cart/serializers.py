@@ -1,9 +1,8 @@
 from rest_framework import serializers
+
 from common.serializers import ProductSerializer
-from shop.models import Product, ProductAttribute
+from shop.models import Product
 from .models import CartItem, ShippingDetails
-from django.shortcuts import get_object_or_404
-import re
 
 
 class AddProductToCartSerializer(serializers.Serializer):

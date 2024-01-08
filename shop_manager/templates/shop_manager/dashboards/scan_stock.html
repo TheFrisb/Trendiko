@@ -3,10 +3,20 @@
 {% block dashboard %}
     <div class="py-4 px-4 lg:px-8 flex flex-col items-start gap-4">
         {% with button_classes="p-4 rounded-lg text-sm font-bold w-full text-white transition-all hover:bg-black/80" %}
-            <button class="{{ button_classes }} bg-green-600">ДОДАЈ ЗАЛИХА</button>
-            <button class="{{ button_classes }} bg-red-400">МИНУСИРИ ЗАЛИХА</button>
+            <button class="{{ button_classes }} bg-green-600" id="stockManagerActions__addStockButton">ДОДАЈ ЗАЛИХА
+            </button>
+            <button class="{{ button_classes }} bg-red-400" id="stockManagerActions__removeStockButton">МИНУСИРИ ЗАЛИХА
+            </button>
         {% endwith %}
-        <div id="reader" class="w-full"></div>
+        <div class="w-full relative">
+            <div id="qrCodeReader"></div>
+            <div class="absolute w-full h-full top-0 flex justify-between items-center bg-black/70 z-50 rounded isDoingNothing"
+                 id="scanner__overlay">
+                <svg class="icon animate-spinner mx-auto text-white" width="36" height="36" fill="currentColor">
+                    <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#spinner"></use>
+                </svg>
+            </div>
+        </div>
     </div>
 
 
@@ -14,18 +24,26 @@
 {% endblock dashboard %}
 
 {% block extra_content %}
-    <div class="absolute bottom-0 w-full text-center p-4 isDoingNothing" id="stockManagerCurrentAction">
-        <p class="text-lg font-bold text-white" id="stockManagerCurrentAction__actionLabel">СЕГА ДОДАВАШ ЗАЛИХА</p>
+    <div class="absolute bottom-0 w-full text-center p-4 isDoingNothing" id="stockManagerCurrentActionBanner">
+        <p class="text-lg font-bold text-white" id="stockManagerCurrentActionBanner__actionLabel">СЕГА ДОДАВАШ
+            ЗАЛИХА</p>
     </div>
 
     <!-- make a modal for adding stock -->
-    <div class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/60">
-        <div class="absolute bg-white w-10/12 h-auto top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-lg">
-            <div class="p-4">
-                <p>Produkt</p>
-                <img src="" alt="asd">
-                <button>Yes</button>
-                <button>No</button>
+    <div class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black/60 z-50 isDoingNothing"
+         id="scannedProductModal">
+        <div class="absolute bg-white rounded z-100">
+            <div class="p-4 flex flex-col gap-6 text-center ">
+                <p class="font-bold text-red-600 scannedProductModal__action">Минусири залиха од</p>
+                <p class="font-bold text-2xl scannedProductModal__productName">Produkt taj i taj i taj</p>
+                <img src="https://greengoshop.mk/media/products/2023/12/26/1_KYiSU2x.webp" alt="Image of some product"
+                     class="scannedProductModal__productImage">
+                {% with button_classes="p-4 rounded-lg text-sm font-bold w-full text-white transition-all hover:bg-black/80" %}
+                    <button class="{{ button_classes }} bg-green-600 scannedProductModal__confirmActionButton">Потврди
+                    </button>
+                    <button class="{{ button_classes }} bg-red-400 scannedProductModal__cancelActionButton">Откажи
+                    </button>
+                {% endwith %}
             </div>
         </div>
     </div>
