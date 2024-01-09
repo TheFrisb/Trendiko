@@ -24,9 +24,8 @@
 {% endblock dashboard %}
 
 {% block extra_content %}
-    <div class="absolute bottom-0 w-full text-center p-4 isDoingNothing" id="stockManagerCurrentActionBanner">
-        <p class="text-lg font-bold text-white" id="stockManagerCurrentActionBanner__actionLabel">СЕГА ДОДАВАШ
-            ЗАЛИХА</p>
+    <div class="fixed bottom-0 w-full text-center p-4 isDoingNothing" id="stockManagerCurrentActionBanner">
+        <p class="text-lg font-bold text-white" id="stockManagerCurrentActionBanner__actionLabel">{action_type}</p>
     </div>
 
     <!-- make a modal for adding stock -->
@@ -34,14 +33,15 @@
          id="scannedProductModal">
         <div class="absolute bg-white rounded z-100">
             <div class="p-4 flex flex-col gap-6 text-center ">
-                <p class="font-bold text-red-600 scannedProductModal__action">Минусири залиха од</p>
-                <p class="font-bold text-2xl scannedProductModal__productName">Produkt taj i taj i taj</p>
-                <img src="https://greengoshop.mk/media/products/2023/12/26/1_KYiSU2x.webp" alt="Image of some product"
-                     class="scannedProductModal__productImage">
+                <p class="font-bold" id="scannedProductModal__currentActionLabel">{current_action}</p>
+                <p class="font-bold text-2xl" id="scannedProductModal__label">{stock_item label}</p>
+                <img src="#" alt="{stock_item thumbnail}"
+                     id="scannedProductModal__thumbnail">
                 {% with button_classes="p-4 rounded-lg text-sm font-bold w-full text-white transition-all hover:bg-black/80" %}
-                    <button class="{{ button_classes }} bg-green-600 scannedProductModal__confirmActionButton">Потврди
+                    <button class="{{ button_classes }} bg-green-600" id="scannedProductModal__confirmActionButton">
+                        Потврди
                     </button>
-                    <button class="{{ button_classes }} bg-red-400 scannedProductModal__cancelActionButton">Откажи
+                    <button class="{{ button_classes }} bg-red-400" id="scannedProductModal__cancelActionButton">Откажи
                     </button>
                 {% endwith %}
             </div>

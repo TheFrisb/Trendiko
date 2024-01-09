@@ -1,0 +1,35 @@
+1. Shop manager / 3hrs
+- Orders export
+
+2. Stock manager / 3hrs
+- Uvoz export ?
+- Popraj QR Code border
+- Rezerviri zaliha za processed i confirmed orders, odzimi zaliha ako ordero ode deleted
+- Dodadi scan item logika da minusire od zalihata.
+- Update zaliha dashboard design to reflect information:
+- Rezervirana zaliha,
+- Zaliha od uvozi
+
+3. Analytics dashboard / 4hrs
+- Design
+- Cron job to populate data
+- Adspend query
+
+4. Facebook Ads / 10hrs
+- Interface za create ads
+- Store facebook campaigns
+
+5. Shop page / 6hrs
+- Design
+
+Global: / 2hrs
+- Facebook pixel
+- Facebook catalogue
+
+Misc: / 1hr
+Stock manager:
+- On 0 stock, archive all products related
+Shop:
+- When product gets archived/out of stock, turn off facebook campaign.
+
+Total: 29hrs

@@ -7,7 +7,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{% static 'shop_manager/css/shop_manager.css' %}">
-
+    <link rel="stylesheet" href="{% static 'shop_manager/css/notyf.css' %}">
     <title>{{ title }}</title>
 </head>
 <body>
@@ -32,12 +32,12 @@
         {% block dashboard %}
         {% endblock dashboard %}
     </div>
-
 </div>
 
 {% block extra_content %}
 {% endblock extra_content %}
 
+<script src="{% static 'shop_manager/js/libs/notyf.js' %}"></script>
 <script src="{% static 'shop_manager/js/dashboards.js' %}"></script>
 {% block scripts %}{% endblock scripts %}
 </body>

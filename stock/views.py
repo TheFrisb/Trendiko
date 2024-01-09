@@ -1,8 +1,10 @@
 from rest_framework import status
+from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from stock.serializers import ManageStockItemSerializer, StockItemSerializer
+from .models import StockItem
 from .services.stock_item_service import StockItemService
 from .utils import IsStockManager
 
@@ -19,3 +21,11 @@ class ManageStockItemView(APIView):
                 StockItemSerializer(stock_item).data, status=status.HTTP_200_OK
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class StockItemDetailView(RetrieveAPIView):
+    permission_classes = [IsStockManager]
+
+    queryset = StockItem.objects.all()
+    serializer_class = StockItemSerializer
+    lookup_field = "sku"  # or any other unique field

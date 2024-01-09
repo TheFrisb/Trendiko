@@ -139,6 +139,9 @@ class Order(TimeStampedModel):
     total_price = models.IntegerField(default=0)
     shipping_price = models.IntegerField(default=130)
 
+    def __str__(self):
+        return f"Order id: {self.id}, Status: {self.status}, Total: {self.total_price}, Created at: {self.created_at}"
+
 
 class OrderItem(TimeStampedModel):
     """
