@@ -4,16 +4,16 @@
     <div class="navigation text-white flex flex-col gap-8">
         <div class="flex items-center gap-2">
             <svg class="icon" width="32" height="32" fill="currentColor">
-                <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#box"></use>
+                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#box"></use>
             </svg>
             <h4 class="font-bold">Dashboard</h4>
             <svg class="ml-auto lg:hidden" width="32" height="32" fill="currentColor" id="dashboard__menuIcon">
-                <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#menu"></use>
+                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#menu"></use>
             </svg>
 
             <svg class="ml-auto hidden lg:hidden" width="32" height="32" fill="currentColor"
                  id="dashboard__closeMenuIcon">
-                <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#close"></use>
+                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#close"></use>
             </svg>
         </div>
 
@@ -23,7 +23,7 @@
                     <div class="sidebar-item active">
                         <div class="sidebar-item-title">
                             <svg class="icon" width="22" height="22" fill="currentColor">
-                                <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#{{ item.icon }}"></use>
+                                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#{{ item.icon }}"></use>
                             </svg>
 
                             <h4 class="font-bold">{{ item.title }}</h4>
@@ -38,7 +38,7 @@
                         {% for item in item.items %}
                             <a href="{{ item.url }}" class="sidebar-item-content-title">
                                 <svg class="icon" width="16" height="16" fill="currentColor">
-                                    <use xlink:href="{% static 'shop_manager/assets/svg_sprite.svg' %}#{{ item.icon }}"></use>
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#{{ item.icon }}"></use>
                                 </svg>
 
                                 <h4 class="text-sm">{{ item.name }}</h4>

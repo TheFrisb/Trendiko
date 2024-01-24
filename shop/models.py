@@ -1,3 +1,4 @@
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -35,6 +36,7 @@ class Product(BaseProduct):
     stock_item = models.ForeignKey(
         "stock.StockItem", on_delete=models.CASCADE, null=True
     )
+    description = RichTextUploadingField()
 
     @property
     def selling_price(self):

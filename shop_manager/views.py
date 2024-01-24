@@ -1,3 +1,4 @@
+from django.http import FileResponse
 from django.views.generic import ListView
 
 from cart.models import Order
@@ -27,7 +28,9 @@ class ShopManagerHome(ShopManagerRequiredMixin, BaseDashboardView):
     def post(self, request, *args, **kwargs):
         form = ExportOrdersForm(request.POST)
         if form.is_valid():
-            form.export_orders()
+            return FileResponse(
+                form.export_orders(), as_attachment=True, filename="orders.xlsx"
+            )
         return self.get(request, *args, **kwargs)
 
     def dispatch(self, request, *args, **kwargs):

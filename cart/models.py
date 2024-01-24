@@ -139,6 +139,16 @@ class Order(TimeStampedModel):
     total_price = models.IntegerField(default=0)
     shipping_price = models.IntegerField(default=130)
 
+    @property
+    def get_shipping_method(self):
+        """
+        Get the shipping method of the order.
+
+        Returns:
+            str: The shipping method of the order.
+        """
+        return "Брза достава"
+
     def __str__(self):
         return f"Order id: {self.id}, Status: {self.status}, Total: {self.total_price}, Created at: {self.created_at}"
 
@@ -205,3 +215,12 @@ class ShippingDetails(TimeStampedModel):
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=50)
     phone = models.CharField(max_length=20)
+    comment = models.TextField(null=True, blank=True)
+
+    @property
+    def full_name(self):
+        """
+        Get the full name of the customer.
+        :return: str: The full name of the customer.
+        """
+        return f"{self.first_name} {self.last_name}"

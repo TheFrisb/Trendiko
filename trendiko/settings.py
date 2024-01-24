@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     #  Third party apps
     "rest_framework",
     "imagekit",
+    "ckeditor",
+    "ckeditor_uploader",
     # Local apps
     "common.apps.CommonConfig",
     "shop.apps.ShopConfig",
@@ -134,6 +136,39 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "static"
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "media/"
+
+# CKEDITOR
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_FORCE_JPEG_COMPRESSION = True
+
+CKEDITOR_CONFIGS = {
+    "default": {
+        "height": 300,
+        "width": 1000,
+        "toolbar": "Custom",
+        "toolbar_Custom": [
+            [
+                "Format",
+                "Bold",
+                "Italic",
+                "Underline",
+                "Strike",
+                "NumberedList",
+                "BulletedList",
+            ],
+            ["JustifyLeft", "JustifyCenter", "JustifyRight"],
+            ["Image", "Link", "Maximize"],
+            ["Undo", "Redo", "Html5video"],
+        ],
+        "extraPlugins": ",".join(
+            [
+                "uploadimage",
+            ]
+        ),
+    }
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
