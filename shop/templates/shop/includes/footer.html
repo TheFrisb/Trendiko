@@ -1,10 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% load static %}
+<footer class="bg-brand-primary rounded-t-lg">
+    <div class="px-6 py-6 w-full">
+        <img src="{% static 'common/assets/brand/logo-white.png' %}" alt="" width="105" class="mx-auto h-auto mb-6">
+        <div class="flex flex-col gap-2 pb-4">
+            <p class="text-lg text-brand-accent">Контакт</p>
+            <a href="tel:+38970123456" class="text-sm text-white">Телефон: 070 123 456</a>
+            <a href="mailto:info@trendiko.mk" class="text-sm text-white">Емаил: info@trendiko.mk</a>
+            <p class="text-sm text-white">Работно време: 08:00 - 22:00 ( пон - саб )</p>
+        </div>
+        <div class="flex flex-col gap-2 pb-4">
+            <p class="text-lg text-brand-accent">Информации</p>
+            <a href="#" class="text-sm text-white">Достава</a>
+            <a href="#" class="text-sm text-white">Рекламација</a>
+            <a href="#" class="text-sm text-white">Правила за користење</a>
+            <a href="#" class="text-sm text-white">Политика за приватност и колачиња</a>
+        </div>
+        <div class="flex flex-col gap-2 pb-8">
+            <p class="text-lg text-brand-accent">За Trendiko.mk</p>
+            <a href="#" class="text-sm text-white">За Нас и Нашиот Тим</a>
+            <a href="#" class="text-sm text-white">Сакате да Увезете Роба во Македонија?</a>
+            <a href="#" class="text-sm text-white">Нарачки од Кина за Вашата Продавница</a>
+        </div>
 
-</body>
-</html>
+        <div class="flex items-center gap-1.5 pb-16">
+            <svg class="text-white" width="24" height="24" fill="currentColor">
+                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#copyright"></use>
+            </svg>
+            <p class="text-white text-sm">2024, Сите права задржани, Trendiko.mk</p>
+        </div>
+
+        <div class="flex items-center justify-center gap-4">
+            <a href="#">
+                <svg class="text-brand-accent" width="36" height="36" fill="currentColor">
+                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#facebook"></use>
+                </svg>
+            </a>
+            <a href="#">
+                <svg class="text-brand-accent" width="36" height="36" fill="currentColor">
+                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#instagram"></use>
+                </svg>
+            </a>
+        </div>
+    </div>
+</footer>

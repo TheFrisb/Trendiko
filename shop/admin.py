@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Product, ProductAttribute
+
+from .models import Product, ProductAttribute, Category
 
 
 # Register your models here.
@@ -17,3 +18,14 @@ class ProductAdmin(admin.ModelAdmin):
 
     class Meta:
         model = Product
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["name", "slug"]
+    list_filter = ["name"]
+    search_fields = ["name"]
+    prepopulated_fields = {"slug": ("name",)}
+
+    class Meta:
+        model = Category

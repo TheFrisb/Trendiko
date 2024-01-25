@@ -7,6 +7,7 @@ module.exports = {
     // '**/static/**/*.js',
     'shop/templates/**/*.html',
     'shop/templates/**/**/*.html',
+    'shop/templates/**/**/**/*.html',
     'shop/static/**/*.js',
 
   ],
@@ -24,12 +25,12 @@ module.exports = {
         'dashboard-blue': '#4759E4',
         'dashboard-item-active': '#95A1FF',
         'dashboard-gray': '#F8FAFF',
-        'brand-gray': '#F8FAFF',
+        'brand-gray': '#9D9A99',
         'error': '#FF0000',
-        'brand-yellow': '#F0DA1F',
-        'brand-primary': '#21872f',
-        'brand-secondary': '#17335E',
-        'brand-tertiary': '#53175E',
+        'brand-primary': '#163C45',
+        'brand-secondary': '#D9D9D9',
+        'brand-action': '#FF4C15',
+        'brand-accent': '#75FFCE',
       },
       gridTemplateColumns: {
         'dashboard-template': '300px 1fr',
@@ -37,10 +38,15 @@ module.exports = {
       gridTemplateRows: {
         'dashboard-mobile-template': 'auto 1fr',
       },
-      fontFamily: {
-        'montserrat': ['Montserrat', 'sans-serif'],
-      },
+
     },
+
+    fontFamily: {
+      'montserrat': ['Montserrat', 'sans-serif'],
+      'mulish': ['Mulish', 'sans-serif'],
+    },
+
+
   },
   plugins: [],
 };

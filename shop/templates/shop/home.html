@@ -1,0 +1,137 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Promoted category -->
+    <div class="rounded-lg bg-brand-secondary">
+        <div class="p-5 relative">
+            <div class="h-full flex flex-col items-start justify-between w-7/12">
+                <div class="flex flex-col justify-start items-start pb-28 gap-4">
+                    <h1 class="font-bold text-brand-primary text-[2.5rem] leading-10">{{ promotion_category.name }}</h1>
+                    <p class="text-sm text-brand-primary leading-7">{{ promotion_category.promotion_text }}</p>
+                </div>
+                <img src="{% static 'common/assets/brand/logo-trendiko-arrow.png' %}"
+                     alt="Trendiko's brand secondary logo"
+                     class="w-8 h-auto">
+            </div>
+            <div class="absolute bottom-12 right-12">
+                {% if promotion_category.promotion_image %}
+                    <div class="z-50 relative">
+                        <picture>
+                            <source srcset="{{ promotion_category.promotion_image.url }}" type="image/webp">
+                            <source srcset="{{ promotion_category.promotion_image_png.url }}" type="image/jpeg">
+                            <img src="{{ promotion_category.promotion_image_png.url }}" alt="Promotion image"
+                                 width="150" height="150">
+                        </picture>
+
+                    </div>
+                {% endif %}
+                <div class="flex flex-col items-center justify-center bg-brand-accent rounded-lg z-20 absolute -top-16 -right-2 p-1.5">
+                    <span class="text-2xl text-brand-primary text-center">До</span>
+                    <span class="text-2xl text-brand-primary text-center">-23%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of promoted category -->
+
+    <!-- Benefits list -->
+    <div class="flex items-baseline justify-between">
+        <div class="flex flex-col items-center justify-center gap-2.5">
+            <img src="{% static 'common/assets/images/free_delivery.png' %}" alt="Free delivery benefit"
+                 class="w-12 h-auto">
+            <p class="text-center text-sm text-brand-primary">Брза Испорака и Бесплатна над 1000 денари</p>
+        </div>
+        <div class="flex flex-col items-center justify-center gap-2.5">
+            <img src="{% static 'common/assets/images/highly_rated.png' %}" alt="Quality products benefit"
+                 class="w-12 h-auto">
+            <p class="text-center text-sm text-brand-primary">Загарантирана сатисфакција и квалитет</p>
+        </div>
+        <div class="flex flex-col items-center justify-center gap-2.5">
+            <img src="{% static 'common/assets/images/cash_on_delivery.png' %}" alt="Returns benefit"
+                 class="w-12 h-auto">
+            <p class="text-center text-sm text-brand-primary">Едноставна 14 дневна замена на производи</p>
+        </div>
+    </div>
+    <!-- End of benefits list -->
+
+    <!-- Products -->
+    <div class="flex flex-col gap-2">
+        <div class="flex flex-col ">
+            <h2 class="font-bold text-lg">Препорачани производи</h2>
+            <a href="{% url 'shop:category_page' slug='all-products' %} " class="text-sm text-brand-action">Погледај ги
+                сите</a>
+        </div>
+
+        {% with list=recommended_products %}
+            {% include 'shop/includes/product_list.html' %}
+        {% endwith %}
+    </div>
+    <!-- End of Products -->
+
+    <!-- See more products -->
+    <div class="flex flex-col gap-2 items-center justify-center">
+        <div class="h-[1px] w-[150px] bg-[#E2DEDE]"></div>
+        <a href="{% url 'shop:category_page' slug='all-products' %}" class="text-brand-action font-bold text-center">Види
+            повеќе</a>
+    </div>
+    <!-- End of See more products -->
+
+    <!-- Category list -->
+    {% for category in categories %}
+        <div class="rounded-lg bg-brand-secondary">
+            <div class="p-5 relative">
+                <div class="h-full flex flex-col items-start justify-between w-7/12">
+                    <div class="flex flex-col justify-start items-start pb-20 gap-4">
+                        <p class="font-bold text-black text-lg leading-6">{{ category.name }}</p>
+                    </div>
+                    <div class="flex items-center justify-start gap-1">
+                        <a href="{% url 'shop:category_page' slug=category.slug %}" class="text-brand-action">Види
+                            производи</a>
+                        <svg class="text-white" width="26" height="26" fill="currentColor">
+                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#linkArrow"></use>
+                        </svg>
+                    </div>
+                </div>
+                <div class="absolute bottom-4 right-16">
+                    {% if category.promotion_image %}
+                        <div class="z-50 relative">
+                            <picture>
+                                <source srcset="{{ promotion_category.promotion_image.url }}" type="image/webp">
+                                <source srcset="{{ promotion_category.promotion_image_png.url }}" type="image/jpeg">
+                                <img src="{{ promotion_category.promotion_image_png.url }}" alt="Promotion image"
+                                     width="100" height="100">
+                            </picture>
+
+                        </div>
+                    {% endif %}
+                    <div class="flex flex-col items-center justify-center bg-brand-accent rounded-lg z-20 absolute -top-10 -right-11 p-1.5">
+                        <span class="text-2xl text-brand-primary text-center">До</span>
+                        <span class="text-2xl text-brand-primary text-center">-23%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <!-- End of Category list -->
+
+    <!-- Free shipping products -->
+    <div class="flex flex-col gap-2">
+        <div class="flex flex-col ">
+            <h2 class="font-bold text-lg">Производи со бесплатна испорака</h2>
+            <a href="{% url 'shop:category_page' slug='free-shipping' %} " class="text-sm text-brand-action">Погледај ги
+                сите</a>
+        </div>
+
+        {% with list=free_shipping_products %}
+            {% include 'shop/includes/product_list.html' %}
+        {% endwith %}
+    </div>
+
+    <div class="flex flex-col gap-2 items-center justify-center">
+        <div class="h-[1px] w-[150px] bg-[#E2DEDE]"></div>
+        <a href="{% url 'shop:category_page' slug='all-products' %}" class="text-brand-action font-bold text-center">Види
+            повеќе</a>
+    </div>
+    <!-- End of Free shipping products -->
+{% endblock content %}

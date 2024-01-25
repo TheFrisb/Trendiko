@@ -1,11 +1,81 @@
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
+from django.urls import reverse
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+from imagekit.models import ProcessedImageField, ImageSpecField
+from imagekit.processors import ResizeToFill
+from transliterate import translit
 
+from common.models import CATEGORY_THUMBNAIL_DIMENSIONS, IMAGE_QUALITY
 from common.models import TimeStampedModel, BaseProduct
 
 
 # Create your models here.
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=200, verbose_name="Име")
+    # parent = models.ForeignKey(
+    #     "self",
+    #     on_delete=models.SET_NULL,
+    #     null=True,
+    #     blank=True,
+    #     verbose_name="Припаѓа на",
+    #     related_name="subcategories",
+    # )
+    promotion_text = models.CharField(
+        max_length=200, null=True, blank=True, verbose_name="Текст за промоција"
+    )
+    promotion_image = ProcessedImageField(
+        upload_to="products/%Y/%m/%d/",
+        processors=[ResizeToFill(*CATEGORY_THUMBNAIL_DIMENSIONS)],
+        format="WEBP",
+        options={"quality": IMAGE_QUALITY},
+        null=True,
+        blank=True,
+        verbose_name="Слика за промоција (200px X 200px)",
+    )
+    promotion_image_png = ImageSpecField(
+        source="promotion_image",
+        processors=[ResizeToFill(*CATEGORY_THUMBNAIL_DIMENSIONS)],
+        format="PNG",
+        options={"quality": IMAGE_QUALITY},
+    )
+
+    is_on_promotion = models.BooleanField(default=False, verbose_name="Промоција")
+    slug = models.SlugField(blank=True, unique=True, verbose_name="Slug")
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            latin_name = translit(self.name, "mk", reversed=True)
+            slug_candidate = slugify(latin_name)
+            unique_slug = slug_candidate
+            num = 1
+            while Category.objects.filter(slug=unique_slug).exists():
+                unique_slug = "{}-{}".format(slug_candidate, num)
+                num += 1
+            self.slug = unique_slug
+
+        if self.is_on_promotion:
+            qs = Category.objects.filter(is_on_promotion=True)
+            if self.pk:
+                qs = qs.exclude(pk=self.pk)
+            qs.update(is_on_promotion=False)
+
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("shop:category_page", kwargs={"slug": self.slug})
+
+    def __str__(self):
+        # if self.parent is not None:
+        # return f"[{self.parent}] {self.name}"
+        return self.name
+
+    class Meta:
+        verbose_name = "Категорија"
+        verbose_name_plural = "Категории"
 
 
 class Product(BaseProduct):
@@ -30,6 +100,7 @@ class Product(BaseProduct):
     type = models.CharField(
         max_length=20, choices=ProductType.choices, default=ProductType.SIMPLE
     )
+    slug = models.SlugField(blank=True)
 
     regular_price = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField(null=True, blank=True)
@@ -37,10 +108,24 @@ class Product(BaseProduct):
         "stock.StockItem", on_delete=models.CASCADE, null=True
     )
     description = RichTextUploadingField()
+    has_free_shipping = models.BooleanField(default=False)
 
     @property
     def selling_price(self):
         return self.sale_price if self.sale_price else self.regular_price
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            latin_name = translit(self.title, "mk", reversed=True)
+            slug_candidate = slugify(latin_name)
+            unique_slug = slug_candidate
+            num = 1
+            while Product.objects.filter(slug=unique_slug).exists():
+                unique_slug = "{}-{}".format(slug_candidate, num)
+                num += 1
+            self.slug = unique_slug
+
+        super().save(*args, **kwargs)
 
 
 class ProductAttribute(TimeStampedModel):

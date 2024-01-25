@@ -27,11 +27,14 @@ sitemaps = {
 }
 
 urlpatterns = [
+    # THIRD PARTY APPS URLS
+    path("ckeditor/", include("ckeditor_uploader.urls")),
+    # END THIRD PARTY APPS URLS
     path("admin/", admin.site.urls),
     path("shop-manager/", include("shop_manager.urls")),
     path("api/cart/", include("cart.urls")),
     path("api/stock/", include("stock.urls")),
-    path("ckeditor/", include("ckeditor_uploader.urls")),
+    path("", include("shop.urls")),
 ]
 
 if settings.DEBUG:

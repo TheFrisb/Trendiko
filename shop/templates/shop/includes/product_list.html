@@ -1,0 +1,29 @@
+<div class="grid grid-cols-2 gap-5">
+    {% for product in list %}
+        <div class="w-full flex flex-col gap-1.5">
+            <a href="{% url 'shop:product_page' slug=product.slug %}">
+                <picture>
+                    <source srcset="{{ product.thumbnail_loop.url }}" type="image/webp">
+                    <source srcset="{{ product.thumbnail_loop_as_jpeg }}" type="image/jpeg">
+                    <img src="{{ product.thumbnail_loop_as_jpeg.url }}" alt="Image of a product"
+                         class="rounded-lg">
+                </picture>
+            </a>
+
+            <a href="{% url 'shop:product_page' slug=product.slug %}"
+               class="text-center font-bold ">{{ product.title }}
+            </a>
+
+            <div class="relative flex justify-between items-baseline">
+                <span class="font-bold text-brand-action">{{ product.sale_price }} ден.</span>
+                <span class="font-bold text-sm text-brand-gray -top-0.5 relative line-through">{{ product.regular_price }} ден.</span>
+            </div>
+
+            {% if product.has_free_shipping %}
+                <div class="flex items-center justify-center bg-brand-accent py-1 px-1.5 rounded-lg">
+                    <p class="text-xs">Бесплатна испорака</p>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
