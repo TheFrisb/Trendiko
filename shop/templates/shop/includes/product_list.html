@@ -1,4 +1,4 @@
-<div class="grid grid-cols-2 gap-5">
+<div class="productsGrid">
     {% for product in list %}
         <div class="w-full flex flex-col gap-1.5">
             <a href="{% url 'shop:product_page' slug=product.slug %}">

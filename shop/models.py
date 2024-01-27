@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from imagekit.models import ProcessedImageField, ImageSpecField
-from imagekit.processors import ResizeToFill
+from imagekit.processors import ResizeToFit, ResizeToFill
 from transliterate import translit
 
 from common.models import CATEGORY_THUMBNAIL_DIMENSIONS, IMAGE_QUALITY
@@ -38,7 +38,6 @@ class Category(models.Model):
     )
     promotion_image_png = ImageSpecField(
         source="promotion_image",
-        processors=[ResizeToFill(*CATEGORY_THUMBNAIL_DIMENSIONS)],
         format="PNG",
         options={"quality": IMAGE_QUALITY},
     )
@@ -101,7 +100,9 @@ class Product(BaseProduct):
         max_length=20, choices=ProductType.choices, default=ProductType.SIMPLE
     )
     slug = models.SlugField(blank=True)
-
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="products"
+    )
     regular_price = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField(null=True, blank=True)
     stock_item = models.ForeignKey(
@@ -113,6 +114,28 @@ class Product(BaseProduct):
     @property
     def selling_price(self):
         return self.sale_price if self.sale_price else self.regular_price
+
+    def review_data(self):
+        reviews = self.reviews.all()
+        if reviews:
+            rating = sum([review.rating for review in reviews]) / reviews.count()
+            closest_half = int(round(rating * 2) / 2)
+            return {
+                "rating": rating,
+                "closest_half": closest_half,
+                "count": len(reviews),
+            }
+
+    def get_product_misc_data(self):
+        review_data = self.review_data()
+        money_saved = self.regular_price - self.selling_price
+        money_saved_percent = int((money_saved / self.regular_price) * 100)
+
+        return {
+            "review_data": review_data,
+            "money_saved": money_saved,
+            "money_saved_percent": money_saved_percent,
+        }
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -150,3 +173,26 @@ class ProductAttribute(TimeStampedModel):
     name = models.CharField(max_length=140)
     content = models.CharField(max_length=140)
     price = models.PositiveIntegerField(null=True, blank=True)
+
+
+class Review(TimeStampedModel):
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="reviews"
+    )
+    # int field 1 to 5
+    rating = models.PositiveIntegerField()
+    name = models.CharField(max_length=140)
+    content = models.TextField(blank=True, null=True)
+    image = ProcessedImageField(
+        upload_to="products/%Y/%m/%d/",
+        processors=[ResizeToFit(width=400, upscale=False)],
+        format="WEBP",
+        options={"quality": IMAGE_QUALITY},
+        null=True,
+        blank=True,
+    )
+    image_png = ImageSpecField(
+        source="image",
+        format="PNG",
+        options={"quality": IMAGE_QUALITY},
+    )

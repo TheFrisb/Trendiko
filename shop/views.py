@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render
 
 from shop.models import Category, Product
@@ -26,3 +27,23 @@ def home_view(request):
     }
 
     return render(request, "shop/home.html", context)
+
+
+def product_detail_view(request, slug):
+    try:
+        product = (
+            Product.objects.prefetch_related("attributes", "category", "reviews")
+            .select_related("category")
+            .get(slug=slug, status=Product.ProductStatus.PUBLISHED)
+        )
+    except Product.DoesNotExist:
+        raise Http404("Product does not exist or is not published.")
+
+    categories = Category.objects.all()
+    context = {
+        "product": product,
+        "title": product.title,
+        "categories": categories,
+        "product_misc_data": product.get_product_misc_data(),
+    }
+    return render(request, "shop/product_pages/main_product_page.html", context)

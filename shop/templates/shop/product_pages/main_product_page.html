@@ -1,0 +1,137 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block content %}
+    <div>
+        <a href="{% url 'shop:home' %}" class="text-sm text-brand-primary font-bold">Почетна ></a>
+        <a href="{% url 'shop:category_page' product.category.slug %}"
+           class="text-sm text-brand-primary">{{ product.category.name }} ></a>
+        <a href="{% url 'shop:product_page' product.slug %}"
+           class="text-sm text-brand-primary">{{ product.title }}</a>
+    </div>
+    <div>
+
+        <div>
+            <!-- Finish slider -->
+            <img src="{{ product.thumbnail.url }}" alt="" class="rounded-lg">
+        </div>
+        <div class="flex flex-col gap-1.5 py-2">
+
+            <!-- Product title and headline -->
+            <div>
+                <p class="text-brand-primary leading-3">{{ product.title }} Change me!</p>
+                <h1 class="text-brand-primary text-2xl font-bold">{{ product.title }}</h1>
+            </div>
+            <!-- End Product Title and Headline -->
+
+            <!-- Product reviews -->
+            {% if product.reviews.all %}
+                {% with review_data=product_misc_data.review_data %}
+                    <div class="flex gap-2 items-center justify-start">
+                        <p class="text-sm">{{ review_data.rating }}/5</p>
+                        <div class="flex items-center">
+                            <svg class="text-[#F9D247]" width="16" height="16" fill="currentColor">
+                                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                            </svg>
+                            <svg class="text-[#F9D247]" width="16" height="16" fill="currentColor">
+                                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                            </svg>
+                            <svg class="text-[#F9D247]" width="16" height="16" fill="currentColor">
+                                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                            </svg>
+                            <svg class="text-[#F9D247]" width="16" height="16" fill="currentColor">
+                                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                            </svg>
+                            <svg class="text-[#F9D247]" width="16" height="16" fill="currentColor">
+                                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-light">{{ review_data.count }} Рецензии</p>
+                    </div>
+                {% endwith %}
+            {% endif %}
+
+            <!-- End Product reviews -->
+
+
+            <!-- Product pricing -->
+            <div class="pb-2">
+                <p class="text-sm text-brand-primary">Заштедувате: <span
+                        class="font-bold">{{ product_misc_data.money_saved }} ден.</span>
+                </p>
+
+                <div class="flex gap-2 justify-start items-baseline">
+                    <p class="font-bold text-2xl text-brand-action">{{ product.sale_price }} ден.</p>
+                    <p class="font-bold text-lg text-brand-gray line-through">{{ product.regular_price }}
+                        ден</p>
+                    <p class="ml-1 px-1.5 py-0.5 rounded-lg bg-brand-accent font-bold text-brand-primary">
+                        -{{ product_misc_data.money_saved_percent }}%</p>
+                </div>
+            </div>
+            <!-- End Product pricing -->
+
+            <!-- TODO PRODUCT VARIATIONS -->
+            <!-- TODO END PRODUCT VARIATIONS -->
+
+            <!-- Expected shipping date -->
+            <div class="w-full flex items-center justify-center flex-col">
+                <p class="text-brand-primary text-sm font-bold">Предвидена испорака: </p>
+                <p class="text-brand-primary text-sm">Измеѓу Сабота <span class="font-bold">27 Ное.</span> - Петок <span
+                        class="font-bold">03 Дек.</span></p>
+            </div>
+            <!-- End expected shipping date -->
+
+            <!-- Product Add To Cart Section -->
+            <div class="px-6 py-4 bg-brand-secondary border border-black/40 rounded-lg">
+                <div class="flex flex-col gap-3.5 items-center justify-between w-full">
+                    <div class="w-full flex items-center justify-between">
+
+                        <div class="flex justify-start items-center gap-2.5 w-4/12">
+                            <div class="w-2.5 h-2.5 rounded-full bg-green-600"></div>
+                            <p class="text-brand-primary font-bold text-sm">На залиха</p>
+                        </div>
+
+                        <div class="flex items-center gap-2.5 w-8/12">
+                            <span class="text-brand-primary text-sm font-bold">37</span>
+                            <div class="rounded-full w-full h-3 bg-white border border-black/60">
+                                <div class="rounded-full w-3/12 h-full bg-green-600 border-r border-r-black/60 "></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="w-full flex items-center justify-between gap-4">
+
+                        <div class="flex items-center w-4/12 h-10 bg-white rounded-lg border border-black/60">
+                            <button class="w-3/12 h-full">-</button>
+                            <input type="number" value="1" min="1"
+                                   class="w-6/12 h-full text-center font-bold text-brand-primary text-lg">
+                            <button class="w-3/12 h-full">+</button>
+                        </div>
+
+                        <button class="h-10 w-8/12 bg-brand-primary rounded-lg text-white font-bold flex items-center justify-between p-1">
+                            <span class="w-10/12">Во кошничка</span>
+                            <div class="w-2/12 h-full flex items-center justify-center bg-white rounded-lg">
+                                <svg class="text-white" width="20" height="18" fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#addToCart"></use>
+                                </svg>
+                            </div>
+                        </button>
+
+                    </div>
+
+                    <div class="w-full">
+                        <button class="h-12 w-full bg-brand-action rounded-lg text-white font-bold flex items-center justify-between p-1">
+                            <div class="w-2/12 h-full flex items-center justify-center bg-white rounded-lg">
+                                <svg class="text-white" width="24" height="21" fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#buyNow"></use>
+                                </svg>
+                            </div>
+                            <span class="w-10/12 text-xl">НАРАЧАЈ ВЕДНАШ</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- End Product Add To Cart Section -->
+        </div>
+    </div>
+{% endblock content %}

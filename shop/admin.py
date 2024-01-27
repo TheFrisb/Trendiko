@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Product, ProductAttribute, Category
+from .models import Product, ProductAttribute, Category, Review
 
 
 # Register your models here.
@@ -29,3 +29,13 @@ class CategoryAdmin(admin.ModelAdmin):
 
     class Meta:
         model = Category
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ["product", "name", "rating", "created_at"]
+    list_filter = ["product", "name", "rating"]
+    search_fields = ["product", "name"]
+
+    class Meta:
+        model = Review

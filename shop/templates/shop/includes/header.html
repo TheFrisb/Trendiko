@@ -1,7 +1,7 @@
 {% load static %}
 <header class="bg-brand-secondary">
-    <div class="flex flex-col items-center justify-center  w-full">
-        <div class="flex items-center justify-between w-full pl-4 pr-4 pb-4 pt-9 bg-brand-primary rounded-bl-lg rounded-br-lg">
+    <div class="flex flex-col items-center justify-center w-full bg-brand-primary">
+        <div class="flex items-center justify-between shop-container--headerContent  rounded-b-lg">
             <svg class="text-white" width="26" height="26" fill="currentColor">
                 <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#menu"></use>
             </svg>
@@ -24,7 +24,7 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-row items-center overflow-x-auto whitespace-nowrap pl-4 pr-4 gap-4">
+    <div class="flex flex-row items-center overflow-x-auto whitespace-nowrap shop-container--horizontalPadding gap-4">
         {% for category in categories %}
             <a href="{{ category.get_absolute_url }}"
                class="py-2 ">
