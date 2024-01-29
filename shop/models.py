@@ -7,7 +7,7 @@ from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import ResizeToFit, ResizeToFill
 from transliterate import translit
 
-from common.models import CATEGORY_THUMBNAIL_DIMENSIONS, IMAGE_QUALITY
+from common.models import CATEGORY_THUMBNAIL_DIMENSIONS, IMAGE_QUALITY, IMAGE_DIMENSIONS
 from common.models import TimeStampedModel, BaseProduct
 
 
@@ -99,10 +99,8 @@ class Product(BaseProduct):
     type = models.CharField(
         max_length=20, choices=ProductType.choices, default=ProductType.SIMPLE
     )
-    slug = models.SlugField(blank=True)
-    category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="products"
-    )
+    slug = models.SlugField(blank=True, unique=True, db_index=True)
+    categories = models.ManyToManyField(Category, related_name="products")
     regular_price = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField(null=True, blank=True)
     stock_item = models.ForeignKey(
@@ -149,6 +147,23 @@ class Product(BaseProduct):
             self.slug = unique_slug
 
         super().save(*args, **kwargs)
+
+
+class ProductImage(TimeStampedModel):
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="images"
+    )
+    image = ProcessedImageField(
+        upload_to="products/gallery/%Y/%m/%d/",
+        processors=[ResizeToFill(*IMAGE_DIMENSIONS)],
+        format="WEBP",
+        options={"quality": IMAGE_QUALITY},
+    )
+    image_png = ImageSpecField(
+        source="image",
+        format="PNG",
+        options={"quality": IMAGE_QUALITY},
+    )
 
 
 class ProductAttribute(TimeStampedModel):

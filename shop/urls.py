@@ -1,11 +1,11 @@
 from django.urls import path
 
-from .views import home_view, product_detail_view
+from .views import HomeView, ProductDetailView, CategoryListView
 
 app_name = "shop"
 
 urlpatterns = [
-    path("", home_view, name="home"),
-    path("category/<slug:slug>/", home_view, name="category_page"),
-    path("product/<slug:slug>/", product_detail_view, name="product_page"),
+    path("", HomeView.as_view(), name="home"),
+    path("category/<slug:slug>/", CategoryListView.as_view(), name="category_page"),
+    path("product/<slug:slug>/", ProductDetailView.as_view(), name="product_page"),
 ]

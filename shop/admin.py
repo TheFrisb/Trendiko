@@ -1,20 +1,38 @@
+from django import forms
 from django.contrib import admin
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from .models import Product, ProductAttribute, Category, Review
+from .models import Product, ProductAttribute, Category, Review, ProductImage
 
 
 # Register your models here.
+class ProductAdminForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = "__all__"
+        widgets = {
+            "category": FilteredSelectMultiple("Category", is_stacked=False),
+        }
+
+
 class ProductAttributeInline(admin.TabularInline):
     model = ProductAttribute
     extra = 1
 
 
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    form = ProductAdminForm
+
     list_display = ["title", "status", "type", "regular_price", "sale_price"]
     list_filter = ["status", "type"]
     search_fields = ["title"]
-    inlines = [ProductAttributeInline]
+    inlines = [ProductImageInline, ProductAttributeInline]
 
     class Meta:
         model = Product

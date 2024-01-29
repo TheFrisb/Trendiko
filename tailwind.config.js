@@ -44,6 +44,7 @@ module.exports = {
     fontFamily: {
       'montserrat': ['Montserrat', 'sans-serif'],
       'mulish': ['Mulish', 'sans-serif'],
+      'century-gothic': ['"Century Gothic Paneuropean"', 'Arial', 'sans-serif'],
     },
 
 

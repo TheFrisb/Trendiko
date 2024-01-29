@@ -1,25 +1,41 @@
 {% extends 'shop/base.html' %}
 {% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'shop/css/tinySlider.css' %}">
+{% endblock head %}
+
 {% block content %}
     <div>
-        <a href="{% url 'shop:home' %}" class="text-sm text-brand-primary font-bold">Почетна ></a>
-        <a href="{% url 'shop:category_page' product.category.slug %}"
-           class="text-sm text-brand-primary">{{ product.category.name }} ></a>
+        <a href="{% url 'shop:home' %}" class="text-sm font-bold hover:text-brand-action">Почетна ></a>
+        {#        <a href="{% url 'shop:category_page' product.categories.all.first.slug %}"#}
+        {#           class="text-sm hover:text-brand-action">{{ product.category.name }} ></a>#}
         <a href="{% url 'shop:product_page' product.slug %}"
-           class="text-sm text-brand-primary">{{ product.title }}</a>
+           class="text-sm hover:text-brand-action">{{ product.title }}</a>
     </div>
-    <div>
+    <div class="grid grid-cols-1 md:grid-cols-[350px,1fr] lg:grid-cols-[480px,1fr] xl:grid-cols-[auto,1fr] md:gap-4">
 
         <div>
-            <!-- Finish slider -->
-            <img src="{{ product.thumbnail.url }}" alt="" class="rounded-lg">
+            <div class="md:sticky md:top-4" id="productGallery">
+                {% for image in product.images.all %}
+                    <div>
+                        <picture>
+                            <source srcset="{{ image.image.url }}" type="image/webp">
+                            <source srcset="{{ image.image_png.url }}" type="image/png">
+                            <img src="{{ image.image_png.url }}" alt="" class="rounded-lg" width="550" height="550">
+                        </picture>
+
+                    </div>
+                {% endfor %}
+            </div>
         </div>
+
         <div class="flex flex-col gap-1.5 py-2">
 
             <!-- Product title and headline -->
             <div>
-                <p class="text-brand-primary leading-3">{{ product.title }} Change me!</p>
-                <h1 class="text-brand-primary text-2xl font-bold">{{ product.title }}</h1>
+                <p class="leading-3">{{ product.title }} Change me!</p>
+                <h1 class="text-2xl font-bold">{{ product.title }}</h1>
             </div>
             <!-- End Product Title and Headline -->
 
@@ -55,7 +71,7 @@
 
             <!-- Product pricing -->
             <div class="pb-2">
-                <p class="text-sm text-brand-primary">Заштедувате: <span
+                <p class="text-sm">Заштедувате: <span
                         class="font-bold">{{ product_misc_data.money_saved }} ден.</span>
                 </p>
 
@@ -63,7 +79,7 @@
                     <p class="font-bold text-2xl text-brand-action">{{ product.sale_price }} ден.</p>
                     <p class="font-bold text-lg text-brand-gray line-through">{{ product.regular_price }}
                         ден</p>
-                    <p class="ml-1 px-1.5 py-0.5 rounded-lg bg-brand-accent font-bold text-brand-primary">
+                    <p class="ml-1 px-1.5 py-0.5 rounded-lg bg-brand-accent font-bold">
                         -{{ product_misc_data.money_saved_percent }}%</p>
                 </div>
             </div>
@@ -73,25 +89,25 @@
             <!-- TODO END PRODUCT VARIATIONS -->
 
             <!-- Expected shipping date -->
-            <div class="w-full flex items-center justify-center flex-col">
-                <p class="text-brand-primary text-sm font-bold">Предвидена испорака: </p>
-                <p class="text-brand-primary text-sm">Измеѓу Сабота <span class="font-bold">27 Ное.</span> - Петок <span
+            <div class="w-full flex items-center md:items-start justify-center flex-col">
+                <p class="text-sm font-bold">Предвидена испорака: </p>
+                <p class="text-sm">Измеѓу Сабота <span class="font-bold">27 Ное.</span> - Петок <span
                         class="font-bold">03 Дек.</span></p>
             </div>
             <!-- End expected shipping date -->
 
             <!-- Product Add To Cart Section -->
-            <div class="px-6 py-4 bg-brand-secondary border border-black/40 rounded-lg">
+            <div class="px-6 py-4 bg-[#F4F4F4] border border-black/40 rounded-lg">
                 <div class="flex flex-col gap-3.5 items-center justify-between w-full">
-                    <div class="w-full flex items-center justify-between">
+                    <div class="w-full flex items-center justify-between ">
 
                         <div class="flex justify-start items-center gap-2.5 w-4/12">
-                            <div class="w-2.5 h-2.5 rounded-full bg-green-600"></div>
-                            <p class="text-brand-primary font-bold text-sm">На залиха</p>
+                            <div class="w-2.5 h-2.5 rounded-full bg-green-600 "></div>
+                            <p class="font-bold text-sm">На залиха</p>
                         </div>
 
                         <div class="flex items-center gap-2.5 w-8/12">
-                            <span class="text-brand-primary text-sm font-bold">37</span>
+                            <span class=" text-sm font-bold">37</span>
                             <div class="rounded-full w-full h-3 bg-white border border-black/60">
                                 <div class="rounded-full w-3/12 h-full bg-green-600 border-r border-r-black/60 "></div>
                             </div>
@@ -101,14 +117,18 @@
 
                     <div class="w-full flex items-center justify-between gap-4">
 
-                        <div class="flex items-center w-4/12 h-10 bg-white rounded-lg border border-black/60">
-                            <button class="w-3/12 h-full">-</button>
+                        <div class="flex items-center w-4/12 h-10 bg-white rounded-lg">
+                            <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
+                                -
+                            </button>
                             <input type="number" value="1" min="1"
-                                   class="w-6/12 h-full text-center font-bold text-brand-primary text-lg">
-                            <button class="w-3/12 h-full">+</button>
+                                   class="w-6/12 h-full text-center font-bold text-lg quantityInput border-t border-b border-black/60 focus:outline-0">
+                            <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
+                                +
+                            </button>
                         </div>
 
-                        <button class="h-10 w-8/12 bg-brand-primary rounded-lg text-white font-bold flex items-center justify-between p-1">
+                        <button class="h-10 w-8/12 bg-brand-primary rounded-lg text-white font-bold flex items-center justify-between p-1 hover:bg-brand-action transition-all duration-100 ease-in-out">
                             <span class="w-10/12">Во кошничка</span>
                             <div class="w-2/12 h-full flex items-center justify-center bg-white rounded-lg">
                                 <svg class="text-white" width="20" height="18" fill="currentColor">
@@ -120,7 +140,7 @@
                     </div>
 
                     <div class="w-full">
-                        <button class="h-12 w-full bg-brand-action rounded-lg text-white font-bold flex items-center justify-between p-1">
+                        <button class="h-12 w-full bg-brand-action rounded-lg text-white font-bold flex items-center justify-between p-1 hover:bg-brand-primary transition-all duration-100 ease-in-out">
                             <div class="w-2/12 h-full flex items-center justify-center bg-white rounded-lg">
                                 <svg class="text-white" width="24" height="21" fill="currentColor">
                                     <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#buyNow"></use>
@@ -132,6 +152,185 @@
                 </div>
             </div>
             <!-- End Product Add To Cart Section -->
+
+            <!-- Brand benefits section -->
+            <div class="w-full flex justify-between items-center gap-2 pt-1 pb-2">
+                <div class="p-2 gap-1 rounded-lg border border-black/40 flex justify-between items-center">
+                    <p class="w-11/12 text-xs font-bold ">Плаќање при испорака на курир</p>
+                    <svg width="24" height="21" fill="currentColor">
+                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#payOnDelivery"></use>
+                    </svg>
+                </div>
+                <div class="p-2 rounded-lg border border-black/40 flex justify-between items-center">
+                    <p class="w-11/12 text-xs font-bold ">Лесна замена на производи</p>
+                    <svg width="24" height="21" fill="currentColor">
+                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#exchangeProduct"></use>
+                    </svg>
+                </div>
+            </div>
+            <!-- End Brand Benefits section -->
+
+            <!-- Product Toggles section -->
+            <div class="w-full flex flex-col gap-2 pb-5">
+                <div class="toggle active"
+                     data-content-id="description">
+                    <p class="">Опис на производот</p>
+                    <p class="toggle-icon">-</p>
+                </div>
+                <div class="toggle"
+                     data-content-id="technicalSpecifications">
+                    <p class="">Технички спецификации</p>
+                    <p class="toggle-icon">+</p>
+                </div>
+                <div class="toggle"
+                     data-content-id="faq">
+                    <p class="">Често поставувани прашања</p>
+                    <p class="toggle-icon">+</p>
+                </div>
+            </div>
+            <!-- End Product Toggles section -->
+
+            <!-- Product Toggle content section-->
+            <div class="">
+                <div id="description" class="canBeToggled">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa distinctio facilis hic impedit ipsa
+                    nobis,
+                    officiis optio reprehenderit. Eveniet ipsa necessitatibus quia repudiandae. Ad cum delectus eius eum
+                    ipsa.
+                    Accusamus accusantium aspernatur dolore doloremque ducimus esse est expedita fugit labore, molestias
+                    nemo
+                    porro
+                    quasi repellendus reprehenderit velit veniam voluptates voluptatum?
+                </div>
+                <div id="technicalSpecifications" class="canBeToggled hidden">
+                    Lorem ipsum dolor sit amet.
+                </div>
+                <div id="faq" class="canBeToggled hidden">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo laudantium optio sapiente.
+                </div>
+            </div>
+            <!-- End Product Toggle content section -->
+
+            <!-- End Product Reviews Section -->
+        </div>
+
+
+    </div>
+    <!-- Product Reviews Section -->
+    {% if product.reviews.all %}
+
+        <!-- Product review summary -->
+        {% with review_data=product_misc_data.review_data %}
+            <div class="flex flex-col gap-3 items-center justify-center py-9">
+                <div class="flex items-center justify-center gap-2.5">
+                    <p class="text-2xl">{{ review_data.rating }}/5</p>
+                    <div class="flex items-center reviews-section">
+                        <!-- use css to fix -->
+                        <svg class="text-[#F9D247]" width="24" height="24" fill="currentColor">
+                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                        </svg>
+                        <svg class="text-[#F9D247]" width="24" height="24" fill="currentColor">
+                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                        </svg>
+                        <svg class="text-[#F9D247]" width="24" height="24" fill="currentColor">
+                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                        </svg>
+                        <svg class="text-[#F9D247]" width="24" height="24" fill="currentColor">
+                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                        </svg>
+                        <svg class="" width="24" height="24" fill="currentColor">
+                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-lg font-light">Базирано на {{ review_data.count }} Рецензии</p>
+            </div>
+        {% endwith %}
+        <!-- End Product review summary -->
+
+        <!-- Product review list -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pb-4">
+            {% for review in product.reviews.all %}
+                <div class="flex flex-col w-full">
+                    <div class="flex flex-col gap-2.5 w-full pb-3">
+                        <div class="flex items-center justify-between w-full">
+                            <div class="flex items-center reviews-section">
+                                <!-- use css to fix -->
+                                <svg class="text-[#F9D247]" width="16" height="16" fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                                </svg>
+                                <svg class="text-[#F9D247]" width="16" height="16" fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                                </svg>
+                                <svg class="text-[#F9D247]" width="16" height="16" fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                                </svg>
+                                <svg class="text-[#F9D247]" width="16" height="16" fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                                </svg>
+                                <svg class="" width="16" height="16" fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#star"></use>
+                                </svg>
+                            </div>
+                            <p class="text-xs text-brand-gray font-bold">{{ review.created_at|date:"m/d/Y" }}</p>
+                        </div>
+
+                        <div class="flex items-start justify-start gap-1.5">
+                            <div class="rounded-lg p-1 bg-brand-secondary/50 flex items-center justify-center">
+                                <svg class="text-brand-action" width="22" height="22" fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#user"></use>
+                                </svg>
+                            </div>
+                            <p class="text-sm font-bold text-brand-action">{{ review.name }}</p>
+                        </div>
+
+                    </div>
+
+                    <div>
+                        {% if review.image %}
+                            <div class="pb-4">
+                                <picture>
+                                    <source srcset="{{ review.image.url }}" type="image/webp">
+                                    <source srcset="{{ review.image_png.url }}" type="image/png">
+                                    <img src="{{ review.image_png.url }}" alt="Image of a review"
+                                         class="rounded-lg">
+                                </picture>
+                            </div>
+                        {% endif %}
+                        <p class="text-sm font-bold">{{ review.content }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <!-- End product review list -->
+    {% endif %}
+
+    {% with list=recommended_products heading="Производи Препорачани за тебе" %}
+        {% include 'shop/includes/product_list.html' %}
+    {% endwith %}
+
+    <div class="flex items-baseline justify-between pt-10">
+        <div class="flex flex-col items-center justify-center gap-2.5">
+            <img src="{% static 'common/assets/images/free_delivery.png' %}" alt="Free delivery benefit"
+                 class="w-12 h-auto">
+            <p class="text-center text-sm ">Брза Испорака и Бесплатна над 1000 денари</p>
+        </div>
+        <div class="flex flex-col items-center justify-center gap-2.5">
+            <img src="{% static 'common/assets/images/highly_rated.png' %}" alt="Quality products benefit"
+                 class="w-12 h-auto">
+            <p class="text-center text-sm ">Загарантирана сатисфакција и квалитет</p>
+        </div>
+        <div class="flex flex-col items-center justify-center gap-2.5">
+            <img src="{% static 'common/assets/images/cash_on_delivery.png' %}" alt="Returns benefit"
+                 class="w-12 h-auto">
+            <p class="text-center text-sm ">Едноставна 14 дневна замена на производи</p>
         </div>
     </div>
+
+    {% include 'shop/includes/benefits.html' %}
 {% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'shop/js/tinySlider.js' %}"></script>
+    <script src="{% static 'shop/js/shop.js' %}"></script>
+{% endblock scripts %}

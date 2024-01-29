@@ -1,0 +1,81 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="productsGrid">
+        {% for product in products %}
+            <div class="w-full flex flex-col gap-1.5 hover:scale-105 transition-transform duration-300 ease-in-out group">
+                <a href="{% url 'shop:product_page' slug=product.slug %}">
+                    <picture>
+                        <source srcset="{{ product.thumbnail_loop.url }}" type="image/webp">
+                        <source srcset="{{ product.thumbnail_loop_as_jpeg }}" type="image/jpeg">
+                        <img src="{{ product.thumbnail_loop_as_jpeg.url }}" alt="Image of a product"
+                             class="rounded-lg" width="250" height="250">
+                    </picture>
+                </a>
+
+                <a href="{% url 'shop:product_page' slug=product.slug %}"
+                   class="text-center font-bold hover:text-brand-action">{{ product.title }}
+                </a>
+
+                <div class="relative flex justify-between items-baseline">
+                    <span class="font-bold text-brand-action">{{ product.sale_price }} ден.</span>
+                    <span class="font-bold text-sm text-brand-gray -top-0.5 relative line-through">{{ product.regular_price }} ден.</span>
+                </div>
+
+                {% if product.has_free_shipping %}
+                    <div class="flex items-center justify-center bg-brand-accent py-1 px-1.5 rounded-lg">
+                        <p class="text-xs">Бесплатна испорака</p>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="flex items-center justify-center gap-1">
+
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="paginator-arrow">
+
+                <svg class="" width="24" height="24"
+                     fill="currentColor">
+                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#squareArrowLeft"></use>
+                </svg>
+            </a>
+
+            {% if page_obj.number > 3 %}
+                <a href="?page=1" class="paginator-number">1</a>
+                {% if page_obj.number > 4 %}
+                    <span>...</span>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a href="?page={{ num }}" class="paginator-number active">{{ num }}</a>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}" class="paginator-number">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                <span>...</span>
+                <a href="?page={{ page_obj.paginator.num_pages }}"
+                   class="paginator-number">{{ page_obj.paginator.num_pages }}</a>
+            {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
+                <a href="?page={{ page_obj.paginator.num_pages }}"
+                   class="paginator-number">{{ page_obj.paginator.num_pages }}</a>
+            {% endif %}
+
+            <a href="?page={{ page_obj.next_page_number }}" class="paginator-arrow">
+                <svg class="" width="24" height="24"
+                     fill="currentColor">
+                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#squareArrowRight"></use>
+                </svg>
+            </a>
+        {% endif %}
+
+    </div>
+{% endblock content %}

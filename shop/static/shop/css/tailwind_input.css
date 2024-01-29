@@ -33,6 +33,57 @@
 
 .productsGrid {
     @apply grid grid-cols-2 gap-5;
-    @apply md:grid-cols-3 lg:grid-cols-4;
+    @apply md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6;
 }
+
+.quantityInput {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+    -moz-appearance: textfield !important;
+}
+
+.quantityInput::-webkit-outer-spin-button,
+.quantityInput::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+
+.paginator-number {
+    @apply text-brand-primary;
+    @apply py-1.5;
+    @apply px-4;
+    @apply rounded;
+    @apply font-bold;
+    @apply hover:bg-brand-primary;
+    @apply hover:text-white;
+}
+
+.paginator-number.active {
+    @apply bg-brand-primary;
+    @apply text-white;
+}
+
+.paginator-arrow {
+    @apply text-brand-primary;
+    @apply p-1.5;
+    @apply rounded;
+    @apply hover:bg-brand-primary;
+    @apply hover:text-white;
+}
+
+.toggle {
+    @apply w-full rounded-lg cursor-pointer;
+    @apply flex justify-between items-center;
+    @apply px-3 py-1.5;
+    @apply bg-[#E6E6E6];
+    @apply hover:bg-brand-primary;
+    @apply hover:text-white;
+}
+
+.toggle.active {
+    @apply text-white;
+    @apply bg-brand-primary;
+}
+
 
