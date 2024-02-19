@@ -1,4 +1,5 @@
 from ckeditor_uploader.fields import RichTextUploadingField
+from colorfield.fields import ColorField
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -124,6 +125,9 @@ class Product(BaseProduct):
                 "count": len(reviews),
             }
 
+    def isVariable(self):
+        return self.type == self.ProductType.VARIABLE
+
     def get_product_misc_data(self):
         review_data = self.review_data()
         money_saved = self.regular_price - self.selling_price
@@ -175,7 +179,7 @@ class ProductAttribute(TimeStampedModel):
         COLOR = "color", _("Color")
         SIZE = "size", _("Size")
         OFFER = "offer", _("Offer")
-        PROMOTED = "cart_offer", _("Cart Offer")
+        # PROMOTED = "cart_offer", _("Cart Offer")
 
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name="attributes"
@@ -187,6 +191,7 @@ class ProductAttribute(TimeStampedModel):
     )
     name = models.CharField(max_length=140)
     content = models.CharField(max_length=140)
+    color = ColorField(null=True, blank=True)
     price = models.PositiveIntegerField(null=True, blank=True)
 
 

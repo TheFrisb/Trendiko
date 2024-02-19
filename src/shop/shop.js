@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const productGalleryContainer = document.getElementById('productGalleryContainer');
   const toggles = document.querySelectorAll('.toggle');
   const toggle_contents = document.querySelectorAll('.canBeToggled');
+  const addToCartButton = document.getElementById('addToCartButton');
 
   let slider = tns({
     container: '#productGallery',
@@ -39,6 +40,5 @@ document.addEventListener('DOMContentLoaded', function () {
       toggle.classList.add('active');
     });
   });
-
 
 })

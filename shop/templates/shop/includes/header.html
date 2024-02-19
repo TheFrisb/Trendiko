@@ -56,6 +56,82 @@
             </a>
         {% endfor %}
     </div>
-
-    </div>
 </header>
+<!-- Overlay -->
+<div class="container-fluid w-full h-full overflow-hidden absolute top-0 right-0 bg-black/70 z-[100]" id="overlay"
+     style="display:none!important;"></div>
+<!-- End Overlay -->
+
+<!-- Side Cart -->
+{% with cart=request.cart %}
+    <div class="active"
+         id="sideCart">
+        <div class="py-3 border-b-2">
+            <div class="px-5 w-full flex justify-between items-center">
+                <p class="py-2 font-semibold">Кошничка</p>
+                <div class="py-2">
+                    <svg class="text-black cursor-pointer hover:text-brand-action" width="24" height="24"
+                         fill="currentColor">
+                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#close"></use>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="h-full flex flex-col flex-auto items-stretch justify-between">
+            <div class="relative flex-auto overflow-hidden w-full h-full">
+                <div class="absolute top-0 right-0 left-0 bottom-0 overflow-auto overflow-x-hidden cartBody">
+                    <!-- Cart Item -->
+                    {% if not cart.is_empty %}
+                        <div class="flex gap-2 items-center py-4 border-b-2 p-5">
+                            <img src="https://outleton.com/cdn/shop/products/b58d1e3079be145f701202556d8dfd1f_120x.jpg?v=1621270157"
+                                 alt="">
+                            <div class="">
+                                <p class="font-semibold">Lorem ipsum dolor sit.</p>
+                                <p class="font-semibold text-brand-action mt-2">599 ден</p>
+                                <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
+                                    <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
+                                        -
+                                    </button>
+                                    <input type="number" value="1" min="1"
+                                           class="w-6/12 h-full text-center quantityInput border-t border-b border-black/60 focus:outline-0">
+                                    <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
+                                        +
+                                    </button>
+                                </div>
+                                <div>
+                                    <svg class="text-black cursor-pointer hover:text-black/60" width="22" height="22"
+                                         fill="currentColor">
+                                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
+                                    </svg>
+
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="text-sm text-black/60 p-5 emptyCartText">Вашата кошничка е празна.</p>
+                    {% endif %}
+                    <!-- End Cart Item -->
+                </div>
+            </div>
+            <div class="p-5 border-t-2">
+                {% if not cart.is_empty %}
+                    <div class="flex justify-between items-center text-lg mb-2">
+                        <p class="font-semibold">Вкупно</p>
+                        <p id="cartTotal">{{ cart.get_total }} ден</p>
+                    </div>
+                    <p class="text-sm text-black/60 mb-2">Данок вклучен. Испораката е пресметанa при наплата</p>
+                    <a href=""
+                       class="block text-center cursor-pointer bg-brand-action font-semibold text-white rounded-lg p-2 hover:bg-brand-primary/80">Кон
+                        Нарачка</a>
+                {% else %}
+                    <button
+                            class="w-full text-center cursor-pointer bg-brand-primary font-semibold text-white rounded-lg p-2 hover:bg-brand-primary/80 cartGoBackButton">
+                        Назад
+                    </button>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+{% endwith %}
+<!-- End Side Cart -->

@@ -86,4 +86,18 @@
     @apply bg-brand-primary;
 }
 
+#sideCart {
+    @apply active;
+    @apply absolute top-0 right-0 z-[150];
+    @apply bg-white shadow-2xl shadow-black;
+    @apply w-11/12 md:w-6/12 lg:w-4/12 xl:w-3/12 2xl:w-2/12 h-full;
+    @apply flex flex-col ml-auto;
+    @apply scale-x-0 transition-transform origin-right;
+}
+
+#sideCart.active {
+    @apply scale-x-100;
+    @apply transition-transform;
+}
+
 

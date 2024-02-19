@@ -1,23 +1,45 @@
 from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.core.exceptions import ValidationError
+from django.forms import BaseInlineFormSet
 
 from .models import Product, ProductAttribute, Category, Review, ProductImage
 
 
 # Register your models here.
 class ProductAdminForm(forms.ModelForm):
+    categories = forms.ModelMultipleChoiceField(
+        queryset=Category.objects.all(),
+        widget=FilteredSelectMultiple(verbose_name="Categories", is_stacked=False),
+    )
+
     class Meta:
         model = Product
         fields = "__all__"
-        widgets = {
-            "category": FilteredSelectMultiple("Category", is_stacked=False),
-        }
+
+
+class ProductAttributeInlineFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        attribute_types = set()
+        for form in self.forms:
+            if not form.cleaned_data:
+                continue  # Skip empty forms
+            attribute_type = form.cleaned_data.get("type")
+            attribute_types.add(attribute_type)
+            if len(attribute_types) > 1:
+                raise ValidationError("All attributes must be of the same type.")
 
 
 class ProductAttributeInline(admin.TabularInline):
     model = ProductAttribute
     extra = 1
+    fields = ["type", "name", "content", "color", "price"]
+    formset = ProductAttributeInlineFormSet
+
+    class Media:
+        js = ("admin/js/product_attribute.js",)
 
 
 class ProductImageInline(admin.TabularInline):

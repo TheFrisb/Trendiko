@@ -23,6 +23,7 @@
     <title>{{ title }}</title>
 </head>
 <body class="font-century-gothic bg-white">
+{% csrf_token %}
 {% include 'shop/includes/header.html' %}
 <div class="shop-container--flex text-brand-primary">
     {% block content %}
@@ -31,7 +32,7 @@
 
 {% include 'shop/includes/footer.html' %}
 
-<script src="{% static 'shop/js/main.js' %}"></script>
+<script src="{% static 'bundles/shop.bundle.js' %}"></script>
 {% block scripts %}
 {% endblock scripts %}
 

@@ -54,6 +54,15 @@ class Cart(TimeStampedModel):
 
         return sum(item.quantity for item in self.cart_items.all())
 
+    def is_empty(self):
+        """
+        Check if the cart is empty.
+
+        Returns:
+            bool: True if the cart is empty, False otherwise.
+        """
+        return self.cart_items.count() == 0
+
     def __str__(self):
         return f"Cart id: {self.id}, Total: {self.get_total}, Total Quantity: {self.get_total_quantity}"
 
