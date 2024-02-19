@@ -1,35 +1,62 @@
-1. Shop manager / 3hrs
-- Orders export
+Shop UI: Total should be 7 hours.
+1. Cart design - 1
+2. Add to cart logic - 1
+3. Checkout logic - 2
+4. Attributes rendering } ☑️
+5. Attributes logic } 1 ☑️
+6. Thank you page - 1
+7. Product page slider - 1
 
-2. Stock manager / 3hrs
-- Uvoz export ?
-- Popraj QR Code border
-- Rezerviri zaliha za processed i confirmed orders, odzimi zaliha ako ordero ode deleted
-- Dodadi scan item logika da minusire od zalihata.
-- Update zaliha dashboard design to reflect information:
-- Rezervirana zaliha,
-- Zaliha od uvozi
+Facebook Pixel & Catalogue: Total should be 3 hours
+8. Facebook pixel view content event }
+9. Facebook pixel add to cart event }
+10. Facebook pixel checkout event }
+11. Facebook pixel purchase event. }
+12. Facebook pixel view page event }
 
-3. Analytics dashboard / 4hrs
-- Design
-- Cron job to populate data
-- Adspend query
+Shop-manager finishing touch: Total should be 3 hours
+13. Verify shop manager works 1
+14. Finish shop manager export 2
 
-4. Facebook Ads / 10hrs
-- Interface za create ads
-- Store facebook campaigns
+Stock management: Total should be: 13 hours
+15. Implement logic for stock reservation and clearing reservation. 2
+16. Fix stock manager stock rendering/UI 1
+17. Implement needed logic for qr scanning 3
+18. Make a stock manager export 2
+19. Fix QR logic 1
+20. Streamline Uvoz import 2
+21. Make a way to print qr codes 2
 
-5. Shop page / 6hrs
-- Design
+Analytics: Total should be 5 hours
+22. Make an analytics dashboard 3 hours
+23. Update rows 2 hours
 
-Global: / 2hrs
-- Facebook pixel
-- Facebook catalogue
+Facebook campaigns creation: Total should be 8 hours
+24. Make Ad creation page and implement logic:
+	- Implement UI - 3
+	- Implement Logic - 3
+	- Verify it works - 1
+	- Implement backend db storage - 1
 
-Misc: / 1hr
-Stock manager:
-- On 0 stock, archive all products related
-Shop:
-- When product gets archived/out of stock, turn off facebook campaign.
+Miscellaneous: Total should be 3 hours.
+25. On Product Out Of Stock turn off Campaign } 1
+26. If Product Stock is 0, archive product. } 1
+27. Implement SideCart offers 1
+28. Implement CheckoutFees 1
 
-Total: 29hrs
+
+
+I think 42 hours should fix this and ready to use.
+
+Saturday 17: 6 hours
+Sunday 18: 9 hours
+Monday 19: 1 hour
+Tuesday 20: 3 hours
+Wednesday 21: 3 hours
+Thursday 22: 3 hours
+Friday 22: 3 hours
+Saturday 23: 6 hours
+Sunday 24: 8 hours
+
+Let's time track this!
+

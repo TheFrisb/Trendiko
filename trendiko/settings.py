@@ -67,7 +67,7 @@ MIDDLEWARE = [
 if DEBUG:
     INSTALLED_APPS += ["debug_toolbar"]
     MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
-    INTERNAL_IPS = config("ALLOWED_HOSTS", cast=Csv())
+    INTERNAL_IPS = config("ALLOWED_DJANGO_HOSTS", cast=Csv())
 
 ROOT_URLCONF = "trendiko.urls"
 
