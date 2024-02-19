@@ -16,6 +16,7 @@ pilkit==3.0
 pillow==10.2.0
 platformdirs==4.1.0
 pypng==0.20220715.0
+python-decouple==3.8
 pytz==2023.3.post1
 qrcode==7.4.2
 six==1.16.0
