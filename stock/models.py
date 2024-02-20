@@ -28,7 +28,7 @@ class StockItem(BaseProduct):
             box_size=10,
             border=4,
         )
-        qr.add_data("self.id")
+        qr.add_data(self.sku)
         qr.make(fit=True)
 
         img = qr.make_image(fill_color="black", back_color="white")
