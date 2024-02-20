@@ -41,6 +41,10 @@ class StockItem(BaseProduct):
 
         return file
 
+    class Meta:
+        verbose_name = "Предмет"
+        verbose_name_plural = "Предмети"
+
 
 class Import(TimeStampedModel):
     title = models.CharField(max_length=255, verbose_name="Име на увоз")
@@ -48,6 +52,10 @@ class Import(TimeStampedModel):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = "Увоз"
+        verbose_name_plural = "Увози"
 
 
 class ImportItem(TimeStampedModel):

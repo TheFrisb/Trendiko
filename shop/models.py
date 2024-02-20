@@ -152,6 +152,10 @@ class Product(BaseProduct):
 
         super().save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = "Производ"
+        verbose_name_plural = "Производи"
+
 
 class ProductImage(TimeStampedModel):
     product = models.ForeignKey(
@@ -194,6 +198,10 @@ class ProductAttribute(TimeStampedModel):
     color = ColorField(null=True, blank=True)
     price = models.PositiveIntegerField(null=True, blank=True)
 
+    class Meta:
+        verbose_name = "Атрибут"
+        verbose_name_plural = "Атрибути"
+
 
 class Review(TimeStampedModel):
     product = models.ForeignKey(
@@ -216,3 +224,10 @@ class Review(TimeStampedModel):
         format="PNG",
         options={"quality": IMAGE_QUALITY},
     )
+
+    def __str__(self):
+        return f"{self.product.title} - {self.rating}"
+
+    class Meta:
+        verbose_name = "Рецензија"
+        verbose_name_plural = "Рецензии"
