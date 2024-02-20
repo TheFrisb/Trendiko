@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound
 
-from stock.models import StockItem
+from stock.models import StockItem, ImportItem
 from stock.serializers import AvailableStockManagerActions
 
 
@@ -16,10 +16,22 @@ class StockItemService:
         except StockItem.DoesNotExist:
             raise NotFound({"sku": "StockItem not found " + str(sku)})
 
+        import_item = (
+            ImportItem.objects.filter(stock_item=stock_item, quantity__gt=0)
+            .order_by("created_at")
+            .first()
+        )
+
         if action == AvailableStockManagerActions.ADD_QUANTITY.value:
+            if import_item:
+                import_item.quantity += 1
+                import_item.save()
             return self.add_stock(stock_item)
 
         elif action == AvailableStockManagerActions.REMOVE_QUANTITY.value:
+            if import_item:
+                import_item.quantity -= 1
+                import_item.save()
             return self.remove_stock(stock_item)
 
         else:
