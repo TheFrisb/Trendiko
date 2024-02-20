@@ -11,9 +11,9 @@
     "webpack-cli": "^5.1.4"
   },
   "scripts": {
-    "watch-shop-manager": "npx tailwindcss -i ./shop_manager/static/shop_manager/css/tailwind_input.css -o ./shop_manager/static/shop_manager/css/shop_manager.css --watch",
+    "watch-shop-manager": "npx tailwindcss -i ./static/shop_manager/css/tailwind_input.css -o ./static/shop_manager/css/shop_manager.css --watch",
     "watch-shop": "npx tailwindcss -i static/shop/css/tailwind_input.css -o ./shop/static/shop/css/shop.css --watch",
-    "build-shop-manager": "npx tailwindcss -i ./shop_manager/static/shop_manager/css/tailwind_input.css -o ./shop_manager/static/shop_manager/css/shop_manager.css --minify",
+    "build-shop-manager": "npx tailwindcss -i static/shop_manager/css/tailwind_input.css -o static/shop_manager/css/shop_manager.css --minify",
     "build-shop": "npx tailwindcss -i static/shop/css/tailwind_input.css -o ./shop/static/shop/css/shop.css --minify",
     "watch": "webpack --watch --mode development"
   }

@@ -2,13 +2,14 @@
 module.exports = {
   content: [
     // path to all app templates
-    // '**/templates/**/*.html',
-    // '**/templates/**/**/*.html',
-    // '**/static/**/*.js',
-    'shop/templates/**/*.html',
-    'shop/templates/**/**/*.html',
-    'shop/templates/**/**/**/*.html',
-    'shop/static/**/*.js',
+    '**/templates/**/*.html',
+    '**/templates/**/**/*.html',
+    '**/static/**/*.js',
+    // Posle za build
+    // 'shop/templates/**/*.html',
+    // 'shop/templates/**/**/*.html',
+    // 'shop/templates/**/**/**/*.html',
+    // 'shop/static/**/*.js',
 
   ],
   theme: {
