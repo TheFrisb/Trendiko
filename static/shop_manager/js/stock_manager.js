@@ -111,7 +111,7 @@ window.addEventListener('load', function () {
     function onScanSuccess(decodedText, decodedResult) {
       console.log(`Code matched = ${decodedText}`, decodedResult);
       console.log(`Is adding stock = ${stockManagerState.isAddingStock}`);
-      // stockManagerState.currentSku = decodedText;
+      stockManagerState.currentSku = decodedText;
       html5QrcodeScanner.pause(shouldPauseVideo);
       toggleElement(scannerOverlay);
 
