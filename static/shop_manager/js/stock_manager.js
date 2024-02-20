@@ -122,12 +122,15 @@ window.addEventListener('load', function () {
         if (error.status && error.data) {
           if (error.status === 400) {
             notyf.error(error.data.detail);
+
             return;
           }
           const messages = Object.keys(error.data).map(key => error.data[key]);
           messages.forEach(message => {
             notyf.error(message);
           });
+
+
         } else {
           notyf.error('An unexpected error occurred');
         }
@@ -213,8 +216,6 @@ window.addEventListener('load', function () {
         stockManagerState.currentSku = null;
         toggleElement(scannerOverlay);
         toggleElement(scannedProductModal);
-        html5QrcodeScanner.resume();
-
       })
         .catch(error => {
           console.error('Error:', error);
@@ -231,7 +232,9 @@ window.addEventListener('load', function () {
           } else {
             notyf.error('An unexpected error occurred');
           }
-        });
+        }).finally(() => {
+        html5QrcodeScanner.resume();
+      });
     });
 
     scannedProductModalCancelButton.addEventListener('click', function () {
@@ -240,8 +243,6 @@ window.addEventListener('load', function () {
       toggleElement(scannerOverlay);
       toggleElement(scannedProductModal);
       html5QrcodeScanner.resume();
-      
-
     });
 
   }

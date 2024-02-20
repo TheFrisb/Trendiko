@@ -9,10 +9,12 @@ from common.models import BaseProduct, TimeStampedModel
 
 # Create your models here.
 class StockItem(BaseProduct):
-    qr_code = models.ImageField(upload_to="stock_items/qr_codes/%Y/%m/%d/", blank=True)
-    sku = models.CharField(max_length=255)
-    label = models.CharField(max_length=255)
-    stock = models.PositiveIntegerField(default=0)
+    qr_code = models.ImageField(
+        upload_to="stock_items/qr_codes/%Y/%m/%d/", blank=True, verbose_name="QR Code"
+    )
+    sku = models.CharField(max_length=255, unique=True, verbose_name="SKU")
+    label = models.CharField(max_length=255, verbose_name="Label")
+    stock = models.PositiveIntegerField(default=0, verbose_name="Залиха")
 
     def save(self, *args, **kwargs):
         if not self.qr_code:
@@ -41,8 +43,8 @@ class StockItem(BaseProduct):
 
 
 class Import(TimeStampedModel):
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
+    title = models.CharField(max_length=255, verbose_name="Име на увоз")
+    description = models.TextField(blank=True, null=True, verbose_name="Опис")
 
     def __str__(self):
         return self.title

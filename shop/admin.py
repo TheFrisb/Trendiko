@@ -50,7 +50,7 @@ class ProductImageInline(admin.TabularInline):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     form = ProductAdminForm
-
+    autocomplete_fields = ["stock_item"]
     list_display = ["title", "status", "type", "regular_price", "sale_price"]
     list_filter = ["status", "type"]
     search_fields = ["title"]

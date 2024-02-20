@@ -25,7 +25,7 @@ class TimeStampedModel(models.Model):
 class BaseProduct(TimeStampedModel):
     """Time Stamped Product Model"""
 
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, verbose_name="Наслов")
     thumbnail = ProcessedImageField(
         upload_to="products/%Y/%m/%d/",
         processors=[ResizeToFill(*IMAGE_DIMENSIONS)],

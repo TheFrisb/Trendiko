@@ -7,6 +7,7 @@ from .models import StockItem, ImportItem, Import
 class ImportItemInline(admin.StackedInline):
     model = ImportItem
     extra = 1
+    autocomplete_fields = ["stock_item"]
 
 
 @admin.register(Import)
@@ -15,4 +16,6 @@ class ImportAdmin(admin.ModelAdmin):
     inlines = [ImportItemInline]
 
 
-admin.site.register(StockItem)
+@admin.register(StockItem)
+class StockItemAdmin(admin.ModelAdmin):
+    search_fields = ["label", "sku"]

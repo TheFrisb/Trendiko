@@ -28,13 +28,13 @@ class StockItemService:
             )
 
     def add_stock(self, stock_item):
-        # stock_item.quantity += 1
+        stock_item.quantity += 1
         stock_item.save()
 
         return stock_item
 
     def remove_stock(self, stock_item):
-        # stock_item.quantity -= 1
+        stock_item.quantity -= 1
         stock_item.save()
 
         return stock_item
