@@ -42,8 +42,8 @@ class StockItem(BaseProduct):
         return file
 
     class Meta:
-        verbose_name = "Предмет"
-        verbose_name_plural = "Предмети"
+        verbose_name = "Магацински Продукт"
+        verbose_name_plural = "Магацински Продукт"
 
 
 class Import(TimeStampedModel):
@@ -61,8 +61,9 @@ class Import(TimeStampedModel):
 class ImportItem(TimeStampedModel):
     parentImport = models.ForeignKey(Import, on_delete=models.CASCADE)
     stock_item = models.ForeignKey(StockItem, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=0)
-    price = models.PositiveIntegerField(default=0)
+    quantity = models.PositiveIntegerField(default=0, verbose_name="Количина")
+    price_vat = models.PositiveIntegerField(default=0, verbose_name="Цена со ДДВ")
+    price_no_vat = models.PositiveIntegerField(default=0, verbose_name="Цена без ДДВ")
 
     def __str__(self):
         return f"{self.stock_item.title} - {self.quantity}"
@@ -74,3 +75,7 @@ class ImportItem(TimeStampedModel):
 
     def vat_price(self):
         return self.price * 0.18
+
+    class Meta:
+        verbose_name = "Увозен Продукт"
+        verbose_name_plural = "Увозени Продукти"

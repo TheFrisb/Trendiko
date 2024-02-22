@@ -38,8 +38,8 @@ class ProductAttributeInline(admin.TabularInline):
     fields = ["type", "name", "content", "color", "price"]
     formset = ProductAttributeInlineFormSet
 
-    class Media:
-        js = ("admin/js/product_attribute.js",)
+    # class Media:
+    #     js = ("admin/js/product_attribute.js",)
 
 
 class ProductImageInline(admin.TabularInline):
@@ -55,6 +55,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ["status", "type"]
     search_fields = ["title"]
     inlines = [ProductImageInline, ProductAttributeInline]
+    readonly_fields = ["slug"]
 
     class Meta:
         model = Product

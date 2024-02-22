@@ -95,20 +95,36 @@ class Product(BaseProduct):
         VARIABLE = "variable", _("Variable")
 
     status = models.CharField(
-        max_length=20, choices=ProductStatus.choices, default=ProductStatus.PUBLISHED
+        max_length=20,
+        choices=ProductStatus.choices,
+        default=ProductStatus.PUBLISHED,
+        verbose_name="Статус",
     )
     type = models.CharField(
-        max_length=20, choices=ProductType.choices, default=ProductType.SIMPLE
+        max_length=20,
+        choices=ProductType.choices,
+        default=ProductType.SIMPLE,
+        verbose_name="Тип",
     )
-    slug = models.SlugField(blank=True, unique=True, db_index=True)
-    categories = models.ManyToManyField(Category, related_name="products")
-    regular_price = models.PositiveIntegerField()
-    sale_price = models.PositiveIntegerField(null=True, blank=True)
+    slug = models.SlugField(blank=True, unique=True, db_index=True, verbose_name="Slug")
+    categories = models.ManyToManyField(
+        Category, related_name="products", verbose_name="Категории"
+    )
+    regular_price = models.PositiveIntegerField(verbose_name="Regular price")
+    sale_price = models.PositiveIntegerField(
+        null=True, blank=True, verbose_name="Sale price"
+    )
     stock_item = models.ForeignKey(
-        "stock.StockItem", on_delete=models.CASCADE, null=True
+        "stock.StockItem",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name="Магацински предмет",
     )
-    description = RichTextUploadingField()
-    has_free_shipping = models.BooleanField(default=False)
+    description = RichTextUploadingField(verbose_name="Опис")
+    has_free_shipping = models.BooleanField(
+        default=False, verbose_name="Бесплатна испорака"
+    )
 
     @property
     def selling_price(self):
@@ -159,13 +175,17 @@ class Product(BaseProduct):
 
 class ProductImage(TimeStampedModel):
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="images"
+        Product,
+        on_delete=models.CASCADE,
+        related_name="images",
+        verbose_name="Производ",
     )
     image = ProcessedImageField(
         upload_to="products/gallery/%Y/%m/%d/",
         processors=[ResizeToFill(*IMAGE_DIMENSIONS)],
         format="WEBP",
         options={"quality": IMAGE_QUALITY},
+        verbose_name="Gallery Image",
     )
     image_png = ImageSpecField(
         source="image",
@@ -186,17 +206,21 @@ class ProductAttribute(TimeStampedModel):
         # PROMOTED = "cart_offer", _("Cart Offer")
 
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="attributes"
+        Product,
+        on_delete=models.CASCADE,
+        related_name="attributes",
+        verbose_name="Продукт",
     )
     type = models.CharField(
         max_length=20,
         choices=ProductAttributeType.choices,
         default=ProductAttributeType.COLOR,
+        verbose_name="Тип",
     )
-    name = models.CharField(max_length=140)
-    content = models.CharField(max_length=140)
-    color = ColorField(null=True, blank=True)
-    price = models.PositiveIntegerField(null=True, blank=True)
+    name = models.CharField(max_length=140, verbose_name="Име")
+    content = models.CharField(max_length=140, verbose_name="Содржина")
+    color = ColorField(null=True, blank=True, verbose_name="Боја")
+    price = models.PositiveIntegerField(null=True, blank=True, verbose_name="Цена")
 
     class Meta:
         verbose_name = "Атрибут"
