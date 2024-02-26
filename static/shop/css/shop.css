@@ -540,40 +540,6 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
-.container {
-  width: 100%;
-}
-
-@media (min-width: 640px) {
-  .container {
-    max-width: 640px;
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 768px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .container {
-    max-width: 1024px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .container {
-    max-width: 1280px;
-  }
-}
-
-@media (min-width: 1536px) {
-  .container {
-    max-width: 1536px;
-  }
-}
-
 .static {
   position: static;
 }
@@ -691,16 +657,8 @@ video {
   margin-top: 0.5rem;
 }
 
-.mt-auto {
-  margin-top: auto;
-}
-
 .block {
   display: block;
-}
-
-.inline {
-  display: inline;
 }
 
 .flex {
@@ -743,6 +701,10 @@ video {
   height: 1.75rem;
 }
 
+.h-9 {
+  height: 2.25rem;
+}
+
 .h-\[1px\] {
   height: 1px;
 }
@@ -753,18 +715,6 @@ video {
 
 .h-full {
   height: 100%;
-}
-
-.h-6 {
-  height: 1.5rem;
-}
-
-.h-8 {
-  height: 2rem;
-}
-
-.h-9 {
-  height: 2.25rem;
 }
 
 .min-h-\[50px\] {
@@ -827,6 +777,10 @@ video {
   width: 66.666667%;
 }
 
+.w-9\/12 {
+  width: 75%;
+}
+
 .w-\[150px\] {
   width: 150px;
 }
@@ -838,10 +792,6 @@ video {
 
 .w-full {
   width: 100%;
-}
-
-.w-9\/12 {
-  width: 75%;
 }
 
 .min-w-\[50px\] {
@@ -856,20 +806,16 @@ video {
   flex: 1 1 auto;
 }
 
+.flex-grow {
+  flex-grow: 1;
+}
+
 .grow {
   flex-grow: 1;
 }
 
-.transform {
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
 .cursor-pointer {
   cursor: pointer;
-}
-
-.resize {
-  resize: both;
 }
 
 .grid-cols-1 {
@@ -1000,28 +946,8 @@ video {
   border-top-right-radius: 0.5rem;
 }
 
-.rounded-bl-\[50\%\] {
-  border-bottom-left-radius: 50%;
-}
-
-.rounded-br-\[50\%\] {
-  border-bottom-right-radius: 50%;
-}
-
-.rounded-tl-\[50\%\] {
-  border-top-left-radius: 50%;
-}
-
-.rounded-tr-\[50\%\] {
-  border-top-right-radius: 50%;
-}
-
 .border {
   border-width: 1px;
-}
-
-.border-2 {
-  border-width: 2px;
 }
 
 .border-b {
@@ -1137,10 +1063,6 @@ video {
   padding: 1.25rem;
 }
 
-.p-7 {
-  padding: 1.75rem;
-}
-
 .px-1 {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
@@ -1164,11 +1086,6 @@ video {
 .px-3 {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
-}
-
-.px-5 {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
 }
 
 .px-6 {
@@ -1242,6 +1159,14 @@ video {
 
 .pb-5 {
   padding-bottom: 1.25rem;
+}
+
+.pl-5 {
+  padding-left: 1.25rem;
+}
+
+.pr-3 {
+  padding-right: 0.75rem;
 }
 
 .pt-1 {
@@ -1363,14 +1288,6 @@ video {
 
 .line-through {
   text-decoration-line: line-through;
-}
-
-.transition {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
 }
 
 .transition-all {
@@ -1667,16 +1584,16 @@ video {
   }
 }
 
-.quantityInput {
+.quantityInput, .quantityInput::-webkit-outer-spin-button, .quantityInput::-webkit-inner-spin-button {
   -webkit-appearance: none !important;
   margin: 0 !important;
   -moz-appearance: textfield !important;
 }
 
-.quantityInput::-webkit-outer-spin-button,
-.quantityInput::-webkit-inner-spin-button {
+.cartItem__quantityInput, .cartItem__quantityInput::-webkit-outer-spin-button, .cartItem__quantityInput::-webkit-inner-spin-button {
   -webkit-appearance: none !important;
   margin: 0 !important;
+  -moz-appearance: textfield !important;
 }
 
 .paginator-number {
@@ -1747,29 +1664,8 @@ video {
   background-color: rgb(22 60 69 / var(--tw-bg-opacity));
 }
 
-.paginator-number#sideCart {
-  --tw-bg-opacity: 1;
-  background-color: rgb(22 60 69 / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.toggle#sideCart {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
-  --tw-bg-opacity: 1;
-  background-color: rgb(22 60 69 / var(--tw-bg-opacity));
-}
-
-#sideCart#sideCart {
-  --tw-scale-x: 1;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-  transition-property: transform;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
-
 #sideCart {
+  /*@apply active;*/
   position: absolute;
   top: 0px;
   right: 0px;
@@ -1854,6 +1750,10 @@ video {
   background-color: rgb(22 60 69 / 0.8);
 }
 
+.hover\:text-black\/60:hover {
+  color: rgb(0 0 0 / 0.6);
+}
+
 .hover\:text-brand-action:hover {
   --tw-text-opacity: 1;
   color: rgb(255 76 21 / var(--tw-text-opacity));
@@ -1867,14 +1767,6 @@ video {
 .hover\:text-white:hover {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
-}
-
-.hover\:text-black\/60:hover {
-  color: rgb(0 0 0 / 0.6);
-}
-
-.hover\:text-black\/80:hover {
-  color: rgb(0 0 0 / 0.8);
 }
 
 .hover\:underline:hover {

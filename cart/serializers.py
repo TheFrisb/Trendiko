@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from common.serializers import ProductSerializer
 from shop.models import Product
 from .models import CartItem, ShippingDetails
 
@@ -33,15 +32,22 @@ class CartItemSerializer(serializers.ModelSerializer):
     Used for returning the cart items to the frontend
     """
 
-    product = ProductSerializer(read_only=True)
-
     class Meta:
         """
         Returned fields for CartItemSerializer
         """
 
         model = CartItem
-        fields = ["id", "type", "product", "quantity", "attribute", "total_price"]
+        fields = [
+            "id",
+            "type",
+            "title",
+            "thumbnails",
+            "quantity",
+            "attribute",
+            "price",
+            "total_price",
+        ]
 
 
 class ShippingDetailsSerializer(serializers.ModelSerializer):

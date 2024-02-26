@@ -20,7 +20,7 @@
                         <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#person"></use>
                     </svg>
                 </div>
-                <div class="relative">
+                <div class="relative" id="cartIcon">
                     <div class="p-2">
                         <svg class="text-white cursor-pointer hover:text-brand-action" width="22" height="22"
                              fill="currentColor">
@@ -28,7 +28,7 @@
                         </svg>
                     </div>
                     <div class="absolute top-[-6px] right-[-6px] w-3.5 h-3.5 bg-brand-accent rounded flex items-center justify-center">
-                        <span class="text-xs text-black relative top-[1px]">2</span>
+                        <span class="text-xs text-black relative top-[1px]" id="cartIcon__currentQuantity">2</span>
                     </div>
                 </div>
             </div>
@@ -67,9 +67,9 @@
     <div class=""
          id="sideCart">
         <div class="py-3 border-b-2">
-            <div class="px-5 w-full flex justify-between items-center">
+            <div class="pl-5 pr-3 w-full flex justify-between items-center">
                 <p class="py-2 font-semibold">Кошничка</p>
-                <div class="py-2">
+                <div class="p-2" id="closeCartIcon">
                     <svg class="text-black cursor-pointer hover:text-brand-action" width="24" height="24"
                          fill="currentColor">
                         <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#close"></use>
@@ -79,34 +79,43 @@
         </div>
         <div class="h-full flex flex-col flex-auto items-stretch justify-between">
             <div class="relative flex-auto overflow-hidden w-full h-full">
-                <div class="absolute top-0 right-0 left-0 bottom-0 overflow-auto overflow-x-hidden cartBody">
+                <div class="absolute top-0 right-0 left-0 bottom-0 overflow-auto overflow-x-hidden" id="cartBody">
                     <!-- Cart Item -->
                     {% if not cart.is_empty %}
-                        <div class="flex gap-2 items-center py-4 border-b-2 p-5">
-                            <img src="https://outleton.com/cdn/shop/products/b58d1e3079be145f701202556d8dfd1f_120x.jpg?v=1621270157"
-                                 alt="">
-                            <div class="">
-                                <p class="font-semibold">Lorem ipsum dolor sit.</p>
-                                <p class="font-semibold text-brand-action mt-2">599 ден</p>
-                                <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
-                                    <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
-                                        -
-                                    </button>
-                                    <input type="number" value="1" min="1"
-                                           class="w-6/12 h-full text-center quantityInput border-t border-b border-black/60 focus:outline-0">
-                                    <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
-                                        +
-                                    </button>
-                                </div>
-                                <div>
-                                    <svg class="text-black cursor-pointer hover:text-black/60" width="22" height="22"
-                                         fill="currentColor">
-                                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
-                                    </svg>
+                        {% for cartItem in cart.cart_items.all %}
+                            <div class="flex gap-2 items-center py-4 border-b-2 p-5 cartItem"
+                                 data-cart-item-id="{{ cartItem.id }}">
+                                <picture class="">
+                                    <source srcset="{{ cartItem.product.thumbnail.url }}" type="image/webp">
+                                    <source srcset="{{ cartItem.product.thumbnail_as_jpeg.url }}" type="image/png">
+                                    <img src="{{ cartItem.product.thumbnail_as_jpeg.url }}" alt=""
+                                         class="rounded-lg" width="120" height="120">
+                                </picture>
+                                <div class="flex-grow">
+                                    <p class="font-semibold">Lorem ipsum dolor sit.</p>
+                                    <p class="font-semibold text-brand-action mt-2"><span class="cartItem__salePrice">599</span>
+                                        ден</p>
+                                    <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
+                                        <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
+                                            -
+                                        </button>
+                                        <input type="number" value="{{ cartItem.quantity }}" min="1"
+                                               class="w-6/12 h-full text-center cartItem__quantityInput border-t border-b border-black/60 focus:outline-0">
+                                        <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
+                                            +
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <svg class="text-black cursor-pointer hover:text-black/60" width="22"
+                                             height="22"
+                                             fill="currentColor">
+                                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
+                                        </svg>
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        {% endfor %}
                     {% else %}
                         <p class="text-sm text-black/60 p-5 emptyCartText">Вашата кошничка е празна.</p>
                     {% endif %}

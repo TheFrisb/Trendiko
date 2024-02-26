@@ -183,10 +183,54 @@ CKEDITOR_CONFIGS = {
         "extraPlugins": ",".join(
             [
                 "uploadimage",
+                "dialogui",
+                "dialog",
+                "button",
+                "widgetselection",
+                "toolbar",
+                "notification",
+                "clipboard",
+                "lineutils",
+                "widget",
+                "html5video",
             ]
         ),
     }
 }
+#
+# CKEDITOR_CONFIGS = {
+#     "default": {
+#         "toolbar": "Custom",
+#         "toolbar_Custom": [
+#             [
+#                 "Format",
+#                 "Bold",
+#                 "Italic",
+#                 "Underline",
+#                 "Strike",
+#                 "NumberedList",
+#                 "BulletedList",
+#             ],
+#             ["JustifyLeft", "JustifyCenter", "JustifyRight"],
+#             ["Image"],
+#             ["Undo", "Redo", "Html5video"],
+#         ],
+#         "extraPlugins": ",".join(
+#             [
+#                 "dialogui",
+#                 "dialog",
+#                 "button",
+#                 "widgetselection",
+#                 "toolbar",
+#                 "notification",
+#                 "clipboard",
+#                 "lineutils",
+#                 "widget",
+#                 "html5video",
+#             ]
+#         ),
+#     }
+# }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

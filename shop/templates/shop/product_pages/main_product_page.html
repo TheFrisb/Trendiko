@@ -111,7 +111,7 @@
             <!-- End expected shipping date -->
 
             <!-- Product Add To Cart Section -->
-            <div class="px-6 py-4 bg-[#F4F4F4] border border-black/40 rounded-lg">
+            <div class="px-6 py-4 bg-[#F4F4F4] border border-black/40 rounded-lg productDataContainer">
                 <div class="flex flex-col gap-3.5 items-center justify-between w-full">
                     <div class="w-full flex items-center justify-between ">
 
@@ -129,7 +129,7 @@
 
                     </div>
 
-                    <div class="w-full flex items-center justify-between gap-4">
+                    <div class="w-full flex items-center justify-between gap-4 ">
 
                         <div class="flex items-center w-4/12 h-10 bg-white rounded-lg">
                             <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
@@ -156,7 +156,9 @@
                     </div>
 
                     <div class="w-full">
-                        <button class="h-12 w-full bg-brand-action rounded-lg text-white font-bold flex items-center justify-between p-1 hover:bg-brand-primary transition-all duration-100 ease-in-out">
+                        <button class="h-12 w-full bg-brand-action rounded-lg text-white font-bold flex items-center justify-between p-1 hover:bg-brand-primary transition-all duration-100 ease-in-out buyNowButton"
+                                data-product-id="{{ product.id }}" data-product-type="{{ product.type }}"
+                                data-quantity="1">
                             <div class="w-2/12 h-full flex items-center justify-center bg-white rounded-lg">
                                 <svg class="text-white" width="24" height="21" fill="currentColor">
                                     <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#buyNow"></use>

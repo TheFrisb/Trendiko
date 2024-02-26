@@ -1,21 +1,6 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const productGalleryContainer = document.getElementById('productGalleryContainer');
+function initializeToggles() {
   const toggles = document.querySelectorAll('.toggle');
   const toggle_contents = document.querySelectorAll('.canBeToggled');
-  const addToCartButton = document.getElementById('addToCartButton');
-
-  let slider = tns({
-    container: '#productGallery',
-    items: 1,
-    slideBy: 1,
-    autoplay: false,
-    nav: false,
-
-    controls: false,
-    navAsThumbnails: false,
-    mouseDrag: true,
-
-  });
 
   toggles.forEach(function (toggle) {
     toggle.addEventListener('click', function () {
@@ -40,5 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
       toggle.classList.add('active');
     });
   });
+}
 
-})
+export {initializeToggles};

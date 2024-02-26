@@ -21,6 +21,13 @@
     <link rel="stylesheet" href="{% static 'shop/css/shop.css' %}">
 
     <title>{{ title }}</title>
+
+    <style>
+        #djDebug #djDebugToolbarHandle {
+            right: unset !important;
+            left: 0 !important;
+        }
+    </style>
 </head>
 <body class="font-century-gothic bg-white">
 {% csrf_token %}

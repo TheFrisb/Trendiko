@@ -2,6 +2,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from cart.services.cart_service import CartService
+from cart.services.checkout_service import CheckoutService
 from shop.services.product_service import ProductService
 from .serializers import (
     AddProductToCartSerializer,
@@ -9,8 +11,6 @@ from .serializers import (
     UpdateCartItemSerializer,
     ShippingDetailsSerializer,
 )
-from cart.services.cart_service import CartService
-from cart.services.checkout_service import CheckoutService
 
 
 class CartItemView(APIView):
@@ -38,7 +38,7 @@ class CartItemView(APIView):
             cart_item = cart_service.add_product_to_cart(serializer.data)
 
             return Response(
-                CartItemSerializer(cart_item).data, status=status.HTTP_201_CREATED
+                CartItemSerializer(cart_item).data, status=status.HTTP_200_OK
             )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

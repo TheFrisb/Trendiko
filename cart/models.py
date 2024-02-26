@@ -87,6 +87,44 @@ class CartItem(TimeStampedModel):
     )
 
     @property
+    def price(self):
+        """
+        Get the price of the cart item.
+
+        Returns:
+            int: The price of the cart item.
+        """
+        if self.attribute:
+            return self.attribute.price
+
+        return self.product.selling_price
+
+    @property
+    def title(self):
+        """
+        Get the title of the cart item.
+
+        Returns:
+            str: The title of the cart item.
+        """
+        if self.attribute:
+            return f"{self.product.title} - {self.attribute.name}"
+        return self.product.title
+
+    @property
+    def thumbnails(self):
+        """
+        Get the thumbnails of the cart item.
+
+        Returns:
+            str: The thumbnails of the cart item.
+        """
+        return {
+            "webp": self.product.thumbnail_loop.url,
+            "jpg": self.product.thumbnail_loop_as_jpeg.url,
+        }
+
+    @property
     def total_price(self):
         """
         Calculate the total price of the cart item.
