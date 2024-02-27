@@ -44,7 +44,9 @@ class Category(models.Model):
     )
 
     is_on_promotion = models.BooleanField(default=False, verbose_name="Промоција")
-    slug = models.SlugField(blank=True, unique=True, verbose_name="Slug")
+    slug = models.SlugField(
+        blank=True, unique=True, verbose_name="Slug", max_length=300
+    )
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -106,7 +108,9 @@ class Product(BaseProduct):
         default=ProductType.SIMPLE,
         verbose_name="Тип",
     )
-    slug = models.SlugField(blank=True, unique=True, db_index=True, verbose_name="Slug")
+    slug = models.SlugField(
+        blank=True, unique=True, db_index=True, verbose_name="Slug", max_length=300
+    )
     categories = models.ManyToManyField(
         Category, related_name="products", verbose_name="Категории"
     )
