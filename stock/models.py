@@ -62,8 +62,11 @@ class ImportItem(TimeStampedModel):
     parentImport = models.ForeignKey(Import, on_delete=models.CASCADE)
     stock_item = models.ForeignKey(StockItem, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=0, verbose_name="Количина")
-    price_vat = models.PositiveIntegerField(default=0, verbose_name="Цена со ДДВ")
     price_no_vat = models.PositiveIntegerField(default=0, verbose_name="Цена без ДДВ")
+    price_vat = models.PositiveIntegerField(default=0, verbose_name="Цена со ДДВ")
+    price_vat_and_customs = models.PositiveIntegerField(
+        default=0, verbose_name="Цена со ДДВ и царина"
+    )
 
     def __str__(self):
         return f"{self.stock_item.title} - {self.quantity}"
