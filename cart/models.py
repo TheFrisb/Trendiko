@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from common.models import TimeStampedModel
@@ -13,7 +14,7 @@ class Cart(TimeStampedModel):
     """
     The Cart model represents a shopping cart.
     It contains a foreign key to the user who owns the cart and a session key.
-    It also includes methods to calculate the total price and total quantity of items in the cart.
+    It also includes methods to calculate the total sale_price and total quantity of items in the cart.
 
     The user field is nullable because the cart can be owned by a user or by a session.
 
@@ -28,20 +29,42 @@ class Cart(TimeStampedModel):
         blank=True,
         default=None,
     )
-    session_key = models.CharField(
-        max_length=40, null=True, blank=True, default=None, db_index=True
-    )
+    session_key = models.CharField(max_length=40, default=None, db_index=True)
 
     @property
-    def get_total(self):
+    def has_free_shipping(self):
         """
-        Calculate the total price of all items in the cart.
+        Check if the cart has free shipping.
 
         Returns:
-            int: The total price of all items in the cart.
+            bool: True if the cart has free shipping, False otherwise.
+        """
+
+        return any(item.product.has_free_shipping for item in self.cart_items.all())
+
+    @property
+    def get_items_total(self):
+        """
+        Calculate the total sale_price of all items in the cart.
+
+        Returns:
+            int: The total sale_price of all items in the cart.
         """
 
         return sum(item.total_price for item in self.cart_items.all())
+
+    @property
+    def get_total_price(self):
+        """
+        Calculate the total price of all items in the cart including shipping and handling/provision fee.
+        :return:
+        """
+        has_free_shipping = self.has_free_shipping
+        items_total = self.get_items_total + 20
+
+        if has_free_shipping:
+            return items_total
+        return items_total + 130
 
     @property
     def get_total_quantity(self):
@@ -64,14 +87,14 @@ class Cart(TimeStampedModel):
         return self.cart_items.count() == 0
 
     def __str__(self):
-        return f"Cart id: {self.id}, Total: {self.get_total}, Total Quantity: {self.get_total_quantity}"
+        return f"Cart id: {self.id}, Total: {self.get_items_total}, Total Quantity: {self.get_total_quantity}"
 
 
 class CartItem(TimeStampedModel):
     """
     The CartItem model represents an item in a shopping cart.
     It contains foreign keys to the cart and product associated with the item.
-    It also includes a method to calculate the total price of the item.
+    It also includes a method to calculate the total sale_price of the item.
     """
 
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_items")
@@ -87,12 +110,12 @@ class CartItem(TimeStampedModel):
     )
 
     @property
-    def price(self):
+    def sale_price(self):
         """
-        Get the price of the cart item.
+        Get the sale_price of the cart item.
 
         Returns:
-            int: The price of the cart item.
+            int: The sale_price of the cart item.
         """
         if self.attribute:
             return self.attribute.price
@@ -127,29 +150,16 @@ class CartItem(TimeStampedModel):
     @property
     def total_price(self):
         """
-        Calculate the total price of the cart item.
+        Calculate the total sale_price of the cart item.
 
         Returns:
-            int: The total price of the cart item.
+            int: The total sale_price of the cart item.
         """
 
         if self.attribute:
             return self.attribute.price * self.quantity
 
         return self.product.selling_price * self.quantity
-
-    @property
-    def price(self):
-        """
-        Get the price of the cart item.
-
-        Returns:
-             int: The price of the cart item.
-        """
-        if self.attribute:
-            return self.attribute.price
-
-        return self.product.selling_price
 
     def __str__(self):
         return self.product.title
@@ -177,14 +187,29 @@ class Order(TimeStampedModel):
         default=None,
     )
 
-    session_key = models.CharField(max_length=40, null=True, blank=True, default=None)
+    session_key = models.CharField(max_length=40)
     status = models.CharField(
-        max_length=20, choices=OrderStatus.choices, default=OrderStatus.PENDING
+        max_length=20,
+        choices=OrderStatus.choices,
+        default=OrderStatus.PENDING,
+        db_index=True,
     )
     has_free_shipping = models.BooleanField(default=False)
     subtotal_price = models.IntegerField(default=0)
     total_price = models.IntegerField(default=0)
     shipping_price = models.IntegerField(default=130)
+    tracking_number = models.CharField(max_length=100, unique=True, db_index=True)
+
+    def get_absolute_url(self):
+        """
+        Get the absolute url of the order.
+
+        Returns:
+            str: The absolute url of the order.
+        """
+        return reverse(
+            "shop:thank_you_page", kwargs={"tracking_number": self.tracking_number}
+        )
 
     @property
     def get_shipping_method(self):
@@ -204,7 +229,7 @@ class OrderItem(TimeStampedModel):
     """
     The OrderItem model represents an item in an order.
     It contains foreign keys to the order and product associated with the item.
-    It also includes a method to calculate the total price of the item.
+    It also includes a method to calculate the total sale_price of the item.
     """
 
     order = models.ForeignKey(
@@ -227,10 +252,10 @@ class OrderItem(TimeStampedModel):
     @property
     def total_price(self):
         """
-        Calculate the total price of the order item.
+        Calculate the total sale_price of the order item.
 
         Returns:
-            int: The total price of the order item.
+            int: The total sale_price of the order item.
         """
         return self.price * self.quantity
 

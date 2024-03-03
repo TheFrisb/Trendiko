@@ -4,12 +4,13 @@
 
 
 .shop-container {
-    @apply container mx-auto p-4;
+    @apply container mx-auto p-4 break-words;
 }
 
 .shop-container--flex {
     @apply container mx-auto p-4;
     @apply flex flex-col gap-5;
+    @apply break-words;
 }
 
 .shop-container--horizontalPadding {
@@ -86,6 +87,14 @@
     @apply bg-brand-primary;
 }
 
+#sideCartOverlay {
+    @apply hidden;
+}
+
+#sideCartOverlay.active {
+    @apply block;
+}
+
 #sideCart {
     /*@apply active;*/
     @apply absolute top-0 right-0 z-[150];
@@ -100,4 +109,41 @@
     @apply transition-transform;
 }
 
+#checkoutContainer {
+    @apply hidden;
+}
 
+#checkoutContainer.active {
+    @apply flex;
+}
+
+#sideCart .sideCart__buyableAction, #sideCart .sideCart__buyableAction--flex {
+    @apply hidden;
+}
+
+#sideCart.buyableCart .sideCart__emptyAction {
+    @apply hidden;
+}
+
+#sideCart.buyableCart .sideCart__buyableAction {
+    @apply block;
+}
+
+#sideCart.buyableCart .sideCart__buyableAction--flex {
+    @apply flex;
+}
+
+.checkoutFormInput {
+    @apply rounded-tr-lg rounded-br-lg;
+    @apply border border-black/20;
+    @apply h-[43px] px-3 w-full;
+    @apply focus:outline-brand-action;
+}
+
+input.error {
+    @apply border-red-500;
+}
+
+div.error {
+    @apply border border-r-0 border-red-500;
+}

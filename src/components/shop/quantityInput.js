@@ -1,5 +1,5 @@
 import {HTTP, URLS} from "../../http/client";
-import {updateSideCart} from "./sideCart";
+import {removeCartItemElement, updateCart} from "./cart";
 
 const ACTION_TYPES = {
   INCREMENT: 'INCREMENT',
@@ -20,11 +20,21 @@ function updateCartItemQuantity(quantity, pk) {
   HTTP.put(URLS.UPDATE_CART_ITEM_QUANTITY + `${pk}/`, {quantity: quantity}).then(response => {
     const data = response.data;
     if (response.success) {
-      updateSideCart(data);
+      updateCart(data);
     }
   });
 
   return quantity;
+}
+
+function removeCartItem(pk) {
+  HTTP.delete(`${URLS.REMOVE_CART_ITEM}${pk}`).then(response => {
+    if (response) {
+
+      removeCartItemElement(pk, response.data.has_free_shipping);
+    }
+  });
+
 }
 
 function attachProductInputListeners(inputEl) {
@@ -34,7 +44,7 @@ function attachProductInputListeners(inputEl) {
   let incrementButton = inputEl.nextElementSibling;
   let decrementButton = inputEl.previousElementSibling;
 
-  function updateAddToCartButtons() {
+  function updateAddToCartButtons(quantity) {
     addToCartButtons.forEach(function (button) {
       button.setAttribute('data-quantity', quantity);
     });
@@ -46,13 +56,13 @@ function attachProductInputListeners(inputEl) {
     console.log("before increment", quantity)
     quantity = updateQuantity(ACTION_TYPES.INCREMENT, quantity);
     inputEl.value = quantity;
-    updateAddToCartButtons();
+    updateAddToCartButtons(quantity);
   });
   decrementButton.addEventListener('click', function () {
     let quantity = parseInt(inputEl.value);
     quantity = updateQuantity(ACTION_TYPES.DECREMENT, quantity);
     inputEl.value = quantity;
-    updateAddToCartButtons();
+    updateAddToCartButtons(quantity);
   });
 }
 
@@ -71,7 +81,7 @@ function attachCartItemInputListeners(inputEl) {
   });
 }
 
-function initializeQuantityInput() {
+function initializeQuantityActions() {
   let productInputs = document.querySelectorAll('.quantityInput');
   productInputs.forEach(function (input) {
     attachProductInputListeners(input);
@@ -81,6 +91,17 @@ function initializeQuantityInput() {
   cartItemInputs.forEach(function (input) {
     attachCartItemInputListeners(input);
   });
+
+  let removeCartItemButtons = document.querySelectorAll('.cartItem__removeItem');
+
+  removeCartItemButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      const pk = button.closest('.cartItem').getAttribute('data-cart-item-id');
+      removeCartItem(pk);
+    });
+  });
+
+
 }
 
-export {initializeQuantityInput};
+export {initializeQuantityActions, attachCartItemInputListeners, removeCartItem};

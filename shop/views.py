@@ -3,7 +3,7 @@ from django.http import Http404
 from django.views.generic import TemplateView, DetailView, ListView
 
 from shop.mixins import FetchCategoriesMixin
-from shop.models import Category, Product
+from shop.models import Category, Product, BrandPage
 
 
 # Create your views here.
@@ -91,4 +91,25 @@ class CategoryListView(FetchCategoriesMixin, ListView):
         context = super().get_context_data(**kwargs)
 
         context["category"] = self.category
+        return context
+
+
+class BrandPageDetailView(FetchCategoriesMixin, DetailView):
+    model = BrandPage
+    template_name = "shop/brand_page.html"
+    context_object_name = "brand_page"
+    slug_url_kwarg = "slug"
+
+    def get_object(self, queryset=None):
+        queryset = self.get_queryset()
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        try:
+            brand_page = queryset.get(slug=slug)
+        except BrandPage.DoesNotExist:
+            raise Http404("Brand page does not exist")
+        return brand_page
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = self.object.title
         return context

@@ -1,7 +1,7 @@
+from rest_framework.exceptions import NotFound
+
 from cart.models import CartItem, Cart
-from shop.models import Product
 from shop.services.product_service import ProductService
-from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
 
 
 class CartService:
@@ -54,7 +54,11 @@ class CartService:
         ) = self.product_service.validate_product(data)
 
         cart_item, created = CartItem.objects.get_or_create(
-            cart=self.cart, product=product, type=product_type, attribute=attribute
+            cart=self.cart,
+            product=product,
+            type=product_type,
+            attribute=attribute,
+            defaults={"quantity": quantity},
         )
         if not created:
             cart_item.quantity += quantity
@@ -70,7 +74,6 @@ class CartService:
             pk (int): The primary key of the cart item to be removed.
         """
         cart_item = self.fetch_cart_item_or_throw(pk)
-
         cart_item.delete()
 
     def update_cart_item(self, pk, quantity):

@@ -1,11 +1,11 @@
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import ResizeToFill
 
-
 IMAGE_DIMENSIONS = (550, 550)
 THUMBNAIL_DIMENSIONS = (250, 250)
-CATEGORY_THUMBNAIL_DIMENSIONS = (200, 200)
+CATEGORY_THUMBNAIL_DIMENSIONS = (150, 150)
 IMAGE_QUALITY = 95
 
 
@@ -51,6 +51,20 @@ class BaseProduct(TimeStampedModel):
     class Meta:
         """Meta Class"""
 
+        abstract = True
+
+    def __str__(self):
+        return self.title
+
+
+class SimplePage(TimeStampedModel):
+    title = models.CharField(max_length=200, verbose_name="Име")
+    slug = models.SlugField(unique=True, verbose_name="Slug", max_length=200)
+    content = RichTextUploadingField(verbose_name="Содржина")
+
+    class Meta:
+        verbose_name = "Помошна страна"
+        verbose_name_plural = "Помошни страници"
         abstract = True
 
     def __str__(self):

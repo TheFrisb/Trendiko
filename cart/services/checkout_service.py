@@ -1,4 +1,7 @@
+import uuid
+
 from django.db import transaction
+from rest_framework.exceptions import ValidationError
 
 from cart.models import ShippingDetails, OrderItem, Order
 
@@ -33,6 +36,13 @@ class CheckoutService:
         Returns:
             Order: The order instance that was created.
         """
+        if self.cart.is_empty():
+            raise ValidationError(
+                {
+                    "message": "The cart is empty. Add items to the cart before checking out."
+                }
+            )
+
         order = self.create_order()
 
         for cart_item in self.cart.cart_items.all():
@@ -54,12 +64,16 @@ class CheckoutService:
         order = Order.objects.create(
             user=None,  # see cart/models.py
             session_key=self.cart.session_key,
-            subtotal_price=self.cart.get_total,
-            total_price=self.cart.get_total,
+            subtotal_price=self.cart.get_items_total,
+            total_price=self.cart.get_items_total,
             has_free_shipping=True,
+            tracking_number=self.generate_tracking_number(),
         )
 
         return order
+
+    def generate_tracking_number(self):
+        return str(uuid.uuid4())
 
     def create_order_item(self, cart_item, order):
         """
@@ -76,7 +90,7 @@ class CheckoutService:
             order=order,
             product=cart_item.product,
             quantity=cart_item.quantity,
-            price=cart_item.price,
+            price=cart_item.sale_price,
             type=cart_item.type,
             attribute=cart_item.attribute,
         )

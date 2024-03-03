@@ -1,7 +1,7 @@
 import {HTTP, URLS} from "../../http/client";
-import {toggleSideCart, updateSideCart} from "./sideCart";
+import {isSideCartActive, toggleCheckout, toggleSideCart, updateCart} from "./cart";
 
-function addToCart(product_id, product_type, quantity) {
+function addToCart(product_id, product_type, quantity, isBuyNow) {
   const data = {
     product_id: product_id,
     product_type: product_type,
@@ -12,8 +12,12 @@ function addToCart(product_id, product_type, quantity) {
     // see if response is successful
     const data = response.data;
     if (response.success) {
-      updateSideCart(data);
-      toggleSideCart();
+      updateCart(data);
+      if (!isSideCartActive() && !isBuyNow) {
+        toggleSideCart();
+      } else if (isBuyNow) {
+        toggleCheckout();
+      }
     }
   });
 }
@@ -25,7 +29,7 @@ function initializeAddToCartButtons() {
       const product_id = button.getAttribute('data-product-id');
       const product_type = button.getAttribute('data-product-type');
       const quantity = button.getAttribute('data-quantity');
-      addToCart(product_id, product_type, quantity);
+      addToCart(product_id, product_type, quantity, button.classList.contains('buyNowButton'));
     });
   });
 }

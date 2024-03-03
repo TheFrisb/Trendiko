@@ -28,7 +28,8 @@
                         </svg>
                     </div>
                     <div class="absolute top-[-6px] right-[-6px] w-3.5 h-3.5 bg-brand-accent rounded flex items-center justify-center">
-                        <span class="text-xs text-black relative top-[1px]" id="cartIcon__currentQuantity">2</span>
+                        <span class="text-xs text-black relative top-[1px]"
+                              id="cartIcon__currentQuantity">{{ request.cart.get_total_quantity }}</span>
                     </div>
                 </div>
             </div>
@@ -58,13 +59,15 @@
     </div>
 </header>
 <!-- Overlay -->
-<div class="container-fluid w-full h-full overflow-hidden absolute top-0 right-0 bg-black/70 z-[100]" id="overlay"
-     style="display:none!important;"></div>
+<div class="container-fluid w-full h-full overflow-hidden absolute top-0 right-0 bg-black/70 z-[100]"
+     id="sideCartOverlay">
+
+</div>
 <!-- End Overlay -->
 
 <!-- Side Cart -->
 {% with cart=request.cart %}
-    <div class=""
+    <div class="{% if not cart.is_empty %}buyableCart{% endif %}"
          id="sideCart">
         <div class="py-3 border-b-2">
             <div class="pl-5 pr-3 w-full flex justify-between items-center">
@@ -81,65 +84,255 @@
             <div class="relative flex-auto overflow-hidden w-full h-full">
                 <div class="absolute top-0 right-0 left-0 bottom-0 overflow-auto overflow-x-hidden" id="cartBody">
                     <!-- Cart Item -->
-                    {% if not cart.is_empty %}
-                        {% for cartItem in cart.cart_items.all %}
-                            <div class="flex gap-2 items-center py-4 border-b-2 p-5 cartItem"
-                                 data-cart-item-id="{{ cartItem.id }}">
-                                <picture class="">
-                                    <source srcset="{{ cartItem.product.thumbnail.url }}" type="image/webp">
-                                    <source srcset="{{ cartItem.product.thumbnail_as_jpeg.url }}" type="image/png">
-                                    <img src="{{ cartItem.product.thumbnail_as_jpeg.url }}" alt=""
-                                         class="rounded-lg" width="120" height="120">
-                                </picture>
-                                <div class="flex-grow">
-                                    <p class="font-semibold">Lorem ipsum dolor sit.</p>
-                                    <p class="font-semibold text-brand-action mt-2"><span class="cartItem__salePrice">599</span>
-                                        ден</p>
-                                    <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
-                                        <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
-                                            -
-                                        </button>
-                                        <input type="number" value="{{ cartItem.quantity }}" min="1"
-                                               class="w-6/12 h-full text-center cartItem__quantityInput border-t border-b border-black/60 focus:outline-0">
-                                        <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
-                                            +
-                                        </button>
-                                    </div>
-                                    <div>
-                                        <svg class="text-black cursor-pointer hover:text-black/60" width="22"
-                                             height="22"
-                                             fill="currentColor">
-                                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
-                                        </svg>
+                    {% for cart_item in cart.cart_items.all %}
+                        <div class="flex gap-2 items-center py-4 border-b-2 p-5 cartItem"
+                             data-cart-item-id="{{ cart_item.id }}">
+                            <picture class="">
+                                <source srcset="{{ cart_item.product.thumbnail.url }}" type="image/webp">
+                                <source srcset="{{ cart_item.product.thumbnail_as_jpeg.url }}" type="image/png">
+                                <img src="{{ cart_item.product.thumbnail_as_jpeg.url }}" alt=""
+                                     class="rounded-lg" width="120" height="120">
+                            </picture>
+                            <div class="flex-grow">
+                                <p class="font-semibold">{{ cart_item.title }}</p>
+                                <p class="font-semibold text-brand-action mt-2"><span
+                                        class="cartItem__salePrice">{{ cart_item.sale_price }}</span>
+                                    ден</p>
+                                <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
+                                    <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
+                                        -
+                                    </button>
+                                    <input type="number" value="{{ cart_item.quantity }}" min="1"
+                                           class="w-6/12 h-full text-center cartItem__quantityInput border-t border-b border-black/60 focus:outline-0">
+                                    <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
+                                        +
+                                    </button>
+                                </div>
+                                <div>
+                                    <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem"
+                                         width="22"
+                                         height="22"
+                                         fill="currentColor">
+                                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
+                                    </svg>
 
-                                    </div>
                                 </div>
                             </div>
-                        {% endfor %}
-                    {% else %}
-                        <p class="text-sm text-black/60 p-5 emptyCartText">Вашата кошничка е празна.</p>
-                    {% endif %}
+                        </div>
+                    {% endfor %}
+                    <p class="text-sm text-black/60 p-5 sideCart__emptyAction">Вашата кошничка е празна.</p>
                     <!-- End Cart Item -->
                 </div>
             </div>
             <div class="p-5 border-t-2">
-                {% if not cart.is_empty %}
-                    <div class="flex justify-between items-center text-lg mb-2">
-                        <p class="font-semibold">Вкупно</p>
-                        <p id="cartTotal">{{ cart.get_total }} ден</p>
-                    </div>
-                    <p class="text-sm text-black/60 mb-2">Данок вклучен. Испораката е пресметанa при наплата</p>
-                    <a href=""
-                       class="block text-center cursor-pointer bg-brand-action font-semibold text-white rounded-lg p-2 hover:bg-brand-primary/80">Кон
-                        Нарачка</a>
-                {% else %}
-                    <button
-                            class="w-full text-center cursor-pointer bg-brand-primary font-semibold text-white rounded-lg p-2 hover:bg-brand-primary/80 cartGoBackButton">
-                        Назад
-                    </button>
-                {% endif %}
+
+                <div class="flex justify-between items-center text-lg mb-2 sideCart__buyableAction--flex">
+                    <p class="font-semibold">Вкупно</p>
+                    <p id="cartTotal">{{ cart.get_items_total }} ден</p>
+                </div>
+                <p class="text-sm text-black/60 mb-2 sideCart__buyableAction">Данок вклучен. Испораката е пресметанa при
+                    наплата</p>
+                <button
+                        class="w-full text-center cursor-pointer bg-brand-action font-semibold text-white rounded-lg p-2 hover:bg-brand-primary/80 sideCart__buyableAction"
+                        id="sideCart__goToCheckoutBtn">
+                    Кон
+                    Нарачка
+                </button>
+                <button
+                        class="w-full text-center cursor-pointer bg-brand-primary font-semibold text-white rounded-lg p-2 hover:bg-brand-primary/80 cartGoBackButton sideCart__emptyAction"
+                        id="sideCart__goBackButon">
+                    Назад
+                </button>
 
             </div>
+        </div>
+    </div>
+
+
+    <div id="checkoutContainer"
+         class="container-fluid w-full h-full overflow-hidden absolute top-0 right-0 bg-black/70 z-[100] flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg overflow-auto min-w-[500px] flex flex-col gap-4" id="checkout">
+            <div class="relative border-b border-black/20 py-6">
+                <h3 class="font-bold text-2xl text-brand-action text-center">Колку парчиња сакате?</h3>
+                <svg class="text-black/60 cursor-pointer hover:text-brand-action absolute top-0 right-2" width="26"
+                     height="26"
+                     fill="currentColor"
+                     id="closeCheckoutIcon">
+                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#close"></use>
+                </svg>
+            </div>
+
+            <div id="checkoutBody">
+                {% for cart_item in cart.cart_items.all %}
+                    <div class="flex gap-2 items-center pb-4 border-b cartItem"
+                         data-cart-item-id="{{ cart_item.id }}">
+                        <picture class="">
+                            <source srcset="{{ cart_item.product.thumbnail.url }}" type="image/webp">
+                            <source srcset="{{ cart_item.product.thumbnail_as_jpeg.url }}" type="image/png">
+                            <img src="{{ cart_item.product.thumbnail_as_jpeg.url }}" alt=""
+                                 class="rounded-lg" width="120" height="120">
+                        </picture>
+                        <div class="flex-grow">
+                            <p class="font-semibold">{{ cart_item.title }}</p>
+                            <p class="font-semibold text-brand-action mt-2"><span
+                                    class="cartItem__salePrice">{{ cart_item.sale_price }}</span>
+                                ден</p>
+                            <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
+                                <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
+                                    -
+                                </button>
+                                <input type="number" value="{{ cart_item.quantity }}" min="1"
+                                       class="w-4/12 h-full text-center cartItem__quantityInput border-t border-b border-black/60 focus:outline-0">
+                                <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
+                                    +
+                                </button>
+                            </div>
+                            <div>
+                                <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem"
+                                     width="22"
+                                     height="22"
+                                     fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
+                                </svg>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center p-2 rounded-lg border border-brand-action ">
+                    <div class="flex items-center justify-center gap-3">
+                        <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
+                             width="24"
+                             height="24"
+                             fill="currentColor">
+                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#toggledCircle"></use>
+                        </svg>
+                        <p class="text-sm">Достава до врата</p>
+                    </div>
+                    <p class="font-bold">бесплатна достава</p>
+                </div>
+            </div>
+
+            <div class="bg-brand-primary/20 rounded-lg border border-black/20 ">
+                <div class="p-2 flex flex-col gap-3">
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm">Цена</p>
+                        <p class="font-bold"><span id="checkout__subtotalPrice">{{ cart.get_items_total }}</span> ден
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm">Провизија за готовинско работење</p>
+                        <p class="font-bold">20 ден</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm">Достава</p>
+                        <p class="font-bold" id="checkout__selectedShipping">
+                            {% if cart.has_free_shipping %}
+                                бесплатна достава
+                            {% else %}
+                                130 ден
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-black/40 py-2">
+                        <p>Вкупно за плаќање на курирот</p>
+                        <p class="font-bold text-lg"><span id="checkout__totalPrice">{{ cart.get_total_price }}</span>
+                            ден</p>
+                    </div>
+                </div>
+
+            </div>
+            <div>
+                <p class="text-center text-xl font-bold text-brand-action pb-1">Податоци за испорака</p>
+                <p class="text-sm text-center">Плаќање на врата</p>
+                <form action="" class="flex flex-col gap-3" id="checkoutForm">
+
+                    <div>
+                        <label for="checkoutForm__fullName" class="font-bold text-sm">Име и презиме <span
+                                class="text-red-600">*</span></label>
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg">
+                                <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
+                                     width="24"
+                                     height="24"
+                                     fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#person"></use>
+                                </svg>
+                            </div>
+                            <input type="text"
+                                   name="full_name"
+                                   id="checkoutForm__fullName"
+                                   class="checkoutFormInput">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="checkoutForm__address" class="font-bold text-sm">Адреса <span
+                                class="text-red-600">*</span></label>
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg">
+                                <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
+                                     width="24"
+                                     height="24"
+                                     fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#pin"></use>
+                                </svg>
+                            </div>
+                            <input type="text"
+                                   name="address"
+                                   id="checkoutForm__address"
+                                   class="checkoutFormInput">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="checkoutForm__phone" class="font-bold text-sm">Телефонски број <span
+                                class="text-red-600">*</span></label>
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg">
+                                <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
+                                     width="24"
+                                     height="24"
+                                     fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#phone"></use>
+                                </svg>
+                            </div>
+                            <input type="text"
+                                   name="phone"
+                                   id="checkoutForm__phone"
+                                   class="checkoutFormInput">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="checkoutForm__city" class="font-bold text-sm">Град <span
+                                class="text-red-600">*</span></label>
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg">
+                                <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
+                                     width="24"
+                                     height="24"
+                                     fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#milestone"></use>
+                                </svg>
+                            </div>
+                            <input type="text"
+                                   name="city"
+                                   id="checkoutForm__city"
+                                   class="checkoutFormInput">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <button
+                    class="w-full text-center cursor-pointer bg-brand-action font-semibold text-white rounded-lg p-2 hover:bg-brand-primary/80 sideCart__buyableAction"
+                    id="checkoutBtn">
+                Кон
+                Нарачка
+            </button>
+
         </div>
     </div>
 {% endwith %}

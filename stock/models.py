@@ -12,7 +12,9 @@ class StockItem(BaseProduct):
     qr_code = models.ImageField(
         upload_to="stock_items/qr_codes/%Y/%m/%d/", blank=True, verbose_name="QR Code"
     )
-    sku = models.CharField(max_length=255, unique=True, verbose_name="SKU")
+    sku = models.CharField(
+        max_length=255, unique=True, verbose_name="SKU", db_index=True
+    )
     label = models.CharField(max_length=255, verbose_name="Label")
     stock = models.PositiveIntegerField(default=0, verbose_name="Залиха")
 
@@ -44,6 +46,9 @@ class StockItem(BaseProduct):
     class Meta:
         verbose_name = "Магацински Продукт"
         verbose_name_plural = "Магацински Продукт"
+
+    def __str__(self):
+        return f"{self.title} - {self.sku}"
 
 
 class Import(TimeStampedModel):

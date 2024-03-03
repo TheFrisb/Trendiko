@@ -10,6 +10,8 @@ from .serializers import (
     CartItemSerializer,
     UpdateCartItemSerializer,
     ShippingDetailsSerializer,
+    CartSerializer,
+    OrderSerializer,
 )
 
 
@@ -84,8 +86,8 @@ class CartItemView(APIView):
         cart_service = CartService(request.cart, ProductService())
 
         cart_service.remove_from_cart(pk)
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        print("yes")
+        return Response(CartSerializer(request.cart).data, status=status.HTTP_200_OK)
 
 
 class CheckoutView(APIView):
@@ -111,6 +113,6 @@ class CheckoutView(APIView):
             checkout_service = CheckoutService(request.cart)
             order = checkout_service.checkout(serializer.validated_data)
 
-            return Response({"order_id": order.id}, status=status.HTTP_201_CREATED)
+            return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

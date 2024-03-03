@@ -17,20 +17,27 @@
             </div>
             <div class="flex flex-col gap-2">
                 <p class="text-lg text-brand-accent">Информации</p>
-                <a href="#" class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Достава</a>
-                <a href="#" class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Рекламација</a>
-                <a href="#" class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Правила
+                <a href="{% url 'shop:brand_page' slug='dostava' %}"
+                   class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Достава</a>
+                <a href="{% url 'shop:brand_page' slug='reklamacija' %}"
+                   class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Рекламација</a>
+                <a href="{% url 'shop:brand_page' slug='pravila-za-koristenje' %}"
+                   class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Правила
                     за користење</a>
-                <a href="#" class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Политика
+                <a href="{% url 'shop:brand_page' slug='politika-za-privatnost-i-kolacinja' %}"
+                   class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Политика
                     за приватност и колачиња</a>
             </div>
             <div class="flex flex-col gap-2">
                 <p class="text-lg text-brand-accent">За Trendiko.mk</p>
-                <a href="#" class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">За
+                <a href="{% url 'shop:brand_page' slug='about-us' %}"
+                   class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">За
                     Нас и Нашиот Тим</a>
-                <a href="#" class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Сакате
+                <a href="{% url 'shop:brand_page' slug='import-products' %}"
+                   class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Сакате
                     да Увезете Роба во Македонија?</a>
-                <a href="#" class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Нарачки
+                <a href="{% url 'shop:brand_page' slug='order-from-china-for-your-shop' %}"
+                   class="text-sm text-white transform-all duration-200 ease-in-out hover:text-brand-action">Нарачки
                     од Кина за Вашата Продавница</a>
             </div>
         </div>

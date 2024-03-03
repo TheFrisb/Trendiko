@@ -9,7 +9,7 @@ from imagekit.processors import ResizeToFit, ResizeToFill
 from transliterate import translit
 
 from common.models import CATEGORY_THUMBNAIL_DIMENSIONS, IMAGE_QUALITY, IMAGE_DIMENSIONS
-from common.models import TimeStampedModel, BaseProduct
+from common.models import TimeStampedModel, BaseProduct, SimplePage
 
 
 # Create your models here.
@@ -35,7 +35,7 @@ class Category(models.Model):
         options={"quality": IMAGE_QUALITY},
         null=True,
         blank=True,
-        verbose_name="Слика за промоција (200px X 200px)",
+        verbose_name="Слика за промоција (150px X 150px)",
     )
     promotion_image_png = ImageSpecField(
         source="promotion_image",
@@ -45,7 +45,7 @@ class Category(models.Model):
 
     is_on_promotion = models.BooleanField(default=False, verbose_name="Промоција")
     slug = models.SlugField(
-        blank=True, unique=True, verbose_name="Slug", max_length=300
+        blank=True, unique=True, verbose_name="Slug", max_length=300, db_index=True
     )
 
     def save(self, *args, **kwargs):
@@ -101,6 +101,7 @@ class Product(BaseProduct):
         choices=ProductStatus.choices,
         default=ProductStatus.PUBLISHED,
         verbose_name="Статус",
+        db_index=True,
     )
     type = models.CharField(
         max_length=20,
@@ -112,7 +113,7 @@ class Product(BaseProduct):
         blank=True, unique=True, db_index=True, verbose_name="Slug", max_length=300
     )
     categories = models.ManyToManyField(
-        Category, related_name="products", verbose_name="Категории"
+        Category, related_name="products", verbose_name="Категории", db_index=True
     )
     regular_price = models.PositiveIntegerField(verbose_name="Regular price")
     sale_price = models.PositiveIntegerField(
@@ -127,7 +128,7 @@ class Product(BaseProduct):
     )
     description = RichTextUploadingField(verbose_name="Опис")
     has_free_shipping = models.BooleanField(
-        default=False, verbose_name="Бесплатна испорака"
+        default=False, verbose_name="Бесплатна испорака", db_index=True
     )
 
     @property
@@ -221,6 +222,13 @@ class ProductAttribute(TimeStampedModel):
         default=ProductAttributeType.COLOR,
         verbose_name="Тип",
     )
+    stock_item = models.ForeignKey(
+        "stock.StockItem",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name="Магацински предмет",
+    )
     name = models.CharField(max_length=140, verbose_name="Име")
     content = models.CharField(max_length=140, verbose_name="Содржина")
     color = ColorField(null=True, blank=True, verbose_name="Боја")
@@ -259,3 +267,9 @@ class Review(TimeStampedModel):
     class Meta:
         verbose_name = "Рецензија"
         verbose_name_plural = "Рецензии"
+
+
+class BrandPage(SimplePage):
+    class Meta:
+        verbose_name = "Информативна страница"
+        verbose_name_plural = "Информативни страници"

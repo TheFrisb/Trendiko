@@ -1,15 +1,15 @@
 import {initializeToggles} from "../components/toggles/toggles";
 import {initProductPageMainSlider} from "../components/sliders/productPageMainSlider";
 import {initializeAddToCartButtons} from "../components/shop/addToCart";
-import {initializeQuantityInput} from "../components/shop/quantityInput";
-import {initializeSideCart} from "../components/shop/sideCart";
+import {initializeQuantityActions} from "../components/shop/quantityInput";
+import {initializeCart} from "../components/shop/cart";
 
 document.addEventListener('DOMContentLoaded', function () {
   initializeToggles();
   initProductPageMainSlider();
   initializeAddToCartButtons();
-  initializeQuantityInput();
-  initializeSideCart();
+  initializeQuantityActions();
+  initializeCart();
   const menuIcon = document.getElementById('menuIcon');
   const navbar = document.getElementById('navbar');
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;

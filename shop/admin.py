@@ -4,7 +4,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 
-from .models import Product, ProductAttribute, Category, Review, ProductImage
+from .models import Product, ProductAttribute, Category, Review, ProductImage, BrandPage
 
 
 # Register your models here.
@@ -33,9 +33,10 @@ class ProductAttributeInlineFormSet(BaseInlineFormSet):
 
 
 class ProductAttributeInline(admin.TabularInline):
+    autocomplete_fields = ["stock_item"]
     model = ProductAttribute
     extra = 1
-    fields = ["type", "name", "content", "color", "price"]
+    fields = ["type", "name", "content", "color", "stock_item", "price"]
     formset = ProductAttributeInlineFormSet
 
     # class Media:
@@ -80,3 +81,6 @@ class ReviewAdmin(admin.ModelAdmin):
 
     class Meta:
         model = Review
+
+
+admin.site.register(BrandPage)
