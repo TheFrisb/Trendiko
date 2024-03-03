@@ -12,10 +12,12 @@ function initProductPageMainSlider() {
     items: 1,
     slideBy: 1,
     autoplay: false,
-    nav: false,
+    nav: true,
+    prevButton: '.productGallery_prev',
+    nextButton: '.productGallery_next',
 
-    controls: false,
-    navAsThumbnails: false,
+    controls: true,
+    navAsThumbnails: true,
     mouseDrag: true,
   });
 }

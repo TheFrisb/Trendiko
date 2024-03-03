@@ -1,13 +1,9 @@
 Shop UI: Total should be 7 hours.
-1. Add to cart logic
-2. Cart Logic & logic
-4. Checkout logic
 5. Attributes rendering & add to cart logic logic
 7. Thank you page
 8. Product page slider
 9. Vidi kak da se stavat kategorii i slicno optimiziri go tava
-10. Napraj gi kontakt/privacy, tii strani, i da se admin db based
-11. Napraj Side cart offers
+
 12. Edna posledna proverka
 
 Shop-manager finishing touch: Total should be 3 hours

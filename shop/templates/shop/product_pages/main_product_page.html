@@ -13,10 +13,18 @@
         <a href="{% url 'shop:product_page' product.slug %}"
            class="text-sm hover:text-brand-action">{{ product.title }}</a>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-[350px,1fr] lg:grid-cols-[480px,1fr] xl:grid-cols-[auto,1fr] md:gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-[350px,1fr] lg:grid-cols-[480px,1fr] xl:grid-cols-[550px, auto] md:gap-4">
 
-        <div>
+        <div class="relative">
             <div class="md:sticky md:top-4" id="productGallery">
+                <div>
+                    <picture>
+                        <source srcset="{{ product.thumbnail.url }}" type="image/webp">
+                        <source srcset="{{ product.thumbnail_as_jpeg.url }}" type="image/png">
+                        <img src="{{ product.thumbnail_as_jpeg.url }}" alt="" class="rounded-lg" width="550"
+                             height="550">
+                    </picture>
+                </div>
                 {% for image in product.images.all %}
                     <div>
                         <picture>
@@ -24,9 +32,11 @@
                             <source srcset="{{ image.image_png.url }}" type="image/png">
                             <img src="{{ image.image_png.url }}" alt="" class="rounded-lg" width="550" height="550">
                         </picture>
-
                     </div>
+
+
                 {% endfor %}
+
             </div>
         </div>
 
