@@ -13,8 +13,7 @@ function initProductPageMainSlider() {
     slideBy: 1,
     autoplay: false,
     nav: true,
-    prevButton: '.productGallery_prev',
-    nextButton: '.productGallery_next',
+
 
     controls: true,
     navAsThumbnails: true,
