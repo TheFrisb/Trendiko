@@ -1,32 +1,41 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const inlineContainer = document.getElementById('attributes-group'); // Adjust the ID to match the container of your inline forms
+  const inlineContainer = document.getElementById('attributes-group');
+  console.log('loadded')
 
   function toggleFields(row) {
     var typeSelect = row.querySelector('.field-type select');
-    var contentField = row.querySelector('.field-content');
-    var colorField = row.querySelector('.field-color');
+    var contentField = row.querySelector('.field-value input');
 
-    if (typeSelect && contentField && colorField) { // Check if elements exist
+    if (typeSelect && contentField) {
       if (typeSelect.value === 'color') {
-        contentField.style.display = 'none'; // Hide the content field for color type
-        colorField.style.display = '';       // Show the color field
+        contentField.type = 'color';
+        // check if value is a color
+
+        if (contentField.value && !contentField.value.match(/^#[0-9A-F]{6}$/i)) {
+          contentField.value = '#000000';
+        }
       } else {
-        contentField.style.display = '';     // Show the content field for other types
-        colorField.style.display = 'none';   // Hide the color field
+        contentField.type = 'text';
+        // check if value is a text
+        if (contentField.value && contentField.value.match(/^#[0-9A-F]{6}$/i)) {
+          contentField.value = '';
+        }
       }
     }
   }
 
   // Event delegation for handling changes in the type select dropdown
   inlineContainer.addEventListener('change', function (event) {
-    if (event.target.matches('.field-type select')) { // Check if the changed element is a type select
-      const row = event.target.closest('.dynamic-attributes'); // Find the closest row
+    if (event.target.matches('.field-type select')) {
+      const row = event.target.closest('.dynamic-attributes');
       toggleFields(row);
     }
   });
 
   // Initial application of toggleFields to existing rows
-  document.querySelectorAll('.dynamic-attributes').forEach(function (row) {
+  const rows = inlineContainer.querySelectorAll('.form-row');
+  rows.forEach(function (row) {
+    console.log(row)
     toggleFields(row);
   });
 });

@@ -9,7 +9,7 @@
     <div class="productsGrid">
         {% for product in list %}
             <div class="w-full flex flex-col gap-1.5 hover:scale-105 transition-transform duration-300 ease-in-out group">
-                <a href="{% url 'shop:product_page' slug=product.slug %}">
+                <a href="{{ product.get_absolute_url }}">
                     <picture>
                         <source srcset="{{ product.thumbnail_loop.url }}" type="image/webp">
                         <source srcset="{{ product.thumbnail_loop_as_jpeg }}" type="image/jpeg">
@@ -18,7 +18,7 @@
                     </picture>
                 </a>
 
-                <a href="{% url 'shop:product_page' slug=product.slug %}"
+                <a href="{{ product.get_absolute_url }}"
                    class="text-center font-bold hover:text-brand-action">{{ product.title }}
                 </a>
 

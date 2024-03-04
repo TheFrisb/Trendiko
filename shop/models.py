@@ -1,5 +1,4 @@
 from ckeditor_uploader.fields import RichTextUploadingField
-from colorfield.fields import ColorField
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -173,6 +172,9 @@ class Product(BaseProduct):
 
         super().save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse("shop:product_page", kwargs={"slug": self.slug})
+
     class Meta:
         verbose_name = "Производ"
         verbose_name_plural = "Производи"
@@ -230,8 +232,7 @@ class ProductAttribute(TimeStampedModel):
         verbose_name="Магацински предмет",
     )
     name = models.CharField(max_length=140, verbose_name="Име")
-    content = models.CharField(max_length=140, verbose_name="Содржина")
-    color = ColorField(null=True, blank=True, verbose_name="Боја")
+    value = models.CharField(max_length=140, verbose_name="Содржина")
     price = models.PositiveIntegerField(null=True, blank=True, verbose_name="Цена")
 
     class Meta:

@@ -1,13 +1,20 @@
 import {HTTP, URLS} from "../../http/client";
 import {isSideCartActive, toggleCheckout, toggleSideCart, updateCart} from "./cart";
+import {notyf__short} from "../../utils/error";
 
-function addToCart(product_id, product_type, quantity, isBuyNow) {
+function addToCart(product_id, product_type, quantity, attributeId, isBuyNow) {
   const data = {
     product_id: product_id,
+    attribute_id: attributeId,
     product_type: product_type,
-    quantity: quantity
+    quantity: quantity,
   }
-  // await the response from the server
+
+  if (product_type === 'variable' && !attributeId) {
+    notyf__short.error('Одберете варијација на производот');
+    return;
+  }
+
   HTTP.post(URLS.ADD_TO_CART, data).then(response => {
     // see if response is successful
     const data = response.data;
@@ -29,7 +36,9 @@ function initializeAddToCartButtons() {
       const product_id = button.getAttribute('data-product-id');
       const product_type = button.getAttribute('data-product-type');
       const quantity = button.getAttribute('data-quantity');
-      addToCart(product_id, product_type, quantity, button.classList.contains('buyNowButton'));
+      const attributeId = button.getAttribute('data-attribute-id');
+      const isBuyNow = button.classList.contains('buyNowButton');
+      addToCart(product_id, product_type, quantity, attributeId, isBuyNow);
     });
   });
 }

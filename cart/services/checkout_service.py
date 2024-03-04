@@ -65,14 +65,18 @@ class CheckoutService:
             user=None,  # see cart/models.py
             session_key=self.cart.session_key,
             subtotal_price=self.cart.get_items_total,
-            total_price=self.cart.get_items_total,
-            has_free_shipping=True,
+            total_price=self.cart.get_total_price,
+            has_free_shipping=self.cart.has_free_shipping,
             tracking_number=self.generate_tracking_number(),
         )
 
         return order
 
     def generate_tracking_number(self):
+        """
+        Generate a tracking number for an order.
+        :return: str: The generated tracking number.
+        """
         return str(uuid.uuid4())
 
     def create_order_item(self, cart_item, order):

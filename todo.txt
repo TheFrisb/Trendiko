@@ -1,10 +1,15 @@
 Shop UI: Total should be 7 hours.
-5. Attributes rendering & add to cart logic logic
-7. Thank you page
-8. Product page slider
-9. Vidi kak da se stavat kategorii i slicno optimiziri go tava
-
+1. Fix orderItem thumbnails.
+9. Fix categories
+-- Gore u headero
+-- Category listing and design
+-- Misc category items
+-- Category backend
+10. FAQ
+8. Fix slider load
 12. Edna posledna proverka
+
+
 
 Shop-manager finishing touch: Total should be 3 hours
 13. Verify shop manager works 1

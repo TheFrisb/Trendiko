@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     "imagekit",
     "ckeditor",
     "ckeditor_uploader",
-    "colorfield",
     # Local apps
     "common.apps.CommonConfig",
     "shop.apps.ShopConfig",

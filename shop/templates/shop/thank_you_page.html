@@ -1,0 +1,69 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="h-full">
+        <div class="flex flex-col items-center justify-center gap-4">
+            <h1 class="font-bold text-2xl">Направивте вистински избор!</h1>
+            <p>Ви благодариме за нарачката {{ order.shipping_details.full_name }}.</p>
+            <div class="bg-brand-primary/20 rounded-lg border border-black/20 w-full">
+                <div class="p-2 flex flex-col gap-3 ">
+                    {% for orderItem in order.order_items.all %}
+                        <div class="flex items-center justify-between">
+                            <div class="flex gap-2">
+                                {% with thumbnails=orderItem.get_thumbnails %}
+                                    <picture>
+                                        <source srcset="{{ thumbnails.webp }}" type="image/webp">
+                                        <source srcset="{{ webp.jpg }}" type="image/jpeg">
+                                        <img src="{{ webp.jpg }}" alt="Image of a product"
+                                             class="w-16 h-16 object-cover rounded-lg" width="64" height="64">
+                                    </picture>
+                                {% endwith %}
+                                <div>
+                                    <p class="font-bold">{{ orderItem.get_readable_name }}</p>
+                                    <p class="text-sm">{{ orderItem.price }} ден x {{ orderItem.quantity }}</p>
+                                </div>
+                            </div>
+                            <p class="font-bold">{{ orderItem.total_price }} ден</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="p-2 flex flex-col gap-3  border-t border-black/20">
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm">Цена</p>
+                        <p class="font-bold"><span id="checkout__subtotalPrice">{{ order.subtotal_price }}</span> ден
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm">Провизија за готовинско работење</p>
+                        <p class="font-bold">20 ден</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm">Достава</p>
+                        <p class="font-bold" id="checkout__selectedShipping">
+                            {% if order.has_free_shipping %}
+                                бесплатна достава
+                            {% else %}
+                                130 ден
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center border-t border-black/40 py-2">
+                        <p>Вкупно за плаќање на курирот</p>
+                        <p class="font-bold text-lg"><span id="checkout__totalPrice">{{ order.total_price }}</span>
+                            ден</p>
+                    </div>
+                </div>
+
+            </div>
+            <div class="flex flex-col gap-2 justify-start w-full">
+                <p>Доколку имате потреба од потреба на податоците, обратете се на
+                    <a href="tel:+38970123456"
+                       class="text-brand-primary transform-all duration-200 ease-in-out hover:text-brand-action">070123456</a>
+                </p>
+
+                <p>Ви благодариме што не избравте нас!</p>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

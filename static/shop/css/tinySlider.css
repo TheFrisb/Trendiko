@@ -22,6 +22,20 @@
     box-sizing: border-box
 }
 
+.productGallery__ThumbnailImage {
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.productGallery__ThumbnailImage:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.tns-slider > .tns-item:first-of-type {
+    display: block;
+}
+
 .tns-horizontal.tns-subpixel {
     white-space: nowrap
 }
@@ -49,6 +63,52 @@
 .tns-no-calc {
     position: relative;
     left: 0
+}
+
+.tns-controls {
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.tns-controls button {
+    color: white;
+    padding: 8px;
+}
+
+.tns-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    gap: 6px;
+    width: 100%;
+    bottom: 76px;
+}
+
+@media (max-width: 768px) {
+    .tns-nav {
+        bottom: 16px;
+    }
+}
+
+.tns-nav button {
+    width: 8px;
+    height: 8px;
+    border: none;
+    cursor: pointer;
+    background: #000;
+    opacity: 0.4;
+    border-radius: 100%;
+}
+
+.tns-nav .tns-nav-active {
+    opacity: 1;
 }
 
 .tns-gallery {

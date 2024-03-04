@@ -1,23 +1,11 @@
 import {HTTP, URLS} from "../../http/client";
-import {Notyf} from "notyf";
+import {notyf__long} from "../../utils/error";
 
-let notyf = new Notyf(
-  {
-    duration: 10000,
-    ripple: true,
-    position: {
-      x: 'left',
-      y: 'bottom',
-    },
-    dismissible: true,
-
-  }
-);
 
 function checkout(formEl) {
   console.log("checkout formEl", formEl)
   if (!validateForm(formEl)) {
-    notyf.error('Полињата обележани со црвено се задолжителни!');
+    notyf__long.error('Полињата обележани со црвено се задолжителни!');
     return;
   }
 
@@ -39,7 +27,7 @@ function checkout(formEl) {
         console.log("key", key)
         let input = formEl.querySelector(`input[name=${key}]`);
         input.classList.add('error');
-        notyf.error(errors[key].join(' '));
+        notyf__long.error(errors[key].join(' '));
       });
 
 

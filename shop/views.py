@@ -2,6 +2,7 @@ from django.db.models import Prefetch
 from django.http import Http404
 from django.views.generic import TemplateView, DetailView, ListView
 
+from cart.models import Order
 from shop.mixins import FetchCategoriesMixin
 from shop.models import Category, Product, BrandPage
 
@@ -91,6 +92,33 @@ class CategoryListView(FetchCategoriesMixin, ListView):
         context = super().get_context_data(**kwargs)
 
         context["category"] = self.category
+        return context
+
+
+class ThankYouDetailView(FetchCategoriesMixin, DetailView):
+    model = Order
+    template_name = "shop/thank_you_page.html"
+    context_object_name = "order"
+    slug_url_kwarg = "tracking_number"
+
+    def get_object(self, queryset=None):
+        queryset = (
+            self.get_queryset()
+            .prefetch_related(
+                "order_items", "order_items__product", "order_items__attribute"
+            )
+            .select_related("shipping_details")
+        )
+        tracking_number = self.kwargs.get(self.slug_url_kwarg)
+        try:
+            order = queryset.get(tracking_number=tracking_number)
+        except Order.DoesNotExist:
+            raise Http404("Order does not exist")
+        return order
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Thank You"
         return context
 
 

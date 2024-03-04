@@ -35,12 +35,12 @@ class ProductAttributeInlineFormSet(BaseInlineFormSet):
 class ProductAttributeInline(admin.TabularInline):
     autocomplete_fields = ["stock_item"]
     model = ProductAttribute
-    extra = 1
-    fields = ["type", "name", "content", "color", "stock_item", "price"]
+    extra = 0
+    fields = ["type", "name", "value", "price", "stock_item"]
     formset = ProductAttributeInlineFormSet
 
-    # class Media:
-    #     js = ("admin/js/product_attribute.js",)
+    class Media:
+        js = ("admin/js/product_attribute.js",)
 
 
 class ProductImageInline(admin.TabularInline):

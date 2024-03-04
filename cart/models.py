@@ -250,6 +250,19 @@ class OrderItem(TimeStampedModel):
     )
 
     @property
+    def get_thumbnails(self):
+        """
+        Get the thumbnails of the order item.
+
+        Returns:
+            str: The thumbnails of the order item.
+        """
+        return {
+            "webp": self.product.thumbnail_loop.url,
+            "jpg": self.product.thumbnail_loop_as_jpeg.url,
+        }
+
+    @property
     def total_price(self):
         """
         Calculate the total sale_price of the order item.
