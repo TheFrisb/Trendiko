@@ -1,7 +1,7 @@
 <div class="flex flex-col gap-2">
     <div class="flex flex-col ">
         <h2 class="font-bold text-lg">{{ heading }}</h2>
-        <a href="{% url 'shop:category_page' slug='free-shipping' %} "
+        <a href="{{ redirect_url }} "
            class="text-sm text-brand-action hover:text-brand-primary transform-all duration-200 ease-in-out w-fit">Погледај
             ги
             сите</a>
@@ -38,7 +38,7 @@
 
     <div class="flex flex-col gap-2 items-center justify-center">
         <div class="h-[1px] w-[150px] bg-[#E2DEDE]"></div>
-        <a href="{% url 'shop:category_page' slug='all-products' %}"
+        <a href="{{ redirect_url }}"
            class="text-brand-action font-bold text-center hover:text-brand-primary  transform-all duration-200 ease-in-out w-fit">Види
             повеќе</a>
     </div>

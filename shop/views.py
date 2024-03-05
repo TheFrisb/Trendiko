@@ -17,19 +17,25 @@ class HomeView(FetchCategoriesMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         categories = context.get("categories", Category.objects.none())
         promotion_category = categories.filter(is_on_promotion=True).first()
-
         if not promotion_category:
             promotion_category = categories.first()
 
         context.update(
             {
                 "promotion_category": promotion_category,
-                "recommended_products": Product.objects.all().order_by("-created_at")[
-                    :4
-                ],
-                "free_shipping_products": Product.objects.filter(
-                    has_free_shipping=True
-                ).order_by("-created_at")[:4],
+                "recommended_products_promotion": {
+                    "products": Product.objects.all()
+                    .filter(status=Product.ProductStatus.PUBLISHED)
+                    .order_by("-created_at")[:6],
+                    "redirect_slug": "site-proizvodi",
+                },
+                "free_shipping_promotion": {
+                    "products": Product.objects.filter(
+                        has_free_shipping=True,
+                        status=Product.ProductStatus.PUBLISHED,
+                    ).order_by("-created_at")[:4],
+                    "redirect_url": "besplatna-dostava",
+                },
                 "title": "Home",
             }
         )

@@ -69,6 +69,12 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     prepopulated_fields = {"slug": ("name",)}
 
+    def delete_model(self, request, obj):
+        if not obj.is_default:
+            obj.delete()
+        else:
+            raise ValidationError("You can't delete the default category")
+
     class Meta:
         model = Category
 
