@@ -43,6 +43,7 @@ class Category(models.Model):
     )
 
     is_on_promotion = models.BooleanField(default=False, verbose_name="Промоција")
+    max_discount = models.PositiveIntegerField(verbose_name="Максимален попуст")
     slug = models.SlugField(
         blank=True, unique=True, verbose_name="Slug", max_length=300, db_index=True
     )

@@ -147,3 +147,23 @@ input.error {
 div.error {
     @apply border border-r-0 border-red-500;
 }
+
+#headerHorizontalCategoriesList::-webkit-scrollbar-track {
+    @apply bg-brand-primary/20;
+    @apply rounded-t-full;
+    @apply mx-4;
+}
+
+#headerHorizontalCategoriesList::-webkit-scrollbar-thumb {
+    @apply bg-brand-action/60;
+    @apply rounded-t-full;
+    @apply mx-1;
+}
+
+#headerHorizontalCategoriesList::-webkit-scrollbar-thumb:hover {
+    @apply bg-brand-action/80;
+}
+
+#headerHorizontalCategoriesList::-webkit-scrollbar {
+    @apply h-2;
+}

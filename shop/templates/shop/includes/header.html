@@ -1,5 +1,5 @@
 {% load static %}
-<header class="bg-brand-secondary">
+<header class="bg-brand-secondary overflow-x-hidden">
     <div class="flex flex-col items-center justify-center w-full bg-brand-primary">
         <div class="flex items-center justify-between shop-container--headerContent  rounded-b-lg">
 
@@ -49,10 +49,11 @@
             </nav>
         </div>
     </div>
-    <div class="flex flex-row items-center overflow-x-auto whitespace-nowrap shop-container--horizontalPadding gap-4">
+    <div class="flex flex-row items-center overflow-x-auto whitespace-nowrap shop-container--horizontalPadding gap-4"
+         id="headerHorizontalCategoriesList">
         {% for category in categories %}
             <a href="{{ category.get_absolute_url }}"
-               class="py-2 cursor-pointer hover:text-brand-action hover:underline ">
+               class="py-2 cursor-pointer hover:text-brand-action hover:font-bold hover:underline ">
                 {{ category.name }}
             </a>
         {% endfor %}

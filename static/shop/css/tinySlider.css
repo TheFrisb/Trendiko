@@ -88,13 +88,7 @@
     position: absolute;
     gap: 6px;
     width: 100%;
-    bottom: 76px;
-}
-
-@media (max-width: 768px) {
-    .tns-nav {
-        bottom: 16px;
-    }
+    bottom: 16px;
 }
 
 .tns-nav button {
@@ -221,6 +215,12 @@
     width: calc(100% / 70);
     height: 10px;
     float: left
+}
+
+@media (max-width: 768px) {
+    #productGallery__Thumbnails {
+        display: none;
+    }
 }
 
 /*# sourceMappingURL=sourcemaps/tiny-slider.css.map */

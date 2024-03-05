@@ -15,14 +15,8 @@
     </div>
     <div class="grid grid-cols-1 md:grid-cols-[350px,1fr] lg:grid-cols-[480px,1fr] xl:grid-cols-[550px, auto] md:gap-4">
 
-        <div>
+        <div class="md:pb-12">
             <div class="sticky top-2">
-                {#                <div class="w-full h-full flex items-center justify-center" id="productGallery__spinner">#}
-                {#                    <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] text-brand-action"#}
-                {#                         role="status"><span#}
-                {#                            class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">Loading...</span>#}
-                {#                    </div>#}
-                {#                </div>#}
                 <div class="md:sticky md:top-4 relative" id="productGallery">
                     <div>
                         <picture>
@@ -33,7 +27,7 @@
                         </picture>
                     </div>
                     {% for image in product.images.all %}
-                        <div>
+                        <div class="hidden">
                             <picture>
                                 <source srcset="{{ image.image.url }}" type="image/webp">
                                 <source srcset="{{ image.image_png.url }}" type="image/png">
@@ -42,7 +36,7 @@
                         </div>
                     {% endfor %}
                 </div>
-                <div class="w-full flex items-center justify-center gap-1 pt-2 hidden"
+                <div class="w-full flex items-center justify-center gap-1 pt-2 hidden absolute"
                      id="productGallery__Thumbnails">
                 </div>
             </div>
