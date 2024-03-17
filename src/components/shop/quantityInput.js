@@ -1,5 +1,6 @@
 import {HTTP, URLS} from "../../http/client";
 import {removeCartItemElement, updateCart} from "./cart";
+import {notyf__short} from "../../utils/error";
 
 const ACTION_TYPES = {
   INCREMENT: 'INCREMENT',
@@ -21,6 +22,11 @@ function updateCartItemQuantity(quantity, pk) {
     const data = response.data;
     if (response.success) {
       updateCart(data);
+    } else {
+      let status_code = response.status;
+      if (status_code === 403) {
+        notyf__short.error(data.message);
+      }
     }
   });
 

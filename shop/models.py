@@ -128,7 +128,7 @@ class Product(BaseProduct):
     )
     stock_item = models.ForeignKey(
         "stock.StockItem",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
         verbose_name="Магацински предмет",
@@ -242,7 +242,7 @@ class ProductAttribute(BaseProduct):
     )
     stock_item = models.ForeignKey(
         "stock.StockItem",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
         verbose_name="Магацински предмет",

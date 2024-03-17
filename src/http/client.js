@@ -20,10 +20,14 @@ const HTTP = {
       },
       body: JSON.stringify(data),
     });
+    let responseData = null;
+    if (response.status !== 204) {
+      responseData = await response.json();
+    }
     return {
       success: response.ok,
       status: response.status,
-      data: await response.json()
+      data: responseData
     }
   },
 
@@ -61,6 +65,15 @@ const HTTP = {
       success: response.ok,
       status: response.status,
       data: data // This will be null in case of a 204 response
+    }
+  },
+
+  get: async (url) => {
+    const response = await fetch(url);
+    return {
+      success: response.ok,
+      status: response.status,
+      data: await response.json()
     }
   }
 }

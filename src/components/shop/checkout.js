@@ -21,15 +21,19 @@ function checkout(formEl) {
     if (response.success) {
       window.location.href = response.data.thank_you_page_url;
     } else {
-      let errors = response.data;
-      Object.keys(errors).forEach(key => {
-        console.log("key", key)
-        let input = formEl.querySelector(`input[name=${key}]`);
-        input.classList.add('error');
-        notyf__long.error(errors[key].join(' '));
-      });
-
-
+      let data = response.data;
+      let status_code = response.status;
+      if (status_code === 400) {
+        let errors = response.data;
+        Object.keys(errors).forEach(key => {
+          console.log("key", key)
+          let input = formEl.querySelector(`input[name=${key}]`);
+          input.classList.add('error');
+          notyf__long.error(errors[key].join(' '));
+        });
+      } else if (status_code === 403) {
+        notyf__long.error(data.message);
+      }
     }
 
   });

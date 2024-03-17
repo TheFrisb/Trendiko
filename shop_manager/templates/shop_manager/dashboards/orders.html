@@ -36,36 +36,38 @@
                             {% endfor %}
                             Цена без достава: {{ order.subtotal_price }} ден
                             <br>
-                            Достава: Бесплатна достава
+                            Достава: {{ order.get_shipping_method }}
                             <br>
                             Вкупно: {{ order.total_price }} ден
                         </td>
                         <td class="table_field flex flex-col items-start grow justify-between gap-1">
                             <p>{{ order.get_status_display }}</p>
 
-                            {% with button_classes="py-1.5 px-4 rounded-lg text-sm font-bold w-full max-w-[120px] changeOrderStatus" %}
+                            {% with button_classes="py-1.5 px-4 rounded-lg text-sm font-bold w-full max-w-[120px] changeOrderStatustransition-all duration-100 ease-in-out" %}
 
                                 {% if order.status == OrderStatuses.PENDING %}
-                                    <button class="{{ button_classes }} bg-dashboard-blue text-white"
+                                    <button class="{{ button_classes }} bg-dashboard-blue text-white hover:bg-green-600"
                                             data-order-id="{{ order.id }}"
                                             data-change-to-status="{{ OrderStatuses.CONFIRMED }}">ПОТВРДИ
                                     </button>
-                                    <button class="{{ button_classes }} bg-black/20" data-order-id="{{ order.id }}"
+                                    <button class="{{ button_classes }} bg-black/20 hover:bg-red-600 hover:text-white"
+                                            data-order-id="{{ order.id }}"
                                             data-change-to-status="{{ OrderStatuses.DELETED }}">
                                         ОТСТРАНИ
                                     </button>
 
                                 {% elif order.status == OrderStatuses.DELETED %}
-                                    <button class="{{ button_classes }} bg-dashboard-blue text-white"
+                                    <button class="{{ button_classes }} bg-dashboard-blue text-white hover:bg-green-600"
                                             data-order-id="{{ order.id }}"
                                             data-change-to-status="{{ OrderStatuses.PENDING }}">ВРАТИ
                                     </button>
                                 {% else %}
-                                    <button class="{{ button_classes }} bg-dashboard-blue text-white"
+                                    <button class="{{ button_classes }} bg-dashboard-blue text-white hover:bg-green-600"
                                             data-order-id="{{ order.id }}"
                                             data-change-to-status="{{ OrderStatuses.PENDING }}">ВРАТИ
                                     </button>
-                                    <button class="{{ button_classes }} bg-black/20" data-order-id="{{ order.id }}"
+                                    <button class="{{ button_classes }} bg-black/20 hover:bg-red-600 hover:text-white"
+                                            data-order-id="{{ order.id }}"
                                             data-change-to-status="{{ OrderStatuses.DELETED }}">
                                         ОТСТРАНИ
                                     </button>
@@ -81,8 +83,3 @@
     </div>
 
 {% endblock dashboard %}
-
-{% block scripts %}
-    <script src="{% static 'shop_manager/js/shop_manager.js' %}"></script>
-{% endblock scripts %}
- 

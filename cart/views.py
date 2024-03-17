@@ -111,7 +111,7 @@ class CheckoutView(APIView):
         serializer = ShippingDetailsSerializer(data=request.data)
 
         if serializer.is_valid():
-            checkout_service = CheckoutService(request.cart)
+            checkout_service = CheckoutService(request)
             order = checkout_service.checkout(serializer.validated_data)
 
             return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)

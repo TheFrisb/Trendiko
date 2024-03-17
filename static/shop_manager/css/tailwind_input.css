@@ -50,8 +50,12 @@
 }
 
 .table_field {
-    @apply py-2;
-    @apply break-all;
+    @apply p-2;
+    @apply break-words;
+}
+
+.table_field button {
+    @apply break-normal;
 }
 
 .paginator-number {

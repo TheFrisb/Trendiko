@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import Cart, CartItem, Order, OrderItem, ShippingDetails
 
 
@@ -16,6 +17,8 @@ class CartAdmin(admin.ModelAdmin):
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
+    filter_horizontal = ["reserved_stock_items"]
+    readonly_fields = ["reserved_stock_items"]
 
 
 class ShippingDetailsInline(admin.StackedInline):
@@ -26,3 +29,4 @@ class ShippingDetailsInline(admin.StackedInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline, ShippingDetailsInline]
+    readonly_fields = ["ip", "user_agent"]

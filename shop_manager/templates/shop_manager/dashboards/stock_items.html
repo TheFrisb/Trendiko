@@ -8,35 +8,49 @@
                 <h4 class="text-xl font-bold">Продукти</h4>
                 {% include 'shop_manager/includes/dashboard_paginator.html' %}
             </div>
-            <table class="table-auto w-full text-left">
-                <thead class="border-b border-gray-200">
-                <tr>
-                    <th class="font-normal">Thumbnail</th>
-                    <th class="font-normal">Label</th>
-                    <th class="font-normal">Stock</th>
-                    <th class="font-normal">Qr code</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in page_obj %}
-                    <tr class="border-b-2 border-gray-200">
-                        <td class="table_field">
-                            <img src="{{ item.thumbnail.url }}" alt="" class="w-24 h-24 object-cover">
-                        </td>
-                        <td class="table_field">
-                            <p>{{ item.label }}</p>
-                        </td>
-                        <td class="table_field">
-                            <p>{{ item.stock }}</p>
-                        </td>
-                        <td class="table_field">
-                            <img src="{{ item.qr_code.url }}" alt="" class="w-24 h-24 object-cover">
-                        </td>
-
+            <div class="overflow-x-auto">
+                <table class="table-auto w-full text-left">
+                    <thead class="border-b border-gray-200">
+                    <tr>
+                        <th class="font-normal">Thumbnail</th>
+                        <th class="font-normal">Item</th>
+                        <th class="font-normal">SKU</th>
+                        <th class="font-normal">Label</th>
+                        <th class="font-normal">Reserved Stock</th>
+                        <th class="font-normal">Stock</th>
+                        <th class="font-normal">Qr code</th>
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="">
+                    {% for item in page_obj %}
+                        <tr class="border-b-2 border-gray-200">
+                            <td class="table_field">
+                                <img src="{{ item.thumbnail.url }}" alt="" class="w-24 h-24 object-cover">
+                            </td>
+                            <td class="table_field">
+                                <p>{{ item.title }}</p>
+                            </td>
+                            <td class="table_field">
+                                <p>{{ item.sku }}</p>
+                            </td>
+                            <td class="table_field">
+                                <p>{{ item.label }}</p>
+                            </td>
+                            <td class="table-field">
+                                <p>{{ item.reserved_stock }}</p>
+                            </td>
+                            <td class="table_field">
+                                <p>{{ item.stock }}</p>
+                            </td>
+                            <td class="table_field">
+                                <img src="{{ item.qr_code.url }}" alt="" class="w-24 h-24 object-cover">
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

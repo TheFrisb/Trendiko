@@ -265,7 +265,6 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
                 data.get("full_name")
             )
         except ValueError as e:
-            print(e.args[0])
             errors.update(e.args[0])
 
         try:
@@ -276,7 +275,6 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
         try:
             data["city"] = self.validate_supported_city(data.get("city"))
         except ValueError as e:
-            print(e.args[0])
             errors.update(e.args[0])
 
         try:
@@ -284,7 +282,6 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
                 data.get("municipality")
             )
         except ValueError as e:
-            print(e.args[0])
             errors.update(e.args[0])
 
         if errors:

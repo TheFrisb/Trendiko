@@ -1,11 +1,20 @@
-from shop.models import Product, ProductAttribute
 from rest_framework.exceptions import NotFound, PermissionDenied, ValidationError
+
+from common.exceptions import OutOfStockException
+from shop.models import Product, ProductAttribute
+from stock.services.stock_validator import StockValidator
 
 
 class ProductService:
     """
     Service class for handling product-related operations.
     """
+
+    def __init__(self):
+        """
+        Initialize the ProductService.
+        """
+        self.stock_validator = StockValidator()
 
     def validate_product(self, data):
         """
@@ -32,7 +41,9 @@ class ProductService:
         product_type = data.get("product_type")
         attribute_id = data.get("attribute_id", None)
 
-        product = Product.objects.filter(id=product_id).first()
+        product = (
+            Product.objects.filter(id=product_id).prefetch_related("stock_item").first()
+        )
 
         if not product:
             raise NotFound({"product_id": "Product not found " + str(product_id)})
@@ -63,6 +74,46 @@ class ProductService:
                 raise NotFound(
                     {"attribute_id": "Attribute not found for the provided product"}
                 )
+
+            if not self.stock_validator.check_stock_item_stock(
+                attribute.stock_item, data.get("quantity")
+            ):
+                if attribute.stock_item.stock <= 0:
+                    message = f'Производот "{product.title} - {attribute.title}" е распродаден.'
+                else:
+                    message = f'Имаме само {attribute.stock_item.stock} од "{product.title} - {attribute.title}" на залиха.'
+
+                extraDict = {
+                    "product_id": product_id,
+                    "attribute_id": attribute_id,
+                    "quantity": data.get("quantity"),
+                    "available_quantity": attribute.stock_item.stock,
+                    "message": message,
+                }
+
+                raise OutOfStockException(
+                    data.get("quantity"), attribute.stock_item.stock, extraDict
+                )
+
             return product, product_type, attribute, data.get("quantity")
+
+        if not self.stock_validator.check_stock_item_stock(
+            product.stock_item, data.get("quantity")
+        ):
+            if product.stock_item.stock <= 0:
+                message = f'Производот "{product.title}" е распродаден.'
+            else:
+                message = f'Имаме само {product.stock_item.stock} од "{product.title}" на залиха.'
+
+            extraDict = {
+                "product_id": product_id,
+                "quantity": data.get("quantity"),
+                "available_quantity": product.stock_item.stock,
+                "message": message,
+            }
+
+            raise OutOfStockException(
+                data.get("quantity"), product.stock_item.stock, extraDict
+            )
 
         return product, product_type, None, data.get("quantity")

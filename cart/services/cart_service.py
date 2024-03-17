@@ -1,7 +1,9 @@
 from rest_framework.exceptions import NotFound
 
 from cart.models import CartItem, Cart
+from common.exceptions import OutOfStockException
 from shop.services.product_service import ProductService
+from stock.services.stock_validator import StockValidator
 
 
 class CartService:
@@ -23,6 +25,7 @@ class CartService:
         """
         self.cart = cart
         self.product_service = product_service
+        self.stock_validator = StockValidator()
 
     def add_product_to_cart(self, data):
         """
@@ -88,6 +91,22 @@ class CartService:
             CartItem: The cart item instance that was updated.
         """
         cart_item = self.fetch_cart_item_or_throw(pk)
+        if (
+            not self.stock_validator.check_stock_item_stock(
+                cart_item.get_stock_item(), quantity
+            )
+            and quantity > cart_item.quantity
+        ):
+            message = f"Немаме доволно парчиња на залиха од овој производ."
+
+            extraDict = {
+                "cart_item_id": cart_item.id,
+                "message": message,
+            }
+
+            raise OutOfStockException(
+                quantity, cart_item.get_stock_item().stock, extraDict
+            )
         cart_item.quantity = quantity
         cart_item.save()
         return cart_item

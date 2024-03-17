@@ -22,7 +22,7 @@ class ShopManagerHome(ShopManagerRequiredMixin, BaseDashboardView):
     model = Order
     template_name = f"{dashboards_dir}/orders.html"
     context_object_name = "orders"
-    paginate_by = 2
+    paginate_by = 24
 
     # catch post request from export orders form
     def post(self, request, *args, **kwargs):
@@ -73,7 +73,7 @@ class StockManagerHome(StockManagerRequiredMixin, BaseDashboardView):
     model = StockItem
     template_name = f"{dashboards_dir}/stock_items.html"
     context_object_name = "stock_items"
-    paginate_by = 2
+    paginate_by = 24
 
     def get_queryset(self):
         return StockItem.objects.all()

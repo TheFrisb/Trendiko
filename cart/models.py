@@ -3,7 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from common.models import TimeStampedModel
+from common.models import TimeStampedModel, LoggableModel
 from shop.models import Product, ProductAttribute
 
 
@@ -43,7 +43,6 @@ class Cart(TimeStampedModel):
             item.product.has_free_shipping for item in self.cart_items.all()
         )
         cart_has_free_shipping = self.get_items_total >= 1500
-        print(product_has_free_shipping, cart_has_free_shipping)
         return product_has_free_shipping or cart_has_free_shipping
 
     @property
@@ -66,9 +65,8 @@ class Cart(TimeStampedModel):
         items_total = self.get_items_total + 20
 
         if has_free_shipping:
-            print("has free shipping")
             return items_total
-        print(items_total + 130)
+
         return items_total + 130
 
     @property
@@ -168,11 +166,22 @@ class CartItem(TimeStampedModel):
 
         return self.product.selling_price * self.quantity
 
+    def get_stock_item(self):
+        """
+        Get the stock item of the cart item.
+
+        Returns:
+            StockItem: The stock item of the cart item.
+        """
+        if self.attribute:
+            return self.attribute.stock_item
+        return self.product.stock_item
+
     def __str__(self):
         return self.product.title
 
 
-class Order(TimeStampedModel):
+class Order(TimeStampedModel, LoggableModel):
     """
     The Order model represents an order. It contains a foreign key to the user who placed the order and a session key.
     It also includes fields for the order status, whether the order has free shipping,
@@ -271,7 +280,16 @@ class OrderItem(TimeStampedModel):
         Order, on_delete=models.CASCADE, related_name="order_items"
     )
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="order_items"
+        Product, on_delete=models.SET_NULL, related_name="order_items", null=True
+    )
+    stock_item = models.ForeignKey(
+        "stock.StockItem",
+        on_delete=models.SET_NULL,
+        related_name="order_items",
+        null=True,
+    )
+    reserved_stock_items = models.ManyToManyField(
+        "stock.ReservedStockItem", related_name="order_items"
     )
     quantity = models.IntegerField(default=1)
     price = models.IntegerField(default=0)
@@ -281,7 +299,7 @@ class OrderItem(TimeStampedModel):
         default=Product.ProductType.SIMPLE,
     )
     attribute = models.ForeignKey(
-        ProductAttribute, on_delete=models.CASCADE, null=True, blank=True
+        ProductAttribute, on_delete=models.SET_NULL, null=True, blank=True
     )
     is_from_promotion = models.BooleanField(default=False)
 

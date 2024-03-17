@@ -28,6 +28,11 @@ function addToCart(product_id, product_type, quantity, attributeId, isBuyNow) {
       } else if (isBuyNow) {
         toggleCheckout();
       }
+    } else {
+      let status_code = response.status;
+      if (status_code === 403) {
+        notyf__short.error(data.message);
+      }
     }
   });
 }
@@ -41,7 +46,7 @@ function initializeAddToCartButtons() {
       const quantity = button.getAttribute('data-quantity');
       const attributeId = button.getAttribute('data-attribute-id');
       const isBuyNow = button.classList.contains('buyNowButton');
-      addToCart(product_id, product_type, quantity, attributeId, isBuyNow);
+      addToCart(product_id, product_type, quantity, attributeId, isBuyNow)
     });
   });
 }
