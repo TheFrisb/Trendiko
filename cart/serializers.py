@@ -1,7 +1,63 @@
 from rest_framework import serializers
 
 from shop.models import Product
-from .models import CartItem, ShippingDetails, Cart, Order
+from .models import CartItem, ShippingDetails, Cart, Order, OrderItem
+
+SUPPORTED_CITIES = [
+    {"latin": "Aerodrom", "cyrillic": "Аеродром"},
+    {"latin": "Aracinovo", "cyrillic": "Арачиново"},
+    {"latin": "Berovo", "cyrillic": "Берово"},
+    {"latin": "Bitola", "cyrillic": "Битола"},
+    {"latin": "Bogdanci", "cyrillic": "Богданци"},
+    {"latin": "Butel", "cyrillic": "Бутел"},
+    {"latin": "Valandovo", "cyrillic": "Валандово"},
+    {"latin": "Veles", "cyrillic": "Велес"},
+    {"latin": "Vinica", "cyrillic": "Виница"},
+    {"latin": "Gazi Baba", "cyrillic": "Гази Баба"},
+    {"latin": "Gevgelija", "cyrillic": "Гевгелија"},
+    {"latin": "Gostivar", "cyrillic": "Гостивар"},
+    {"latin": "Debar", "cyrillic": "Дебар"},
+    {"latin": "Delcevo", "cyrillic": "Делчево"},
+    {"latin": "Demir Kapija", "cyrillic": "Демир Капија"},
+    {"latin": "Demir Hisar", "cyrillic": "Демир Хисар"},
+    {"latin": "Dojran", "cyrillic": "Дојран"},
+    {"latin": "Gjorce Petrov", "cyrillic": "Ѓорче Петров"},
+    {"latin": "Zelenikovo", "cyrillic": "Зелениково"},
+    {"latin": "Ilinden", "cyrillic": "Илинден"},
+    {"latin": "Kavadarci", "cyrillic": "Кавадарци"},
+    {"latin": "Karpos", "cyrillic": "Карпош"},
+    {"latin": "Kisela Voda", "cyrillic": "Кисела Вода"},
+    {"latin": "Kichevo", "cyrillic": "Кичево"},
+    {"latin": "Kocani", "cyrillic": "Кочани"},
+    {"latin": "Kratovo", "cyrillic": "Кратово"},
+    {"latin": "Kriva Palanka", "cyrillic": "Крива Паланка"},
+    {"latin": "Krusevo", "cyrillic": "Крушево"},
+    {"latin": "Kumanovo", "cyrillic": "Куманово"},
+    {"latin": "Mavrovo", "cyrillic": "Маврово"},
+    {"latin": "Makedonska Kamenica", "cyrillic": "Македонска Каменица"},
+    {"latin": "Makedonski Brod", "cyrillic": "Македонски Брод"},
+    {"latin": "Negotino", "cyrillic": "Неготино"},
+    {"latin": "Ohrid", "cyrillic": "Охрид"},
+    {"latin": "Petrovec", "cyrillic": "Петровец"},
+    {"latin": "Pehcevo", "cyrillic": "Пехчево"},
+    {"latin": "Prilep", "cyrillic": "Прилеп"},
+    {"latin": "Probistip", "cyrillic": "Пробиштип"},
+    {"latin": "Radovis", "cyrillic": "Радовиш"},
+    {"latin": "Resen", "cyrillic": "Ресен"},
+    {"latin": "Saraj", "cyrillic": "Сарај"},
+    {"latin": "Sveti Nikole", "cyrillic": "Свети Николе"},
+    {"latin": "Skopje", "cyrillic": "Скопје"},
+    {"latin": "Sopiste", "cyrillic": "Сопиште"},
+    {"latin": "Struga", "cyrillic": "Струга"},
+    {"latin": "Strumica", "cyrillic": "Струмица"},
+    {"latin": "Studenicani", "cyrillic": "Студеничани"},
+    {"latin": "Tetovo", "cyrillic": "Тетово"},
+    {"latin": "Centar", "cyrillic": "Центар"},
+    {"latin": "Cair", "cyrillic": "Чаир"},
+    {"latin": "Cucer Sandevo", "cyrillic": "Чучер-Сандево"},
+    {"latin": "Stip", "cyrillic": "Штип"},
+    {"latin": "Suto Orizari", "cyrillic": "Шуто Оризари"},
+]
 
 
 class AddProductToCartSerializer(serializers.Serializer):
@@ -40,6 +96,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         :param obj:
         :return:
         """
+        obj.cart.refresh_from_db()
         return obj.cart.has_free_shipping
 
     class Meta:
@@ -72,9 +129,21 @@ class CartSerializer(serializers.ModelSerializer):
         fields = [
             "is_empty",
             "get_items_total",
-            "get_total_quantity",
+            "get_total_price",
             "has_free_shipping",
         ]
+
+
+class AddOrderItemToOrderSerializer(serializers.Serializer):
+    """
+    Serializer for adding an order item to the order
+    """
+
+    order_id = serializers.IntegerField(min_value=1, required=True)
+    order_item_id = serializers.IntegerField(min_value=1, required=True)
+    quantity = serializers.IntegerField(min_value=1, required=True)
+    tracking_code = serializers.CharField(max_length=100, required=True)
+    promotion_price = serializers.IntegerField(min_value=1, required=True)
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -104,6 +173,66 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
 
 
+class OrderItemSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the OrderItem model
+    Used for returning the order items to the frontend
+    """
+
+    thumbnails = serializers.SerializerMethodField()
+    order_subtotal = serializers.SerializerMethodField()
+    order_total = serializers.SerializerMethodField()
+    order_shipping_method = serializers.SerializerMethodField()
+
+    def get_order_subtotal(self, obj):
+        """
+        Get the order subtotal
+        :param obj:
+        :return:
+        """
+        return obj.order.subtotal_price
+
+    def get_order_total(self, obj):
+        """
+        Get the order total
+        :param obj:
+        :return:
+        """
+        return obj.order.total_price
+
+    def get_order_shipping_method(self, obj):
+        """
+        Get the order shipping
+        :param obj:
+        :return:
+        """
+        return obj.order.get_shipping_method
+
+    def get_thumbnails(self, obj):
+        """
+        Get the thumbnails for the order item
+        :param obj:
+        :return:
+        """
+        return obj.get_thumbnail_loops
+
+    class Meta:
+        model = OrderItem
+        fields = [
+            "id",
+            "type",
+            "get_readable_name",
+            "thumbnails",
+            "quantity",
+            "attribute",
+            "price",
+            "total_price",
+            "order_subtotal",
+            "order_total",
+            "order_shipping_method",
+        ]
+
+
 class ShippingDetailsSerializer(serializers.ModelSerializer):
     """
     Serializer for the ShippingDetails model
@@ -112,6 +241,8 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
 
     full_name = serializers.CharField(max_length=100, required=True)
     phone = serializers.CharField(max_length=12, required=True)
+    city = serializers.CharField(max_length=50, required=True)
+    municipality = serializers.CharField(max_length=50, required=False)
 
     class Meta:
         """
@@ -119,7 +250,7 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
         """
 
         model = ShippingDetails
-        fields = ["full_name", "address", "city", "phone"]
+        fields = ["full_name", "address", "city", "phone", "municipality"]
 
     def validate(self, data):
         """
@@ -140,6 +271,20 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
         try:
             data["phone"] = self.validate_and_set_phone_number(data.get("phone"))
         except ValueError as e:
+            errors.update(e.args[0])
+
+        try:
+            data["city"] = self.validate_supported_city(data.get("city"))
+        except ValueError as e:
+            print(e.args[0])
+            errors.update(e.args[0])
+
+        try:
+            data["municipality"] = self.validate_and_set_municipality(
+                data.get("municipality")
+            )
+        except ValueError as e:
+            print(e.args[0])
             errors.update(e.args[0])
 
         if errors:
@@ -185,3 +330,31 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
 
         else:
             raise ValueError({"phone": "Ве молиме внесете го телефонскиот број"})
+
+    def validate_supported_city(self, value):
+        """
+        Validate the city
+        :param value: the city to be validated
+        :return: the validated city
+        """
+        if value:
+            city = value
+            if city not in [c["latin"] for c in SUPPORTED_CITIES]:
+                raise ValueError({"city": "Одберете го вашиот град од листата"})
+            return city
+        else:
+            raise ValueError({"city": "Полето град е задолжително поле"})
+
+    def validate_and_set_municipality(self, value):
+        """
+        Validate the municipality
+        :param value: the municipality to be validated
+        :return: the validated municipality
+        """
+        if not value or value == "":
+            return None
+
+        municipality = value
+        if municipality not in [c["latin"] for c in SUPPORTED_CITIES]:
+            raise ValueError({"municipality": "Одберете ја вашата општина од листата"})
+        return municipality

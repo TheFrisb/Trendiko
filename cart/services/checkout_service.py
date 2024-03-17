@@ -54,6 +54,42 @@ class CheckoutService:
 
         return order
 
+    @transaction.atomic
+    def add_order_item_to_existing_order(self, data):
+        """
+        Add an order item to an existing order.
+
+        Args:
+            data (dict): A dictionary containing the order item ID and quantity.
+
+        Returns:
+            Order: The order instance that was updated.
+        """
+        order_id = data["order_id"]
+        order_item_id = data["order_item_id"]
+        quantity = data["quantity"]
+        tracking_number = data["tracking_code"]
+        promotion_price = data["promotion_price"]
+
+        try:
+            # get order with its orderItems
+            order = Order.objects.get(id=order_id)
+        except Order.DoesNotExist:
+            raise ValidationError(
+                {"message": "The order with the specified ID does not exist."}
+            )
+
+        if order.tracking_number != tracking_number:
+            raise ValidationError({"message": "The tracking number is invalid."})
+
+        copy_order_item = self.validate_thank_you_order_item(
+            order, order_item_id, promotion_price
+        )
+
+        return self.add_thank_you_order_item_to_order(
+            copy_order_item, order, quantity, promotion_price
+        )
+
     def create_order(self):
         """
         Create an order instance.
@@ -61,6 +97,7 @@ class CheckoutService:
         Returns:
             Order: The order instance that was created.
         """
+
         order = Order.objects.create(
             user=None,  # see cart/models.py
             session_key=self.cart.session_key,
@@ -101,6 +138,31 @@ class CheckoutService:
 
         return order_item
 
+    def add_thank_you_order_item_to_order(
+        self, copy_order_item, order, quantity, price
+    ):
+        # check if already exists
+        existing_order_item = order.order_items.filter(
+            product=copy_order_item.product, is_from_promotion=True, price=price
+        ).first()
+
+        if existing_order_item:
+            existing_order_item.quantity += quantity
+            existing_order_item.save()
+            return existing_order_item
+
+        order_item = OrderItem.objects.create(
+            order=order,
+            product=copy_order_item.product,
+            quantity=quantity,
+            price=price,
+            type=copy_order_item.type,
+            attribute=copy_order_item.attribute,
+            is_from_promotion=True,
+        )
+
+        return order_item
+
     def create_shipping_details(self, shipping_details, order):
         """
         Create shipping details for an order.
@@ -119,6 +181,20 @@ class CheckoutService:
             address=shipping_details["address"],
             phone=shipping_details["phone"],
             city=shipping_details["city"],
+            municipality=shipping_details["municipality"],
         )
 
         return shipping_details
+
+    def validate_thank_you_order_item(self, order, order_item_id, promotion_price):
+        check_promotion = order.make_thank_you_product()
+        print(check_promotion)
+        if order_item_id != check_promotion["order_item"].id:
+            raise ValidationError(
+                {"message": "The order item with the specified ID does not exist."}
+            )
+
+        if promotion_price != check_promotion["promotion_price"]:
+            raise ValidationError({"message": "The promotion price is invalid."})
+
+        return check_promotion["order_item"]

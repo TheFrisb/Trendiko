@@ -38,7 +38,6 @@ module.exports = {
       gridTemplateRows: {
         'dashboard-mobile-template': 'auto 1fr',
       },
-
     },
 
     fontFamily: {

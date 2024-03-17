@@ -3,18 +3,27 @@ function initializeToggles() {
   const toggle_contents = document.querySelectorAll('.canBeToggled');
 
   toggles.forEach(function (toggle) {
-    toggle.addEventListener('click', function () {
-      // Hide all content sections
+    toggle.addEventListener('click', function (e) {
       toggle_contents.forEach(function (content) {
         content.classList.add('hidden');
       });
 
+      // if clicked on self again, close the content and
+
+      if (toggle.classList.contains('active')) {
+        toggle.classList.remove('active');
+        const icon = toggle.querySelector('.toggle-icon');
+        icon.textContent = '+';
+        return;
+      }
+
+
       // Display the content section associated with the clicked toggle
       const contentId = toggle.getAttribute('data-content-id');
       const content = document.getElementById(contentId);
-      content.classList.remove('hidden');
+      content.classList.toggle('hidden');
 
-      // Update the toggle icons
+
       toggles.forEach(function (toggle) {
         const icon = toggle.querySelector('.toggle-icon');
         icon.textContent = '+';
@@ -22,7 +31,7 @@ function initializeToggles() {
       });
       const icon = toggle.querySelector('.toggle-icon');
       icon.textContent = '-';
-      toggle.classList.add('active');
+      toggle.classList.toggle('active');
     });
   });
 }

@@ -6,32 +6,80 @@
         <div class="flex flex-col items-center justify-center gap-4">
             <h1 class="font-bold text-2xl">Направивте вистински избор!</h1>
             <p>Ви благодариме за нарачката {{ order.shipping_details.full_name }}.</p>
+            {% if promotion_product %}
+                <p class="text-sm text-brand-action font-bold">Специјална понуда само за вас!</p>
+                <div class="flex flex-col items-center gap-2 p-3 rounded-lg border-2 border-brand-action">
+                    <p class="font-bold">ПОНУДАТА ИСТЕКУВА ЗА</p>
+                    <p class="countdownByMinutesAndSeconds text-brand-action font-bold">05:00</p>
+                    {% with thumbnails=promotion_product.order_item.get_thumbnail_loops %}
+                        <div class="flex flex-col md:flex-row justify-between items-start gap-3">
+                            <picture>
+                                <source srcset="{{ thumbnails.webp }}" type="image/webp">
+                                <source srcset="{{ webp.jpg }}" type="image/jpeg">
+                                <img src="{{ webp.jpg }}" alt="Image of a product"
+                                     class="object-cover rounded-lg" width="250" height="250">
+                            </picture>
+                            <div class="flex flex-col justify-center md:justify-between orderItem w-full">
+                                <div class="flex flex-col items-center justify-center md:justify-start md:items-start">
+                                    <p class="font-bold text-lg">{{ promotion_product.readable_name }}</p>
+                                    <p class="text-lg font-bold text-brand-action">{{ promotion_product.promotion_price }}
+                                        ден</p>
+                                    <div class="flex items-center w-4/12 min-w-[200px] h-9 bg-white rounded-lg mb-4 justify-center md:justify-start">
+                                        <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
+                                            -
+                                        </button>
+                                        <input type="number" value="1" min="1"
+                                               class="w-4/12 h-full text-center orderItem__quantityInput border-t border-b border-black/60 focus:outline-0">
+                                        <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
+                                            +
+                                        </button>
+                                    </div>
+                                </div>
+                                <button class="h-12 w-full bg-brand-action rounded-lg text-white font-bold flex items-center justify-between p-1 hover:bg-brand-primary transition-all duration-100 ease-in-out addToOrderButton"
+                                        data-order-item-id="{{ promotion_product.order_item.id }}"
+                                        data-quantity="1"
+                                        data-promotion-price="{{ promotion_product.promotion_price }}"
+                                        data-order-id="{{ order.id }}">
+                                    <div class="w-2/12 h-full flex items-center justify-center bg-white rounded-lg">
+                                        <svg class="text-white" width="24" height="21" fill="currentColor">
+                                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#buyNow"></use>
+                                        </svg>
+                                    </div>
+                                    <span class="w-10/12 text-xl">ДОДАЈ ВЕДНАШ</span>
+                                </button>
+                            </div>
+                        </div>
+                    {% endwith %}
+                </div>
+            {% endif %}
             <div class="bg-brand-primary/20 rounded-lg border border-black/20 w-full">
-                <div class="p-2 flex flex-col gap-3 ">
+                <div class="p-2 flex flex-col gap-3" id="orderItemsContainer">
                     {% for orderItem in order.order_items.all %}
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between" data-order-item-id="{{ orderItem.id }}">
                             <div class="flex gap-2">
                                 {% with thumbnails=orderItem.get_thumbnails %}
                                     <picture>
                                         <source srcset="{{ thumbnails.webp }}" type="image/webp">
-                                        <source srcset="{{ webp.jpg }}" type="image/jpeg">
-                                        <img src="{{ webp.jpg }}" alt="Image of a product"
+                                        <source srcset="{{ thumbnails.jpg }}" type="image/jpeg">
+                                        <img src="{{ thumbnails.jpg }}" alt="Image of a product"
                                              class="w-16 h-16 object-cover rounded-lg" width="64" height="64">
                                     </picture>
                                 {% endwith %}
                                 <div>
                                     <p class="font-bold">{{ orderItem.get_readable_name }}</p>
-                                    <p class="text-sm">{{ orderItem.price }} ден x {{ orderItem.quantity }}</p>
+                                    <p class="text-sm">{{ orderItem.price }} ден x <span
+                                            class="orderItem__quantity">{{ orderItem.quantity }}</span></p>
                                 </div>
                             </div>
-                            <p class="font-bold">{{ orderItem.total_price }} ден</p>
+                            <p class="font-bold"><span class="orderItem__totalPrice">{{ orderItem.total_price }}</span>
+                                ден</p>
                         </div>
                     {% endfor %}
                 </div>
                 <div class="p-2 flex flex-col gap-3  border-t border-black/20">
                     <div class="flex justify-between items-center">
                         <p class="text-sm">Цена</p>
-                        <p class="font-bold"><span id="checkout__subtotalPrice">{{ order.subtotal_price }}</span> ден
+                        <p class="font-bold"><span id="order__subtotalPrice">{{ order.subtotal_price }}</span> ден
                         </p>
                     </div>
                     <div class="flex justify-between items-center">
@@ -40,7 +88,7 @@
                     </div>
                     <div class="flex justify-between items-center">
                         <p class="text-sm">Достава</p>
-                        <p class="font-bold" id="checkout__selectedShipping">
+                        <p class="font-bold" id="order__selectedShipping">
                             {% if order.has_free_shipping %}
                                 бесплатна достава
                             {% else %}
@@ -50,7 +98,7 @@
                     </div>
                     <div class="flex justify-between items-center border-t border-black/40 py-2">
                         <p>Вкупно за плаќање на курирот</p>
-                        <p class="font-bold text-lg"><span id="checkout__totalPrice">{{ order.total_price }}</span>
+                        <p class="font-bold text-lg"><span id="order__totalPrice">{{ order.total_price }}</span>
                             ден</p>
                     </div>
                 </div>

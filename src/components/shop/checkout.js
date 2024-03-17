@@ -21,7 +21,6 @@ function checkout(formEl) {
     if (response.success) {
       window.location.href = response.data.thank_you_page_url;
     } else {
-      // The response has a list of input keys, with the errors as list. Pass all the errors to the notyf and color the inputs by keyname red
       let errors = response.data;
       Object.keys(errors).forEach(key => {
         console.log("key", key)
@@ -40,8 +39,9 @@ function validateForm(form) {
   let inputs = form.querySelectorAll('input');
   let is_valid = true;
   inputs.forEach(input => {
-    if (input.value === "") {
-      let sibling = input.previousElementSibling;
+    if (input.value === "" && input.hasAttribute('required')) {
+
+      let sibling = input.closest('.inputContainer').querySelector('.inputIcon');
       is_valid = false;
       input.classList.add('error');
       sibling.classList.add('error');

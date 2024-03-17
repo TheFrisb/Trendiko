@@ -8,18 +8,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     {% block head %}
     {% endblock head %}
-    <!-- Google fonts (Mulish) -->
-    {#    <link rel="preconnect" href="https://fonts.googleapis.com">#}
-    {#    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>#}
-    {#    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap"#}
-    {#          rel="stylesheet">#}
 
-    <!-- Adobe fonts (Century Gothic) -->
     <link href="https://fonts.cdnfonts.com/css/century-gothic-paneuropean" rel="stylesheet">
 
 
     <link rel="stylesheet" href="{% static 'shop/css/shop.css' %}">
-
+ 
     <title>{{ title }}</title>
 
     <style>
@@ -29,16 +23,15 @@
         }
     </style>
 </head>
-<body class="font-century-gothic bg-white grid grid-rows-[auto,1fr,auto] min-h-screen">
+<body class="font-century-gothic bg-white grid grid-rows-[auto,1fr,auto] min-h-screen swap">
 {% csrf_token %}
 {% include 'shop/includes/header.html' %}
-<div class="shop-container--flex text-brand-primary">
+<div class="shop-container--flex text-brand-primary relative">
     {% block content %}
     {% endblock content %}
 </div>
 
 {% include 'shop/includes/footer.html' %}
-
 <script src="{% static 'bundles/shop.bundle.js' %}"></script>
 {% block scripts %}
 {% endblock scripts %}

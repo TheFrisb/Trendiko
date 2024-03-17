@@ -1,3 +1,4 @@
+{% load static %}
 <div class="flex flex-col gap-2">
     <div class="flex flex-col ">
         <h2 class="font-bold text-lg">{{ heading }}</h2>
@@ -8,30 +9,58 @@
     </div>
     <div class="productsGrid">
         {% for product in list %}
-            <div class="w-full flex flex-col gap-1.5 hover:scale-105 transition-transform duration-300 ease-in-out group">
-                <a href="{{ product.get_absolute_url }}">
-                    <picture>
-                        <source srcset="{{ product.thumbnail_loop.url }}" type="image/webp">
-                        <source srcset="{{ product.thumbnail_loop_as_jpeg }}" type="image/jpeg">
-                        <img src="{{ product.thumbnail_loop_as_jpeg.url }}" alt="Image of a product"
-                             class="rounded-lg" width="250" height="250">
-                    </picture>
-                </a>
+            <div class="h-full flex flex-col justify-between hover:scale-105 transition-transform duration-300 ease-in-out group ">
 
-                <a href="{{ product.get_absolute_url }}"
-                   class="text-center font-bold hover:text-brand-action">{{ product.title }}
-                </a>
+                <div class="w-full flex flex-col gap-1.5 ">
+                    <a href="{{ product.get_absolute_url }}">
+                        <picture>
+                            <source srcset="{{ product.thumbnail_loop.url }}" type="image/webp">
+                            <source srcset="{{ product.thumbnail_loop_as_jpeg }}" type="image/jpeg">
+                            <img src="{{ product.thumbnail_loop_as_jpeg.url }}" alt="Image of a product"
+                                 class="rounded-lg" width="250" height="250">
+                        </picture>
+                    </a>
 
-                <div class="relative flex justify-between items-baseline">
-                    <span class="font-bold text-brand-action">{{ product.sale_price }} ден.</span>
-                    <span class="font-bold text-sm text-brand-gray -top-0.5 relative line-through">{{ product.regular_price }} ден.</span>
-                </div>
+                    <a href="{{ product.get_absolute_url }}"
+                       class="text-center font-bold hover:text-brand-action line-clamp-2">{{ product.title }}
+                    </a>
 
-                {% if product.has_free_shipping %}
-                    <div class="flex items-center justify-center bg-brand-accent py-1 px-1.5 rounded-lg">
-                        <p class="text-xs">Бесплатна испорака</p>
+                    <div class="relative flex justify-center gap-2 items-baseline">
+                        {% if product.type == 'variable' %}
+                            <span class="font-bold text-brand-action text-center">Варијабилен производ</span>
+                        {% else %}
+                            <span class="font-bold text-brand-action">{{ product.sale_price }} ден.</span>
+                            <span class="font-bold text-sm text-brand-gray -top-0.5 relative line-through">{{ product.regular_price }} ден.</span>
+                        {% endif %}
                     </div>
-                {% endif %}
+
+                    {% if product.has_free_shipping %}
+                        <div class="flex items-center justify-center bg-brand-accent py-1 px-1.5 rounded-lg">
+                            <p class="text-xs">Бесплатна испорака</p>
+                        </div>
+                    {% endif %}
+
+
+                </div>
+                <div class="mt-2 w-full">
+                    {% if product.type == 'variable' %}
+                        <a href="{{ product.get_absolute_url }}"
+                           class="block text-sm bg-brand-primary text-white font-bold px-2 h-10 rounded-lg flex items-center justify-center hover:bg-brand-action transition-all duration-100 ease-in-out">Погледни
+                            детали</a>
+                    {% else %}
+                        <button class="h-10 w-full bg-brand-primary rounded-lg text-white font-bold flex items-center justify-between p-1 hover:bg-brand-action transition-all duration-100 ease-in-out addToCartButton"
+                                data-product-id="{{ product.id }}" data-product-type="{{ product.type }}"
+                                data-attribute-id=""
+                                data-quantity="1">
+                            <span class="w-10/12">Во кошничка</span>
+                            <div class="w-2/12 h-full flex items-center justify-center bg-white rounded-lg">
+                                <svg class="text-white" width="20" height="18" fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#addToCart"></use>
+                                </svg>
+                            </div>
+                        </button>
+                    {% endif %}
+                </div>
             </div>
         {% endfor %}
     </div>

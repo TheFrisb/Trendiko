@@ -59,8 +59,19 @@
         {% endfor %}
     </div>
 </header>
+{% if show_call_button %}
+    <div class="sticky top-0 left-0 z-[100] w-full bg-brand-primary">
+        <a href="tel:+38970123456"
+           class="text-center font-bold text-white flex items-center justify-center gap-2 p-3 w-full md:hidden">ЈАВИ
+            СЕ И НАРАЧАЈ
+            <svg class="text-white rotate-[260deg]" width="24" height="24" fill="currentColor">
+                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#phone"></use>
+            </svg>
+        </a>
+    </div>
+{% endif %}
 <!-- Overlay -->
-<div class="container-fluid w-full h-full overflow-hidden absolute top-0 right-0 bg-black/70 z-[100]"
+<div class="container-fluid w-full h-full overflow-hidden fixed top-0 right-0 bg-black/70 z-[100]"
      id="sideCartOverlay">
 
 </div>
@@ -88,12 +99,15 @@
                     {% for cart_item in cart.cart_items.all %}
                         <div class="flex gap-2 items-center py-4 border-b-2 p-5 cartItem"
                              data-cart-item-id="{{ cart_item.id }}">
-                            <picture class="">
-                                <source srcset="{{ cart_item.product.thumbnail.url }}" type="image/webp">
-                                <source srcset="{{ cart_item.product.thumbnail_as_jpeg.url }}" type="image/png">
-                                <img src="{{ cart_item.product.thumbnail_as_jpeg.url }}" alt=""
-                                     class="rounded-lg" width="120" height="120">
-                            </picture>
+                            {% with currentThumbnails=cart_item.thumbnails %}
+                                <picture class="">
+                                    <source srcset="{{ currentThumbnails.webp }}" type="image/webp">
+                                    <source srcset="{{ currentThumbnails.jpg }}" type="image/png">
+                                    <img src="{{ currentThumbnails.jpg }}" alt=""
+                                         class="rounded-lg min-w-[120px]" width="120" height="120">
+                                </picture>
+                            {% endwith %}
+
                             <div class="flex-grow">
                                 <p class="font-semibold">{{ cart_item.title }}</p>
                                 <p class="font-semibold text-brand-action mt-2"><span
@@ -151,11 +165,12 @@
 
 
     <div id="checkoutContainer"
-         class="container-fluid w-full h-full overflow-auto absolute top-0 right-0 bg-black/70 z-[100] flex items-center justify-center">
-        <div class="bg-white p-6 rounded-lg min-w-[500px] flex flex-col gap-4" id="checkout">
-            <div class="relative border-b border-black/20 py-6">
+         class="container-fluid w-full h-full overflow-auto fixed top-0 right-0 bg-black/70 z-[100] flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg w-[95%] max-h-[95%] lg:max-w-[720px] lg:h-auto lg:max-h-[95%] flex flex-col gap-4 overflow-y-auto"
+             id="checkout">
+            <div class="relative border-b border-black/20 py-6 flex items-center justify-between">
                 <h3 class="font-bold text-2xl text-brand-action text-center">Колку парчиња сакате?</h3>
-                <svg class="text-black/60 cursor-pointer hover:text-brand-action absolute top-0 right-2" width="26"
+                <svg class="text-black/60 cursor-pointer hover:text-brand-action" width="26"
                      height="26"
                      fill="currentColor"
                      id="closeCheckoutIcon">
@@ -167,12 +182,14 @@
                 {% for cart_item in cart.cart_items.all %}
                     <div class="flex gap-2 items-center py-4 border-b cartItem first-of-type:pt-0"
                          data-cart-item-id="{{ cart_item.id }}">
-                        <picture class="">
-                            <source srcset="{{ cart_item.product.thumbnail.url }}" type="image/webp">
-                            <source srcset="{{ cart_item.product.thumbnail_as_jpeg.url }}" type="image/png">
-                            <img src="{{ cart_item.product.thumbnail_as_jpeg.url }}" alt=""
-                                 class="rounded-lg" width="120" height="120">
-                        </picture>
+                        {% with currentThumbnails=cart_item.thumbnails %}
+                            <picture class="">
+                                <source srcset="{{ currentThumbnails.webp }}" type="image/webp">
+                                <source srcset="{{ currentThumbnails.jpg }}" type="image/png">
+                                <img src="{{ currentThumbnails.jpg }}" alt=""
+                                     class="rounded-lg min-w-[120px]" width="120" height="120">
+                            </picture>
+                        {% endwith %}
                         <div class="flex-grow">
                             <p class="font-semibold">{{ cart_item.title }}</p>
                             <p class="font-semibold text-brand-action mt-2"><span
@@ -254,8 +271,8 @@
                     <div>
                         <label for="checkoutForm__fullName" class="font-bold text-sm">Име и презиме <span
                                 class="text-red-600">*</span></label>
-                        <div class="flex items-center">
-                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg">
+                        <div class="flex items-center inputContainer">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
                                 <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
                                      width="24"
                                      height="24"
@@ -266,15 +283,16 @@
                             <input type="text"
                                    name="full_name"
                                    id="checkoutForm__fullName"
-                                   class="checkoutFormInput">
+                                   class="checkoutFormInput"
+                                   required>
                         </div>
                     </div>
 
                     <div>
                         <label for="checkoutForm__address" class="font-bold text-sm">Адреса <span
                                 class="text-red-600">*</span></label>
-                        <div class="flex items-center">
-                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg">
+                        <div class="flex items-center inputContainer">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
                                 <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
                                      width="24"
                                      height="24"
@@ -285,15 +303,16 @@
                             <input type="text"
                                    name="address"
                                    id="checkoutForm__address"
-                                   class="checkoutFormInput">
+                                   class="checkoutFormInput"
+                                   required>
                         </div>
                     </div>
 
                     <div>
                         <label for="checkoutForm__phone" class="font-bold text-sm">Телефонски број <span
                                 class="text-red-600">*</span></label>
-                        <div class="flex items-center">
-                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg">
+                        <div class="flex items-center inputContainer">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
                                 <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
                                      width="24"
                                      height="24"
@@ -304,14 +323,15 @@
                             <input type="text"
                                    name="phone"
                                    id="checkoutForm__phone"
-                                   class="checkoutFormInput">
+                                   class="checkoutFormInput"
+                                   required>
                         </div>
                     </div>
                     <div>
                         <label for="checkoutForm__city" class="font-bold text-sm">Град <span
                                 class="text-red-600">*</span></label>
-                        <div class="flex items-center">
-                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg">
+                        <div class="flex items-start inputContainer">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
                                 <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
                                      width="24"
                                      height="24"
@@ -322,7 +342,28 @@
                             <input type="text"
                                    name="city"
                                    id="checkoutForm__city"
-                                   class="checkoutFormInput">
+                                   class="checkoutFormInput isAutoComplete"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div id="checkoutForm__municipalityContainer" class="hidden">
+                        <label for="checkoutForm__municipality" class="font-bold text-sm">Општина <span
+                                class="text-red-600">*</span></label>
+                        <div class="flex items-start inputContainer">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
+                                <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
+                                     width="24"
+                                     height="24"
+                                     fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#locate"></use>
+                                </svg>
+                            </div>
+                            <input type="text"
+                                   name="municipality"
+                                   id="checkoutForm__municipality"
+                                   class="checkoutFormInput isAutoComplete"
+                                   disabled>
                         </div>
                     </div>
                 </form>

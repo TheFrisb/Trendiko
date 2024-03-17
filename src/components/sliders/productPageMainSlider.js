@@ -28,6 +28,7 @@ function initProductPageMainSlider() {
       controls: true,
       controlsText: makeSliderButtons(28),
       mouseDrag: true,
+      preventScrollOnTouch: 'auto',
     });
 
     // if tablet or desktop screen, make thumbnails

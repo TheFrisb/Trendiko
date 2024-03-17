@@ -1,11 +1,31 @@
 const mainProduct = document.querySelector('.mainProduct');
+const chosenVariationTextContainer = document.querySelector('#chosenVariationTextContainer');
+let variationPriceContainer = document.querySelector('#variation__priceContainer');
+let chooseVariationBanner = document.querySelector('#chooseVariationBanner');
+let moneySavedEl = document.querySelector('#productMisc__moneySaved');
+let percentageSavedEl = document.querySelector('#productMisc__percentageSaved');
+let salePriceEl = document.querySelector('#productMisc__salePrice');
+let regularPriceEl = document.querySelector('#productMisc__regularPrice');
 
-function chooseAttribute(el, attributesContainer, addToCartButtons) {
-  const attributeId = el.getAttribute('data-attribute-id');
-  addToCartButtons.forEach(function (button) {
-    button.setAttribute('data-attribute-id', attributeId);
-  });
 
+function updatePrices(el) {
+  let currentSalePrice = el.getAttribute('data-attribute-sale-price');
+  let currentRegularPrice = el.getAttribute('data-attribute-regular-price');
+  let currentMoneySaved = parseInt(currentRegularPrice) - parseInt(currentSalePrice);
+  let currentPercentageSaved = Math.round((currentMoneySaved / currentRegularPrice) * 100);
+
+  moneySavedEl.textContent = currentMoneySaved;
+  salePriceEl.textContent = currentSalePrice;
+  regularPriceEl.textContent = currentRegularPrice;
+  percentageSavedEl.textContent = currentPercentageSaved;
+
+  if (variationPriceContainer.classList.contains('hidden')) {
+    variationPriceContainer.classList.remove('hidden');
+    chooseVariationBanner.classList.add('hidden');
+  }
+}
+
+function updateUI(el, attributesContainer, chosenVariationText) {
   attributesContainer.querySelectorAll('.productAttribute').forEach(function (attribute) {
     if (attribute !== el) {
       attribute.classList.remove('selected');
@@ -13,6 +33,18 @@ function chooseAttribute(el, attributesContainer, addToCartButtons) {
   });
 
   el.classList.add('selected');
+  chosenVariationTextContainer.textContent = chosenVariationText;
+  updatePrices(el);
+}
+
+function chooseAttribute(el, attributesContainer, addToCartButtons) {
+  const attributeId = el.getAttribute('data-attribute-id');
+  const chosenVariationText = el.getAttribute('data-attribute-name');
+  addToCartButtons.forEach(function (button) {
+    button.setAttribute('data-attribute-id', attributeId);
+  });
+
+  updateUI(el, attributesContainer, chosenVariationText);
 }
 
 function initializeProductAttributesListeners() {

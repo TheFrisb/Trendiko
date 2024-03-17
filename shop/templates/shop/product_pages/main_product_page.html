@@ -1,10 +1,5 @@
 {% extends 'shop/base.html' %}
 {% load static %}
-
-{% block head %}
-    <link rel="stylesheet" href="{% static 'shop/css/tinySlider.css' %}">
-{% endblock head %}
-
 {% block content %}
     <div>
         <a href="{% url 'shop:home' %}" class="text-sm font-bold hover:text-brand-action">Почетна ></a>
@@ -46,7 +41,9 @@
 
             <!-- Product title and headline -->
             <div>
-                <p class="leading-3">{{ product.title }} Change me!</p>
+                {% if product.short_description %}
+                    <p class="lg:hidden">{{ product.short_description }}</p>
+                {% endif %}
                 <h1 class="text-2xl font-bold">{{ product.title }}</h1>
             </div>
             <!-- End Product Title and Headline -->
@@ -83,24 +80,52 @@
 
             <!-- Product pricing -->
             <div class="pb-2">
-                <p class="text-sm">Заштедувате: <span
-                        class="font-bold">{{ product_misc_data.money_saved }} ден.</span>
-                </p>
+                {% if product.type == 'variable' %}
+                    <p class="font-bold text-xl text-brand-action" id="chooseVariationBanner">Одберете варијација за да
+                        ја видете цената</p>
+                    <div class="hidden" id="variation__priceContainer">
+                        <p class="text-sm">Заштедувате: <span
+                                class="font-bold"><span
+                                id="productMisc__moneySaved">{{ product_misc_data.money_saved }}</span> ден.</span>
+                        </p>
 
-                <div class="flex gap-2 justify-start items-baseline">
-                    <p class="font-bold text-2xl text-brand-action">{{ product.sale_price }} ден.</p>
-                    <p class="font-bold text-lg text-brand-gray line-through">{{ product.regular_price }}
-                        ден</p>
-                    <p class="ml-1 px-1.5 py-0.5 rounded-lg bg-brand-accent font-bold">
-                        -{{ product_misc_data.money_saved_percent }}%</p>
-                </div>
+                        <div class="flex gap-2 justify-start items-baseline">
+                            <p class="font-bold text-2xl text-brand-action"><span
+                                    id="productMisc__salePrice">{{ product.sale_price }}</span> ден.</p>
+                            <p class="font-bold text-lg text-brand-gray line-through"><span
+                                    id="productMisc__regularPrice">{{ product.regular_price }}</span>
+                                ден</p>
+                            <p class="ml-1 px-1.5 py-0.5 rounded-lg bg-brand-accent font-bold">
+                                -<span
+                                    id="productMisc__percentageSaved">{{ product_misc_data.money_saved_percent }}</span>%
+                            </p>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-sm">Заштедувате: <span
+                            class="font-bold"><span
+                            id="productMisc__moneySaved">{{ product_misc_data.money_saved }}</span> ден.</span>
+                    </p>
+
+                    <div class="flex gap-2 justify-start items-baseline">
+                        <p class="font-bold text-2xl text-brand-action"><span
+                                id="productMisc__salePrice">{{ product.sale_price }}</span> ден.</p>
+                        <p class="font-bold text-lg text-brand-gray line-through"><span
+                                id="productMisc__regularPrice">{{ product.regular_price }}</span>
+                            ден</p>
+                        <p class="ml-1 px-1.5 py-0.5 rounded-lg bg-brand-accent font-bold">
+                            -<span id="productMisc__percentageSaved">{{ product_misc_data.money_saved_percent }}</span>%
+                        </p>
+                    </div>
+                {% endif %}
             </div>
             <!-- End Product pricing -->
 
-            <!-- TODO PRODUCT VARIATIONS -->
+            <!-- PRODUCT VARIATIONS -->
             {% if product.isVariable %}
                 <div class="w-full flex flex-col gap-2">
-                    <p class="font-bold ">Варијација</p>
+                    <p class="font-bold ">Варијација <span id="chosenVariationTextContainer" class="font-normal"></span>
+                    </p>
                     <div class="flex gap-3 justify-start items-center productAttributesContainer">
                         {% for attribute in product.attributes.all %}
                             <div class="min-w-[50px] min-h-[50px] border border-black/60 rounded-lg cursor-pointer hover:opacity-80 flex justify-center items-center font-bold productAttribute"
@@ -109,9 +134,20 @@
                                     {% endif %}
                                  data-attribute-id="{{ attribute.id }}"
                                  data-attribute-type="{{ attribute.type }}"
-                                 data-attribute-price="{{ attribute.price }}">
-                                {% if attribute.type != 'color' %}
-                                    <p class="text-center">{{ attribute.value }}</p>
+                                 data-attribute-sale-price="{{ attribute.sale_price }}"
+                                 data-attribute-regular-price="{{ attribute.regular_price }}"
+                                 data-attribute-name="{{ attribute.title }}">
+                                {% if attribute.type == 'size' %}
+                                    <p class="text-center px-3 highlight">{{ attribute.value }}</p>
+                                {% elif attribute.type == 'offer' %}
+                                    <div class="flex flex-col p-2">
+                                        <p class="text-center highlight text-brand-action">{{ attribute.title }}</p>
+                                        <p class="text-center">{{ attribute.value }}</p>
+                                        <div class="flex items-center justify-center gap-2">
+                                            <p class="text-center highlight text-brand-action text-lg">{{ attribute.sale_price }}</p>
+                                            <p class="text-center line-through text-brand-gray">{{ attribute.regular_price }}</p>
+                                        </div>
+                                    </div>
                                 {% endif %}
                             </div>
                         {% endfor %}
@@ -235,8 +271,21 @@
                 <div id="technicalSpecifications" class="canBeToggled hidden">
                     {{ product.technical_specifications|safe }}
                 </div>
-                <div id="faq" class="canBeToggled hidden">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Explicabo laudantium optio sapiente.
+                <div id="faq" class="canBeToggled hidden flex flex-col gap-4">
+                    {% for faqItem in product_misc_data.faq_items %}
+                        <div class="faqItem flex flex-col gap-2 justify-start items-start w-full rounded-lg ">
+                            <div class="faqItem__header flex justify-between items-center w-full cursor-pointer group hover:bg-brand-primary px-2 py-1.5 rounded-lg">
+                                <div class="flex items-center justify-center gap-2 group-hover:text-white">
+                                    <svg class="text-brand-action" fill="currentColor" width="24" height="24">
+                                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#questionMark"></use>
+                                    </svg>
+                                    <p class="font-bold">{{ faqItem.question }}</p>
+                                </div>
+                                <p class="faqItem__icon group-hover:text-white">+</p>
+                            </div>
+                            <p class="faqItem__content hidden px-2 py-1.5 ">{{ faqItem.answer }}</p>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
             <!-- End Product Toggle content section -->

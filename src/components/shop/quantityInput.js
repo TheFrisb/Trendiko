@@ -81,6 +81,28 @@ function attachCartItemInputListeners(inputEl) {
   });
 }
 
+function attachOrderItemInputListeners(inputEl) {
+  let incrementButton = inputEl.nextElementSibling;
+  let decrementButton = inputEl.previousElementSibling;
+  let addToOrderButton = inputEl.closest('.orderItem').querySelector('.addToOrderButton');
+
+  incrementButton.addEventListener('click', function () {
+    let quantity = parseInt(inputEl.value) + 1;
+    inputEl.value = quantity;
+    addToOrderButton.setAttribute('data-quantity', quantity);
+
+  });
+  decrementButton.addEventListener('click', function () {
+    let quantity = parseInt(inputEl.value) - 1;
+    if (quantity < 1) {
+      quantity = 1;
+    }
+    inputEl.value = quantity;
+    addToOrderButton.setAttribute('data-quantity', quantity);
+  });
+
+}
+
 function initializeQuantityActions() {
   let productInputs = document.querySelectorAll('.quantityInput');
   productInputs.forEach(function (input) {
@@ -90,6 +112,11 @@ function initializeQuantityActions() {
   let cartItemInputs = document.querySelectorAll('.cartItem__quantityInput');
   cartItemInputs.forEach(function (input) {
     attachCartItemInputListeners(input);
+  });
+
+  let orderItemInputs = document.querySelectorAll('.orderItem__quantityInput');
+  orderItemInputs.forEach(function (input) {
+    attachOrderItemInputListeners(input);
   });
 
   let removeCartItemButtons = document.querySelectorAll('.cartItem__removeItem');

@@ -1,5 +1,6 @@
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
@@ -28,7 +29,7 @@ class Category(models.Model):
         max_length=200, null=True, blank=True, verbose_name="Текст за промоција"
     )
     promotion_image = ProcessedImageField(
-        upload_to="products/%Y/%m/%d/",
+        upload_to="categories/%Y/%m/%d/",
         processors=[ResizeToFill(*CATEGORY_THUMBNAIL_DIMENSIONS)],
         format="WEBP",
         options={"quality": IMAGE_QUALITY},
@@ -118,6 +119,9 @@ class Product(BaseProduct):
     categories = models.ManyToManyField(
         Category, related_name="products", verbose_name="Категории", db_index=True
     )
+    short_description = models.TextField(
+        null=True, blank=True, verbose_name="Краток опис"
+    )
     regular_price = models.PositiveIntegerField(verbose_name="Regular price")
     sale_price = models.PositiveIntegerField(
         null=True, blank=True, verbose_name="Sale price"
@@ -157,10 +161,18 @@ class Product(BaseProduct):
         money_saved = self.regular_price - self.selling_price
         money_saved_percent = int((money_saved / self.regular_price) * 100)
 
+        # select all faq items that have is_default set to True or belong to the product
+        standard_faq = Q(is_default=True)
+        product_faq = Q(product=self)
+        faq_items = FrequentlyAskedQuestion.objects.filter(
+            standard_faq | product_faq
+        ).order_by("-is_default")
+
         return {
             "review_data": review_data,
             "money_saved": money_saved,
             "money_saved_percent": money_saved_percent,
+            "faq_items": faq_items,
         }
 
     def save(self, *args, **kwargs):
@@ -205,7 +217,7 @@ class ProductImage(TimeStampedModel):
     )
 
 
-class ProductAttribute(TimeStampedModel):
+class ProductAttribute(BaseProduct):
     """Product Attribute Model"""
 
     class ProductAttributeType(models.TextChoices):
@@ -235,9 +247,31 @@ class ProductAttribute(TimeStampedModel):
         blank=True,
         verbose_name="Магацински предмет",
     )
-    name = models.CharField(max_length=140, verbose_name="Име")
     value = models.CharField(max_length=140, verbose_name="Содржина")
-    price = models.PositiveIntegerField(null=True, blank=True, verbose_name="Цена")
+    regular_price = models.PositiveIntegerField(verbose_name="Цена без попуст")
+    sale_price = models.PositiveIntegerField(verbose_name="Цена")
+
+    def get_thumbnail_loops(self):
+        if self.thumbnail and self.thumbnail.name:
+            return {
+                "webp": self.thumbnail_loop.url,
+                "jpg": self.thumbnail_loop_as_jpeg.url,
+            }
+        return {
+            "webp": self.product.thumbnail_loop.url,
+            "jpg": self.product.thumbnail_loop_as_jpeg.url,
+        }
+
+    def get_thumbnails(self):
+        if self.thumbnail and self.thumbnail.name:
+            return {
+                "webp": self.thumbnail.url,
+                "jpg": self.thumbnail_as_jpeg.url,
+            }
+        return {
+            "webp": self.product.thumbnail.url,
+            "jpg": self.product.thumbnail_as_jpeg.url,
+        }
 
     class Meta:
         verbose_name = "Атрибут"
@@ -272,6 +306,29 @@ class Review(TimeStampedModel):
     class Meta:
         verbose_name = "Рецензија"
         verbose_name_plural = "Рецензии"
+
+
+class FrequentlyAskedQuestion(TimeStampedModel):
+    question = models.CharField(max_length=200, verbose_name="Прашање")
+    answer = models.TextField(verbose_name="Одговор")
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="faqItems",
+        verbose_name="Производ",
+        db_index=True,
+        null=True,
+        blank=True,
+    )
+    is_default = models.BooleanField(
+        default=False,
+        verbose_name="Стандардно прашање (Вклучено за секој производ)",
+        db_index=True,
+    )
+
+    class Meta:
+        verbose_name = "Често поставени прашања"
+        verbose_name_plural = "Често поставени прашања"
 
 
 class BrandPage(SimplePage):

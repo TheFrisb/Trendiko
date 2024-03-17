@@ -39,8 +39,12 @@ class Cart(TimeStampedModel):
         Returns:
             bool: True if the cart has free shipping, False otherwise.
         """
-
-        return any(item.product.has_free_shipping for item in self.cart_items.all())
+        product_has_free_shipping = any(
+            item.product.has_free_shipping for item in self.cart_items.all()
+        )
+        cart_has_free_shipping = self.get_items_total >= 1500
+        print(product_has_free_shipping, cart_has_free_shipping)
+        return product_has_free_shipping or cart_has_free_shipping
 
     @property
     def get_items_total(self):
@@ -50,7 +54,6 @@ class Cart(TimeStampedModel):
         Returns:
             int: The total sale_price of all items in the cart.
         """
-
         return sum(item.total_price for item in self.cart_items.all())
 
     @property
@@ -63,7 +66,9 @@ class Cart(TimeStampedModel):
         items_total = self.get_items_total + 20
 
         if has_free_shipping:
+            print("has free shipping")
             return items_total
+        print(items_total + 130)
         return items_total + 130
 
     @property
@@ -118,7 +123,7 @@ class CartItem(TimeStampedModel):
             int: The sale_price of the cart item.
         """
         if self.attribute:
-            return self.attribute.price
+            return self.attribute.sale_price
 
         return self.product.selling_price
 
@@ -131,7 +136,7 @@ class CartItem(TimeStampedModel):
             str: The title of the cart item.
         """
         if self.attribute:
-            return f"{self.product.title} - {self.attribute.name}"
+            return f"{self.product.title} - {self.attribute.title}"
         return self.product.title
 
     @property
@@ -142,6 +147,8 @@ class CartItem(TimeStampedModel):
         Returns:
             str: The thumbnails of the cart item.
         """
+        if self.product.type == Product.ProductType.VARIABLE:
+            return self.attribute.get_thumbnail_loops()
         return {
             "webp": self.product.thumbnail_loop.url,
             "jpg": self.product.thumbnail_loop_as_jpeg.url,
@@ -157,7 +164,7 @@ class CartItem(TimeStampedModel):
         """
 
         if self.attribute:
-            return self.attribute.price * self.quantity
+            return self.attribute.sale_price * self.quantity
 
         return self.product.selling_price * self.quantity
 
@@ -194,10 +201,10 @@ class Order(TimeStampedModel):
         default=OrderStatus.PENDING,
         db_index=True,
     )
+    shipping_price = models.IntegerField(default=130)
     has_free_shipping = models.BooleanField(default=False)
     subtotal_price = models.IntegerField(default=0)
     total_price = models.IntegerField(default=0)
-    shipping_price = models.IntegerField(default=130)
     tracking_number = models.CharField(max_length=100, unique=True, db_index=True)
 
     def get_absolute_url(self):
@@ -219,7 +226,35 @@ class Order(TimeStampedModel):
         Returns:
             str: The shipping method of the order.
         """
-        return "Брза достава"
+        if self.has_free_shipping:
+            return "Бесплатна достава"
+        return "130 ден"
+
+    def make_thank_you_product(self):
+        order_item = self.order_items.order_by("created_at").first()
+        price = int(order_item.price * 0.8)
+        return {
+            "promotion_price": price,
+            "order_item": order_item,
+            "readable_name": order_item.get_readable_name,
+        }
+
+    def recalculate_order(self):
+        """
+        Recalculate the prices of the order.
+        """
+        self.subtotal_price = sum(item.total_price for item in self.order_items.all())
+        if self.subtotal_price >= 1500 or any(
+            item.product.has_free_shipping for item in self.order_items.all()
+        ):
+            self.has_free_shipping = True
+
+        if self.has_free_shipping:
+            self.total_price = self.subtotal_price + 20
+        else:
+            self.total_price = self.subtotal_price + 130
+
+        self.save()
 
     def __str__(self):
         return f"Order id: {self.id}, Status: {self.status}, Total: {self.total_price}, Created at: {self.created_at}"
@@ -248,6 +283,22 @@ class OrderItem(TimeStampedModel):
     attribute = models.ForeignKey(
         ProductAttribute, on_delete=models.CASCADE, null=True, blank=True
     )
+    is_from_promotion = models.BooleanField(default=False)
+
+    @property
+    def get_thumbnail_loops(self):
+        """
+        Get the thumbnails of the order item.
+
+        Returns:
+            str: The thumbnails of the order item.
+        """
+        if self.attribute:
+            return self.attribute.get_thumbnail_loops()
+        return {
+            "webp": self.product.thumbnail_loop.url,
+            "jpg": self.product.thumbnail_loop_as_jpeg.url,
+        }
 
     @property
     def get_thumbnails(self):
@@ -257,9 +308,11 @@ class OrderItem(TimeStampedModel):
         Returns:
             str: The thumbnails of the order item.
         """
+        if self.attribute:
+            return self.attribute.get_thumbnails()
         return {
-            "webp": self.product.thumbnail_loop.url,
-            "jpg": self.product.thumbnail_loop_as_jpeg.url,
+            "webp": self.product.thumbnail.url,
+            "jpg": self.product.thumbnail_as_jpeg.url,
         }
 
     @property
@@ -279,7 +332,7 @@ class OrderItem(TimeStampedModel):
         :return: str: The readable name of the order item.
         """
         if self.attribute:
-            return f"{self.product.title} - {self.attribute.name}"
+            return f"{self.product.title} - {self.attribute.title}"
 
         return self.product.title
 
@@ -299,6 +352,7 @@ class ShippingDetails(TimeStampedModel):
     last_name = models.CharField(max_length=50)
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=50)
+    municipality = models.CharField(max_length=50, null=True, blank=True)
     phone = models.CharField(max_length=20)
     comment = models.TextField(null=True, blank=True)
 

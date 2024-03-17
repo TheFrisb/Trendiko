@@ -12,6 +12,8 @@ from .serializers import (
     ShippingDetailsSerializer,
     CartSerializer,
     OrderSerializer,
+    AddOrderItemToOrderSerializer,
+    OrderItemSerializer,
 )
 
 
@@ -86,7 +88,6 @@ class CartItemView(APIView):
         cart_service = CartService(request.cart, ProductService())
 
         cart_service.remove_from_cart(pk)
-        print("yes")
         return Response(CartSerializer(request.cart).data, status=status.HTTP_200_OK)
 
 
@@ -114,5 +115,28 @@ class CheckoutView(APIView):
             order = checkout_service.checkout(serializer.validated_data)
 
             return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OrderItemView(APIView):
+    """
+    API view for handling operations related to order items.
+
+    The GET method is used to retrieve the order items of a specific order.
+    """
+
+    def post(self, request):
+        serializer = AddOrderItemToOrderSerializer(data=request.data)
+
+        if serializer.is_valid():
+            checkout_service = CheckoutService(request.cart)
+            order_item = checkout_service.add_order_item_to_existing_order(
+                serializer.validated_data
+            )
+
+            return Response(
+                OrderItemSerializer(order_item).data, status=status.HTTP_200_OK
+            )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

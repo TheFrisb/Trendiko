@@ -4,7 +4,15 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 
-from .models import Product, ProductAttribute, Category, Review, ProductImage, BrandPage
+from .models import (
+    Product,
+    ProductAttribute,
+    Category,
+    Review,
+    ProductImage,
+    BrandPage,
+    FrequentlyAskedQuestion,
+)
 
 
 # Register your models here.
@@ -19,6 +27,22 @@ class ProductAdminForm(forms.ModelForm):
         fields = "__all__"
 
 
+class FrequentlyAskedQuestionAdminForm(forms.ModelForm):
+    # check if when saving in the admin, if Product is not selected, is_default is True
+    def clean(self):
+        cleaned_data = super().clean()
+        product = cleaned_data.get("product")
+        is_default = cleaned_data.get("is_default")
+        if not product and not is_default:
+            raise ValidationError(
+                "Мора да биде одберано 'Стандардно прашање' ако не е одберан производот!"
+            )
+
+    class Meta:
+        model = FrequentlyAskedQuestion
+        fields = "__all__"
+
+
 class ProductAttributeInlineFormSet(BaseInlineFormSet):
     def clean(self):
         super().clean()
@@ -28,6 +52,7 @@ class ProductAttributeInlineFormSet(BaseInlineFormSet):
                 continue  # Skip empty forms
             attribute_type = form.cleaned_data.get("type")
             attribute_types.add(attribute_type)
+
             if len(attribute_types) > 1:
                 raise ValidationError("All attributes must be of the same type.")
 
@@ -36,7 +61,15 @@ class ProductAttributeInline(admin.TabularInline):
     autocomplete_fields = ["stock_item"]
     model = ProductAttribute
     extra = 0
-    fields = ["type", "name", "value", "price", "stock_item"]
+    fields = [
+        "thumbnail",
+        "type",
+        "title",
+        "value",
+        "sale_price",
+        "regular_price",
+        "stock_item",
+    ]
     formset = ProductAttributeInlineFormSet
 
     class Media:
@@ -87,6 +120,18 @@ class ReviewAdmin(admin.ModelAdmin):
 
     class Meta:
         model = Review
+
+
+@admin.register(FrequentlyAskedQuestion)
+class FrequentlyAskedQuestionAdmin(admin.ModelAdmin):
+    list_display = ["question", "answer"]
+    list_filter = ["product", "is_default"]
+    search_fields = ["question", "answer", "product__title"]
+    autocomplete_fields = ["product"]
+    form = FrequentlyAskedQuestionAdminForm
+
+    class Meta:
+        model = FrequentlyAskedQuestion
 
 
 admin.site.register(BrandPage)

@@ -17,6 +17,7 @@ class HomeView(FetchCategoriesMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         categories = context.get("categories", Category.objects.none())
         promotion_category = categories.filter(is_on_promotion=True).first()
+        print(promotion_category.promotion_image)
         if not promotion_category:
             promotion_category = categories.first()
 
@@ -50,6 +51,7 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
 
     def get_object(self, queryset=None):
         """Override get_object to include custom prefetching and selecting."""
+
         queryset = self.get_queryset().prefetch_related(
             "attributes", "reviews", "images"
         )
@@ -70,6 +72,7 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
         context["recommended_products"] = Product.objects.all().order_by("-created_at")[
             :4
         ]
+        context["show_call_button"] = True
         return context
 
 
@@ -125,6 +128,7 @@ class ThankYouDetailView(FetchCategoriesMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Thank You"
+        context["promotion_product"] = self.object.make_thank_you_product()
         return context
 
 

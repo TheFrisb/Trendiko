@@ -45,8 +45,12 @@ function toggleCheckout() {
   let inputs = checkoutForm.querySelectorAll('input');
   inputs.forEach(input => {
     input.classList.remove('error');
-    let sibling = input.previousElementSibling;
+    let sibling = input.closest('.inputContainer').querySelector('.inputIcon');
+
+    console.log(sibling);
+    console.log(input.closest('.inputContainer'))
     sibling.classList.remove('error');
+
   });
   checkoutEl.classList.toggle("active");
 }
@@ -126,7 +130,7 @@ function updateCartQuantityAndTotal(hasFreeShipping) {
     checkoutShipping.innerHTML = "бесплатна достава";
     checkoutTotal.innerHTML = cartTotalPrice;
   } else {
-    cartTotalPrice += 20;
+    cartTotalPrice += 20 + 130;
     checkoutShipping.innerHTML = "130 ден";
     checkoutTotal.innerHTML = cartTotalPrice
   }
@@ -151,7 +155,7 @@ function createSideCartItem(cartItem) {
                                   <source srcset="${thumbnails.webp}" type="image/webp">
                                   <source srcset="${thumbnails.jpg}" type="image/png">
                                   <img src="${thumbnails.jpg}" alt=""
-                                       class="rounded-lg" width="120" height="120">
+                                       class="rounded-lg min-w-[120px]" width="120" height="120">
                               </picture>
                               <div class="flex-grow">
                                   <p class="font-semibold">${cartItem.title}</p>
@@ -198,7 +202,7 @@ function createCheckoutItem(cartItem) {
                                   <source srcset="${thumbnails.webp}" type="image/webp">
                                   <source srcset="${thumbnails.jpg}" type="image/png">
                                   <img src="${thumbnails.jpg}" alt=""
-                                       class="rounded-lg" width="120" height="120">
+                                       class="rounded-lg min-w-[120px]" width="120" height="120"> 
                               </picture>
                               <div class="flex-grow">
                                   <p class="font-semibold">${cartItem.title}</p>
@@ -247,8 +251,8 @@ function updateCart(response) {
     createSideCartItem(response);
     createCheckoutItem(response);
   }
-
-  updateCartQuantityAndTotal();
+  console.log(response);
+  updateCartQuantityAndTotal(response.has_free_shipping);
 }
 
 

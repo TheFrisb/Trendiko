@@ -7,6 +7,7 @@ const URLS = {
   'UPDATE_CART_ITEM_QUANTITY': INTERNAL_API_BASE_PATH + '/cart/cart-item/',
   'REMOVE_CART_ITEM': INTERNAL_API_BASE_PATH + '/cart/cart-item/',
   'CHECKOUT': INTERNAL_API_BASE_PATH + '/cart/checkout/',
+  'ADD_TO_ORDER': INTERNAL_API_BASE_PATH + '/cart/order-item/',
 }
 
 const HTTP = {

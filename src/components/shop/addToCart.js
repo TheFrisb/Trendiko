@@ -3,6 +3,9 @@ import {isSideCartActive, toggleCheckout, toggleSideCart, updateCart} from "./ca
 import {notyf__short} from "../../utils/error";
 
 function addToCart(product_id, product_type, quantity, attributeId, isBuyNow) {
+  if (attributeId === 'undefined' || attributeId === '') {
+    attributeId = null;
+  }
   const data = {
     product_id: product_id,
     attribute_id: attributeId,
