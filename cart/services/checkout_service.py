@@ -172,7 +172,9 @@ class CheckoutService:
         self, copy_order_item, order, quantity, price
     ):
         order_item = order.order_items.filter(
-            product=copy_order_item.product, is_from_promotion=True, price=price
+            product=copy_order_item.product,
+            promotion_type=OrderItem.PromotionType.THANK_YOU,
+            price=price,
         ).first()
 
         if order_item:
