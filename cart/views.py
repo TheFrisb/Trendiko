@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 
 from cart.services.cart_service import CartService
 from cart.services.checkout_service import CheckoutService
+from facebook.services.facebook_pixel import FacebookPixel
 from shop.services.product_service import ProductService
 from .serializers import (
     AddProductToCartSerializer,
@@ -40,6 +41,9 @@ class CartItemView(APIView):
         if serializer.is_valid():
             cart_service = CartService(request.cart, ProductService())
             cart_item = cart_service.add_product_to_cart(serializer.data)
+
+            fb_pixel = FacebookPixel(request)
+            fb_pixel.add_to_cart(cart_item.product)
 
             return Response(
                 CartItemSerializer(cart_item).data, status=status.HTTP_200_OK

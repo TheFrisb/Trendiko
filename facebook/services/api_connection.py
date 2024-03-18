@@ -8,7 +8,9 @@ class FacebookApi:
         self.app_id = config("FACEBOOK_APP_ID")
         self.app_secret = config("FACEBOOK_APP_SECRET")
         self.access_token = config("FACEBOOK_ACCESS_TOKEN")
+        self.pixel_access_token = config("FACEBOOK_PIXEL_ACCESS_TOKEN")
         self.ad_account_id = config("FACEBOOK_AD_ACCOUNT_ID")
+        self.dataset_id = config("FACEBOOK_DATASET_ID")
 
         FacebookAdsApi.init(self.app_id, self.app_secret, self.access_token)
 

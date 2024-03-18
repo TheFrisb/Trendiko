@@ -3,6 +3,7 @@ from django.http import Http404
 from django.views.generic import TemplateView, DetailView, ListView
 
 from cart.models import Order
+from facebook.services.facebook_pixel import FacebookPixel
 from shop.mixins import FetchCategoriesMixin
 from shop.models import Category, Product, BrandPage
 
@@ -57,9 +58,12 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
         )
 
         slug = self.kwargs.get(self.slug_url_kwarg)
+        fb = FacebookPixel(self.request)
+
         try:
             product = queryset.get(slug=slug, status=Product.ProductStatus.PUBLISHED)
             print(product.thumbnail.url)
+            fb.view_content(product)
         except Product.DoesNotExist:
             raise Http404("Product does not exist or is not published.")
 
