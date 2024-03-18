@@ -5,20 +5,20 @@ from django.contrib import admin
 from .models import StockItem, ImportItem, Import, ReservedStockItem
 
 
-class StockItemForm(forms.ModelForm):
-    class Meta:
-        model = StockItem
-        fields = "__all__"
-
-    def clean_sku(self):
-        sku = self.cleaned_data["sku"]
-        instance = getattr(self, "instance", None)
-        if instance and instance.pk:
-            if instance.sku != sku:
-                raise forms.ValidationError(
-                    "Changing the SKU of an existing StockItem is not allowed."
-                )
-        return sku
+# class StockItemForm(forms.ModelForm):
+#     class Meta:
+#         model = StockItem
+#         fields = "__all__"
+#
+#     def clean_sku(self):
+#         sku = self.cleaned_data["sku"]
+#         instance = getattr(self, "instance", None)
+#         if instance and instance.pk:
+#             if instance.sku != sku:
+#                 raise forms.ValidationError(
+#                     "Changing the SKU of an existing StockItem is not allowed."
+#                 )
+#         return sku
 
 
 class ImportItemForm(forms.ModelForm):
@@ -50,9 +50,9 @@ class ImportAdmin(admin.ModelAdmin):
 @admin.register(StockItem)
 class StockItemAdmin(admin.ModelAdmin):
     search_fields = ["label", "sku"]
-    readonly_fields = ["stock", "qr_code"]
+    readonly_fields = ["qr_code"]
 
-    form = StockItemForm
+    # form = StockItemForm
 
 
 @admin.register(ReservedStockItem)
