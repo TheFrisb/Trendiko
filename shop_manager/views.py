@@ -4,6 +4,7 @@ from django.views.generic import ListView
 from cart.models import Order
 from stock.models import StockItem
 from .forms.export_orders_form import ExportOrdersForm
+from .forms.export_stock_information_form import ExportStockInformationForm
 from .utils import (
     ShopManagerRequiredMixin,
     SidebarItemsMixin,
@@ -74,6 +75,14 @@ class StockManagerHome(StockManagerRequiredMixin, BaseDashboardView):
     template_name = f"{dashboards_dir}/stock_items.html"
     context_object_name = "stock_items"
     paginate_by = 24
+
+    def post(self, request, *args, **kwargs):
+        form = ExportStockInformationForm(request.POST)
+        return FileResponse(
+            form.export_stock_imports_information(),
+            as_attachment=True,
+            filename="stock.xlsx",
+        )
 
     def get_queryset(self):
         return StockItem.objects.all()

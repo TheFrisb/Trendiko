@@ -10,7 +10,11 @@ class ChangeOrderStatusSerializer(serializers.Serializer):
     def validate(self, data):
         order_id = data.get("order_id")
         new_status = data.get("new_status")
-        order = Order.objects.filter(id=order_id).first()
+        order = (
+            Order.objects.filter(id=order_id)
+            .prefetch_related("order_items", "order_items__reserved_stock_items")
+            .first()
+        )
 
         if not order:
             raise serializers.ValidationError("Order not found")

@@ -7,6 +7,7 @@ from rest_framework.permissions import BasePermission
 
 from cart.models import Order
 from shop_manager.forms.export_orders_form import ExportOrdersForm
+from shop_manager.forms.export_stock_information_form import ExportStockInformationForm
 
 
 class ShopManagerBaseMixin:
@@ -116,6 +117,15 @@ class SidebarItemsMixin:
                     "url": reverse("admin:stock_import_add"),
                     "icon": "pencil",
                 },
+            ],
+            "forms": [
+                {
+                    "title": "Export stock import:",
+                    "form": ExportStockInformationForm(),
+                    "action": reverse("shop_manager:stock_dashboard"),
+                    "method": "POST",
+                    "button_text": "Export stock imports",
+                }
             ],
         }
 

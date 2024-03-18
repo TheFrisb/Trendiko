@@ -276,6 +276,12 @@ class OrderItem(TimeStampedModel):
     It also includes a method to calculate the total sale_price of the item.
     """
 
+    class PromotionType(models.TextChoices):
+        """Order Status"""
+
+        THANK_YOU = "thank_you", _("thank_you")
+        SIDECART = "sidecart", _("sidecart")
+
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE, related_name="order_items"
     )
@@ -301,7 +307,9 @@ class OrderItem(TimeStampedModel):
     attribute = models.ForeignKey(
         ProductAttribute, on_delete=models.SET_NULL, null=True, blank=True
     )
-    is_from_promotion = models.BooleanField(default=False)
+    promotion_type = models.CharField(
+        max_length=25, choices=PromotionType, default=None, null=True, blank=True
+    )
 
     @property
     def get_thumbnail_loops(self):

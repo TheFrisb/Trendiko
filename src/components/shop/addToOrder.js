@@ -1,5 +1,5 @@
 import {HTTP, URLS} from "../../http/client";
-import {notyf__short} from "../../utils/error";
+import {notyf__long, notyf__short} from "../../utils/error";
 
 const orderItemsContainer = document.getElementById('orderItemsContainer');
 const orderSubtotalPriceContainer = document.getElementById('order__subtotalPrice');
@@ -21,6 +21,11 @@ function addToOrder(orderId, orderItemId, quantity, trackingCode, promotionPrice
       notyf__short.success("Продуктот е додаден во порачката");
       makeOrUpdateOrderItemRow(data);
       updateOrderTotals(data);
+    } else {
+      let status_code = response.status;
+      if (status_code === 403) {
+        notyf__long.error(data.message);
+      }
     }
   });
 }

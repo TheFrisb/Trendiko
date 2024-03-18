@@ -187,7 +187,7 @@ class CheckoutService:
                 type=copy_order_item.type,
                 attribute=copy_order_item.attribute,
                 stock_item=copy_order_item.stock_item,
-                is_from_promotion=True,
+                promotion_type=OrderItem.PromotionType.THANK_YOU,
             )
 
         try:

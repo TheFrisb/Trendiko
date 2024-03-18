@@ -43,7 +43,7 @@
                         <td class="table_field flex flex-col items-start grow justify-between gap-1">
                             <p>{{ order.get_status_display }}</p>
 
-                            {% with button_classes="py-1.5 px-4 rounded-lg text-sm font-bold w-full max-w-[120px] changeOrderStatustransition-all duration-100 ease-in-out" %}
+                            {% with button_classes="py-1.5 px-4 rounded-lg text-sm font-bold w-full max-w-[120px] changeOrderStatus transition-all duration-100 ease-in-out" %}
 
                                 {% if order.status == OrderStatuses.PENDING %}
                                     <button class="{{ button_classes }} bg-dashboard-blue text-white hover:bg-green-600"

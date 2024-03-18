@@ -130,7 +130,7 @@ class OrderItemView(APIView):
         serializer = AddOrderItemToOrderSerializer(data=request.data)
 
         if serializer.is_valid():
-            checkout_service = CheckoutService(request.cart)
+            checkout_service = CheckoutService(request)
             order_item = checkout_service.add_order_item_to_existing_order(
                 serializer.validated_data
             )

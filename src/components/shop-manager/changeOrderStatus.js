@@ -22,8 +22,9 @@ function changeOrderStatus(event) {
     if (response.success) {
       const tableRow = button.closest('tr');
       tableRow.remove();
+      notyf__long.success("Статусот на порачката е променет");
     } else {
-      notyf__long.error('Error: ' + response.data);
+      notyf__long.error(response.data.message);
     }
   });
 }
@@ -31,6 +32,7 @@ function changeOrderStatus(event) {
 function initializeChangeOrderStatusButtons() {
   changeOrderButtons.forEach((button) => {
     button.addEventListener('click', changeOrderStatus);
+    console.log('changeOrderStatus button initialized')
   });
 }
 

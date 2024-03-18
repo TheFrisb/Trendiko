@@ -21,11 +21,24 @@ class StockItemForm(forms.ModelForm):
         return sku
 
 
+class ImportItemForm(forms.ModelForm):
+    # when saving a new import item, make quantity=initial_quantity
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if not instance.pk:
+            instance.quantity = instance.initial_quantity
+        if commit:
+            instance.save()
+        return instance
+
+
 class ImportItemInline(admin.StackedInline):
     model = ImportItem
     extra = 1
     autocomplete_fields = ["stock_item"]
-    readonly_fields = ["reserved_stock"]
+    readonly_fields = ["reserved_stock", "quantity"]
+
+    form = ImportItemForm
 
 
 @admin.register(Import)
@@ -44,4 +57,4 @@ class StockItemAdmin(admin.ModelAdmin):
 
 @admin.register(ReservedStockItem)
 class ReservedStockItemAdmin(admin.ModelAdmin):
-    search_fields = ["stock_item__label", "stock_item__sku"]
+    pass

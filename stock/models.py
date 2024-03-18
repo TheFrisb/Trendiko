@@ -66,8 +66,11 @@ class Import(TimeStampedModel):
 class ImportItem(TimeStampedModel):
     parentImport = models.ForeignKey(Import, on_delete=models.CASCADE)
     stock_item = models.ForeignKey(StockItem, on_delete=models.CASCADE)
+    initial_quantity = models.PositiveIntegerField(
+        default=0, verbose_name="Увезена количина"
+    )
     quantity = models.PositiveIntegerField(
-        default=0, verbose_name="Количина", db_index=True
+        default=0, verbose_name="Моментална залиха", db_index=True
     )
     price_no_vat = models.PositiveIntegerField(default=0, verbose_name="Цена без ДДВ")
     price_vat = models.PositiveIntegerField(default=0, verbose_name="Цена со ДДВ")
@@ -112,28 +115,41 @@ class ReservedStockItem(TimeStampedModel):
         """Product Status"""
 
         PENDING = "PENDING", "Pending"
-        ARCHIVED = "RESERVED", "Reserved"
+        ARCHIVED = "ARCHIVED", "Archived"
         DEPLETED = "DEPLETED", "Depleted"
 
     status = models.CharField(
         max_length=20, choices=Status.choices, default=Status.PENDING
     )
     order_item = models.ForeignKey("cart.OrderItem", on_delete=models.CASCADE)
-    import_item = models.ForeignKey(ImportItem, on_delete=models.SET_NULL, null=True)
+    import_item = models.ForeignKey(ImportItem, on_delete=models.PROTECT, null=True)
     initial_quantity = models.PositiveIntegerField(
         default=0, verbose_name="Почетна количина"
     )
     quantity = models.PositiveIntegerField(default=0, verbose_name="Количина")
 
     def __str__(self):
-        return f"Резервација за {self.order_item.product.title} - {self.initial_quantity} од {self.import_item.stock_item.title}"
+        return (
+            f"Резервација за {self.order_item.product.title} - {self.initial_quantity}"
+            f" од {self.import_item.stock_item.title}"
+        )
 
     def save(self, *args, **kwargs):
         if not self.pk:
             self.quantity = self.initial_quantity
 
         self.import_item.reserved_stock = self.calculate_reserved_stock()
+        if self.import_item.reserved_stock > self.import_item.quantity:
+            raise ValueError(
+                {
+                    "error": "The reserved stock cannot be greater than the import item quantity",
+                    "order_item": self.order_item,
+                }
+            )
+
         self.import_item.save()
+        if self.quantity == 0:
+            self.status = self.Status.DEPLETED
 
         super().save(*args, **kwargs)
 
