@@ -50,7 +50,8 @@
                         {% endif %}
                         {% if item.forms %}
                             {% for form in item.forms %}
-                                <form method="{{ form.method }}" class="flex flex-col gap-2" action="{{ form.action }}">
+                                <form method="{{ form.method }}" class="flex flex-col gap-2 w-full"
+                                      action="{{ form.action }}">
                                     <p class="sidebar-item-content-title font-bold">
                                         {{ form.title }}
                                     </p>

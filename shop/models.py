@@ -168,11 +168,19 @@ class Product(BaseProduct):
             standard_faq | product_faq
         ).order_by("-is_default")
 
+        attribute_label = None
+        if self.type == self.ProductType.VARIABLE and self.attributes.exists():
+            attribute_instance = self.attributes.first()
+            attribute_label = attribute_instance.get_attribute_display(
+                attribute_instance.type
+            )
+
         return {
             "review_data": review_data,
             "money_saved": money_saved,
             "money_saved_percent": money_saved_percent,
             "faq_items": faq_items,
+            "attribute_label": attribute_label,
         }
 
     def save(self, *args, **kwargs):
@@ -223,9 +231,9 @@ class ProductAttribute(BaseProduct):
     class ProductAttributeType(models.TextChoices):
         """Product Attribute Type"""
 
-        COLOR = "color", _("Color")
-        SIZE = "size", _("Size")
-        OFFER = "offer", _("Offer")
+        COLOR = "color", _("боја")
+        SIZE = "size", _("големина")
+        OFFER = "offer", _("понуда")
         # PROMOTED = "cart_offer", _("Cart Offer")
 
     product = models.ForeignKey(
@@ -250,6 +258,9 @@ class ProductAttribute(BaseProduct):
     value = models.CharField(max_length=140, verbose_name="Содржина")
     regular_price = models.PositiveIntegerField(verbose_name="Цена без попуст")
     sale_price = models.PositiveIntegerField(verbose_name="Цена")
+
+    def get_attribute_display(self, attribute_type_value):
+        return self.ProductAttributeType(attribute_type_value).label
 
     def get_thumbnail_loops(self):
         if self.thumbnail and self.thumbnail.name:

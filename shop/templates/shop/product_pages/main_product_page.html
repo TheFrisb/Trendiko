@@ -81,7 +81,8 @@
             <!-- Product pricing -->
             <div class="pb-2">
                 {% if product.type == 'variable' %}
-                    <p class="font-bold text-xl text-brand-action" id="chooseVariationBanner">Одберете варијација за да
+                    <p class="font-bold text-xl text-brand-action" id="chooseVariationBanner">
+                        Одберете {{ product_misc_data.attribute_label }} за да
                         ја видете цената</p>
                     <div class="hidden" id="variation__priceContainer">
                         <p class="text-sm">Заштедувате: <span
@@ -124,7 +125,8 @@
             <!-- PRODUCT VARIATIONS -->
             {% if product.isVariable %}
                 <div class="w-full flex flex-col gap-2">
-                    <p class="font-bold ">Варијација <span id="chosenVariationTextContainer" class="font-normal"></span>
+                    <p class="font-bold capitalize">{{ product_misc_data.attribute_label }} <span
+                            id="chosenVariationTextContainer" class="font-normal"></span>
                     </p>
                     <div class="flex gap-3 justify-start items-center productAttributesContainer">
                         {% for attribute in product.attributes.all %}
@@ -384,7 +386,8 @@
         <!-- End product review list -->
     {% endif %}
 
-    {% with list=recommended_products heading="Производи Препорачани за тебе" %}
+    {% url 'shop:category_page' slug=recommended_products_promotion.redirect_slug as all_products_url %}
+    {% with list=recommended_products_promotion.products heading="Производи Препорачани за тебе" redirect_url=all_products_url %}
         {% include 'shop/includes/product_list.html' %}
     {% endwith %}
 

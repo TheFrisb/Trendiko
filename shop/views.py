@@ -35,7 +35,7 @@ class HomeView(FetchCategoriesMixin, TemplateView):
                         has_free_shipping=True,
                         status=Product.ProductStatus.PUBLISHED,
                     ).order_by("-created_at")[:4],
-                    "redirect_url": "besplatna-dostava",
+                    "redirect_slug": "besplatna-dostava",
                 },
                 "title": "Home",
             }
@@ -59,6 +59,7 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
         slug = self.kwargs.get(self.slug_url_kwarg)
         try:
             product = queryset.get(slug=slug, status=Product.ProductStatus.PUBLISHED)
+            print(product.thumbnail.url)
         except Product.DoesNotExist:
             raise Http404("Product does not exist or is not published.")
 
@@ -69,9 +70,13 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["title"] = self.object.title
         context["product_misc_data"] = self.object.get_product_misc_data()
-        context["recommended_products"] = Product.objects.all().order_by("-created_at")[
-            :4
-        ]
+        context["recommended_products_promotion"] = {
+            "products": Product.objects.filter(
+                status=Product.ProductStatus.PUBLISHED
+            ).order_by("-created_at")[:4],
+            "redirect_slug": "site-proizvodi",
+        }
+
         context["show_call_button"] = True
         return context
 

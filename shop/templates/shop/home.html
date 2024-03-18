@@ -109,9 +109,10 @@
         {% endfor %}
     </div>
     <!-- End of Category list -->
-    {% url 'shop:category_page' slug=free_shipping_promotion.redirect_slug as free_shipping_products_Url %}
-    {% if free_shipping_promotion %}
-        {% with list=free_shipping_promotion.products heading="Производи со бесплатна испорака" redirect_url=free_shipping_products_Url %}
+
+    {% if free_shipping_promotion.products %}
+        {% url 'shop:category_page' slug=free_shipping_promotion.redirect_slug as free_shipping_products_url %}
+        {% with list=free_shipping_promotion.products heading="Производи со бесплатна испорака" redirect_url=free_shipping_products_url %}
             {% include 'shop/includes/product_list.html' %}
         {% endwith %}
     {% endif %}
