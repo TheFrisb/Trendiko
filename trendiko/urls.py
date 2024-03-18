@@ -32,9 +32,9 @@ urlpatterns = [
     # END THIRD PARTY APPS URLS
     path("admin/", admin.site.urls),
     path("shop-manager/", include("shop_manager.urls")),
-    path("facebook/", include("facebook.urls")),
     path("api/cart/", include("cart.urls")),
     path("api/stock/", include("stock.urls")),
+    # path("facebook/", include("facebook.urls")),
     path("", include("shop.urls")),
 ]
 

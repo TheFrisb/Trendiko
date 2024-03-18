@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "imagekit",
     "ckeditor",
     "ckeditor_uploader",
+    "django_crontab",
     # Local apps
     "common.apps.CommonConfig",
     "shop.apps.ShopConfig",
@@ -235,3 +236,7 @@ CKEDITOR_CONFIGS = {
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CRONJOBS = [
+    ("50 23 * * *", "facebook.cron.update_facebook_catalogue_feed"),
+]

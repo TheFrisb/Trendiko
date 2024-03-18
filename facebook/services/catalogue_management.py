@@ -1,7 +1,8 @@
-import io
+import os
 
 import xlsxwriter
 from decouple import config
+from django.conf import settings
 
 from shop.models import Product
 
@@ -17,10 +18,15 @@ class CatalogueManager:
         self.brand = "Trendiko"
         self.base_url = config("BASE_URL")
         self.delimiter = ","
+        self.output_file_path = os.path.join(
+            settings.MEDIA_ROOT, "facebook_catalogue_feed.xlsx"
+        )
 
     def make_xlsx_catalogue_feed(self):
-        output = io.BytesIO()
-        workbook = xlsxwriter.Workbook(output, {"in_memory": True})
+        if os.path.exists(self.output_file_path):
+            os.remove(self.output_file_path)
+
+        workbook = xlsxwriter.Workbook(self.output_file_path)
         worksheet = workbook.add_worksheet()
 
         row = 0
@@ -36,8 +42,7 @@ class CatalogueManager:
                 row += 1
 
         workbook.close()
-        output.seek(0)
-        return output
+        return self.output_file_path
 
     def make_headers(self, worksheet, row, col):
         headers = [
