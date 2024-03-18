@@ -273,7 +273,7 @@
                                 class="text-red-600">*</span></label>
                         <div class="flex items-center inputContainer">
                             <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
-                                <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
+                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
                                      width="24"
                                      height="24"
                                      fill="currentColor">
@@ -287,52 +287,12 @@
                                    required>
                         </div>
                     </div>
-
-                    <div>
-                        <label for="checkoutForm__address" class="font-bold text-sm">Адреса <span
-                                class="text-red-600">*</span></label>
-                        <div class="flex items-center inputContainer">
-                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
-                                <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
-                                     width="24"
-                                     height="24"
-                                     fill="currentColor">
-                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#pin"></use>
-                                </svg>
-                            </div>
-                            <input type="text"
-                                   name="address"
-                                   id="checkoutForm__address"
-                                   class="checkoutFormInput"
-                                   required>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="checkoutForm__phone" class="font-bold text-sm">Телефонски број <span
-                                class="text-red-600">*</span></label>
-                        <div class="flex items-center inputContainer">
-                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
-                                <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
-                                     width="24"
-                                     height="24"
-                                     fill="currentColor">
-                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#phone"></use>
-                                </svg>
-                            </div>
-                            <input type="text"
-                                   name="phone"
-                                   id="checkoutForm__phone"
-                                   class="checkoutFormInput"
-                                   required>
-                        </div>
-                    </div>
                     <div>
                         <label for="checkoutForm__city" class="font-bold text-sm">Град <span
                                 class="text-red-600">*</span></label>
                         <div class="flex items-start inputContainer">
                             <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
-                                <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
+                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
                                      width="24"
                                      height="24"
                                      fill="currentColor">
@@ -352,7 +312,7 @@
                                 class="text-red-600">*</span></label>
                         <div class="flex items-start inputContainer">
                             <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
-                                <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
+                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
                                      width="24"
                                      height="24"
                                      fill="currentColor">
@@ -364,6 +324,64 @@
                                    id="checkoutForm__municipality"
                                    class="checkoutFormInput isAutoComplete"
                                    disabled>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="checkoutForm__address" class="font-bold text-sm">Адреса <span
+                                class="text-red-600">*</span></label>
+                        <div class="flex items-center inputContainer">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
+                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
+                                     width="24"
+                                     height="24"
+                                     fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#pin"></use>
+                                </svg>
+                            </div>
+                            <input type="text"
+                                   name="address"
+                                   id="checkoutForm__address"
+                                   class="checkoutFormInput"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="checkoutForm__phone" class="font-bold text-sm">Телефонски број <span
+                                class="text-red-600">*</span></label>
+                        <div class="flex items-center inputContainer">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
+                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
+                                     width="24"
+                                     height="24"
+                                     fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#phone"></use>
+                                </svg>
+                            </div>
+                            <input type="text"
+                                   name="phone"
+                                   id="checkoutForm__phone"
+                                   class="checkoutFormInput"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="checkoutForm__email" class="font-bold text-sm">E-mail</label>
+                        <div class="flex items-center inputContainer">
+                            <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
+                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
+                                     width="24"
+                                     height="24"
+                                     fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#envelope"></use>
+                                </svg>
+                            </div>
+                            <input type="email"
+                                   name="email"
+                                   id="checkoutForm__email"
+                                   class="checkoutFormInput"
+                            >
                         </div>
                     </div>
                 </form>

@@ -242,7 +242,10 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(max_length=100, required=True)
     phone = serializers.CharField(max_length=12, required=True)
     city = serializers.CharField(max_length=50, required=True)
-    municipality = serializers.CharField(max_length=50, required=False)
+    municipality = serializers.CharField(
+        max_length=50, required=False, allow_blank=True
+    )
+    email = serializers.EmailField(required=False, allow_blank=True)
 
     class Meta:
         """
@@ -250,7 +253,7 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
         """
 
         model = ShippingDetails
-        fields = ["full_name", "address", "city", "phone", "municipality"]
+        fields = ["full_name", "address", "city", "phone", "municipality", "email"]
 
     def validate(self, data):
         """
@@ -281,6 +284,11 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
             data["municipality"] = self.validate_and_set_municipality(
                 data.get("municipality")
             )
+        except ValueError as e:
+            errors.update(e.args[0])
+
+        try:
+            data["email"] = self.validate_and_set_email(data.get("email"))
         except ValueError as e:
             errors.update(e.args[0])
 
@@ -355,3 +363,14 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
         if municipality not in [c["latin"] for c in SUPPORTED_CITIES]:
             raise ValueError({"municipality": "Одберете ја вашата општина од листата"})
         return municipality
+
+    def validate_and_set_email(self, value):
+        """
+        Validate the email
+        :param value: the email to be validated
+        :return: the validated email
+        """
+        if not value or value == "":
+            return None
+
+        return value

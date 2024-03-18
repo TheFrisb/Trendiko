@@ -4,18 +4,18 @@ module.exports = {
     // path to all app templates
     // '**/templates/**/*.html',
     // '**/templates/**/**/*.html',
-    // '**/static/**/*.js',
+    '**/static/**/*.js',
 
     // Build shop
-    // './shop/templates/**/*.html',
-    // './shop/templates/**/**/*.html',
-    // './shop/templates/**/**/**/*.html',
+    './shop/templates/**/*.html',
+    './shop/templates/**/**/*.html',
+    './shop/templates/**/**/**/*.html',
 
     // Build shop-manager
-    './shop_manager/templates/**/*.html',
-    './shop_manager/templates/**/**/*.html',
-    './shop_manager/templates/**/**/**/*.html',
-    './static/bundles/shop_manager.bundle.js',
+    // './shop_manager/templates/**/*.html',
+    // './shop_manager/templates/**/**/*.html',
+    // './shop_manager/templates/**/**/**/*.html',
+    // './static/bundles/shop_manager.bundle.js',
 
   ],
   theme: {

@@ -1,8 +1,1 @@
-/*!
-* CookieConsent 3.0.0
-* https://github.com/orestbida/cookieconsent/tree/v3
-* Author Orest Bida
-* Released under the MIT License
-*/
-
 /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */

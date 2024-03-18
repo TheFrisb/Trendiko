@@ -381,6 +381,7 @@ class ShippingDetails(TimeStampedModel):
     municipality = models.CharField(max_length=50, null=True, blank=True)
     phone = models.CharField(max_length=20)
     comment = models.TextField(null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
 
     @property
     def full_name(self):
