@@ -9,6 +9,7 @@ from .utils import (
     ShopManagerRequiredMixin,
     SidebarItemsMixin,
     StockManagerRequiredMixin,
+    AnalyticsManagerRequiredMixin,
 )
 
 # Create your views here.
@@ -105,4 +106,18 @@ class ScanStock(StockManagerRequiredMixin, BaseDashboardView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Скенирај залиха"
+        return context
+
+
+class AnalyticsDashboard(AnalyticsManagerRequiredMixin, BaseDashboardView):
+    model = None
+    template_name = f"{dashboards_dir}/analytics.html"
+
+    def get_queryset(self):
+        # Fix
+        return None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Аналитика"
         return context

@@ -46,6 +46,20 @@ class StockManagerRequiredMixin(AccessMixin):
         return f"{resolve_url('admin:login')}?next={next_url}"
 
 
+class AnalyticsManagerRequiredMixin(AccessMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.groups.filter(name="analytics_manager").exists():
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+    def handle_no_permission(self):
+        return HttpResponseRedirect(self.get_login_url())
+
+    def get_login_url(self):
+        next_url = self.request.get_full_path()
+        return f"{resolve_url('admin:login')}?next={next_url}"
+
+
 # Permission class for DRF views
 class IsShopManagerPermission(ShopManagerBaseMixin, BasePermission):
     def has_permission(self, request, view):
@@ -64,6 +78,9 @@ class SidebarItemsMixin:
 
         if user.groups.filter(name="stock_manager").exists():
             sidebar_items.append(self.get_stock_manager_items())
+
+        if user.groups.filter(name="analytics_manager").exists():
+            sidebar_items.append(self.get_analytics_manager_items())
 
         return sidebar_items
 
@@ -133,3 +150,17 @@ class SidebarItemsMixin:
         context = super().get_context_data(**kwargs)
         context["sidebar_items"] = self.get_sidebar_items()
         return context
+
+    def get_analytics_manager_items(self):
+        analytics_dashboard_url = reverse("shop_manager:analytics_dashboard")
+        return {
+            "title": "Analytics",
+            "icon": "scatter-chart",
+            "items": [
+                {
+                    "name": "Daily rows",
+                    "url": analytics_dashboard_url,
+                    "icon": "line-chart",
+                },
+            ],
+        }
