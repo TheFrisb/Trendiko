@@ -42,8 +42,11 @@ class CartItemView(APIView):
             cart_service = CartService(request.cart, ProductService())
             cart_item = cart_service.add_product_to_cart(serializer.data)
 
-            fb_pixel = FacebookPixel(request)
-            fb_pixel.add_to_cart(cart_item.product)
+            try:
+                fb_pixel = FacebookPixel(request)
+                fb_pixel.add_to_cart(cart_item.product)
+            except Exception as e:
+                pass
 
             return Response(
                 CartItemSerializer(cart_item).data, status=status.HTTP_200_OK
