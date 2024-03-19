@@ -36,7 +36,7 @@ class ImportItemInline(admin.StackedInline):
     model = ImportItem
     extra = 1
     autocomplete_fields = ["stock_item"]
-    readonly_fields = ["reserved_stock", "quantity"]
+    readonly_fields = ["reserved_stock"]
 
     form = ImportItemForm
 
