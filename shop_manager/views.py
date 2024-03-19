@@ -86,7 +86,7 @@ class StockManagerHome(StockManagerRequiredMixin, BaseDashboardView):
         )
 
     def get_queryset(self):
-        return StockItem.objects.all()
+        return StockItem.objects.filter().prefetch_related("importitem_set")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

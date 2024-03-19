@@ -43,6 +43,13 @@ class StockItem(BaseProduct):
 
         return file
 
+    @property
+    def reserved_stock(self):
+        # for items in import items sum the reserved stock and return
+        if self.importitem_set.exists():
+            return sum([item.reserved_stock for item in self.importitem_set.all()])
+        return 0
+
     class Meta:
         verbose_name = "Магацински Продукт"
         verbose_name_plural = "Магацински Продукт"
