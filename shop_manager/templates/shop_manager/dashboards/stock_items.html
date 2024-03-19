@@ -24,11 +24,13 @@
                     <tbody class="">
                     {% for item in page_obj %}
                         <tr class="border-b-2 border-gray-200">
-                            {% if item.thumbnail %}
-                                <td class="table_field">
-                                    <img src="{{ item.thumbnail.url }}" alt="" class="w-24 h-24 object-cover">
-                                </td>
-                            {% endif %}
+
+                            <td class="table_field">
+                                {% if item.thumbnail %}
+                                    <img src="{{ item.thumbnail.url }}" alt="Нема слика" class="w-24 h-24 object-cover">
+                                {% endif %}
+                            </td>
+
                             <td class="table_field">
                                 <p>{{ item.title }}</p>
                             </td>
