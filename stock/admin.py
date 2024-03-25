@@ -22,11 +22,22 @@ class StockItemForm(forms.ModelForm):
 
 
 class ImportItemForm(forms.ModelForm):
-    # when saving a new import item, make quantity=initial_quantity
+    def clean_quantity(self):
+        instance = getattr(self, "instance", None)
+        quantity = self.cleaned_data["quantity"]
+
+        if instance and instance.pk:
+            if quantity < instance.reserved_stock:
+                raise forms.ValidationError(
+                    "Quantity cannot be less than the reserved stock."
+                )
+        return quantity
+
     def save(self, commit=True):
         instance = super().save(commit=False)
         if not instance.pk:
             instance.quantity = instance.initial_quantity
+
         if commit:
             instance.save()
         return instance
