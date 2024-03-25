@@ -50,12 +50,16 @@ class StockItem(BaseProduct):
             return sum([item.reserved_stock for item in self.importitem_set.all()])
         return 0
 
+    @property
+    def available_stock(self):
+        return self.stock - self.reserved_stock
+
     class Meta:
-        verbose_name = "Магацински Продукт"
-        verbose_name_plural = "Магацински Продукт"
+        verbose_name = "Stock Item"
+        verbose_name_plural = "Stock Items"
 
     def __str__(self):
-        return f"{self.title} - {self.sku}"
+        return f"[{self.sku}] {self.title}, {self.stock} items in stock"
 
 
 class Import(TimeStampedModel):

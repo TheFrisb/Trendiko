@@ -19,6 +19,7 @@ const closeCheckoutIcon = document.getElementById("closeCheckoutIcon");
 const checkoutBody = document.getElementById("checkoutBody");
 const checkoutSubtotal = document.getElementById("checkout__subtotalPrice");
 const checkoutShipping = document.getElementById("checkout__selectedShipping");
+const checkoutShipping2 = document.getElementById("checkout__selectedShipping2");
 const checkoutTotal = document.getElementById("checkout__totalPrice");
 const checkoutButton = document.getElementById("checkoutBtn");
 
@@ -128,10 +129,12 @@ function updateCartQuantityAndTotal(hasFreeShipping) {
   if (hasFreeShipping) {
     cartTotalPrice += 20;
     checkoutShipping.innerHTML = "бесплатна достава";
+    checkoutShipping2.innerHTML = "бесплатна достава";
     checkoutTotal.innerHTML = cartTotalPrice;
   } else {
     cartTotalPrice += 20 + 130;
     checkoutShipping.innerHTML = "130 ден";
+    checkoutShipping2.innerHTML = "130 ден";
     checkoutTotal.innerHTML = cartTotalPrice
   }
 
@@ -148,7 +151,7 @@ function removeCartItemElement(cartItemId, hasFreeShipping) {
 function createSideCartItem(cartItem) {
   const thumbnails = cartItem.thumbnails;
   const sideCartItemDiv = document.createElement("div");
-  sideCartItemDiv.classList.add("flex", "gap-2", "items-center", "py-4", "border-b-2", "p-5", "cartItem");
+  sideCartItemDiv.classList.add("flex", "gap-2", "items-start", "py-4", "border-b-2", "p-5", "cartItem");
   sideCartItemDiv.setAttribute("data-cart-item-id", cartItem.id);
   sideCartItemDiv.innerHTML = `
                                 <picture class="">
@@ -158,7 +161,7 @@ function createSideCartItem(cartItem) {
                                        class="rounded-lg min-w-[120px]" width="120" height="120">
                               </picture>
                               <div class="flex-grow">
-                                  <p class="font-semibold">${cartItem.title}</p>
+                                  <p class="font-semibold line-clamp-2">${cartItem.title}</p>
                                   <p class="font-semibold text-brand-action mt-2"><span class="cartItem__salePrice">${cartItem.sale_price}</span> ден</p>
                                   <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                       <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
@@ -195,7 +198,7 @@ function createSideCartItem(cartItem) {
 function createCheckoutItem(cartItem) {
   const thumbnails = cartItem.thumbnails;
   const checkoutCartItemDiv = document.createElement("div");
-  checkoutCartItemDiv.classList.add("flex", "gap-2", "items-center", "pb-4", "border-b", "cartItem");
+  checkoutCartItemDiv.classList.add("flex", "gap-2", "items-start", "pb-4", "border-b", "cartItem");
   checkoutCartItemDiv.setAttribute("data-cart-item-id", cartItem.id);
   checkoutCartItemDiv.innerHTML = `
                                 <picture class="">
@@ -205,7 +208,7 @@ function createCheckoutItem(cartItem) {
                                        class="rounded-lg min-w-[120px]" width="120" height="120"> 
                               </picture>
                               <div class="flex-grow">
-                                  <p class="font-semibold">${cartItem.title}</p>
+                                  <p class="font-semibold line-clamp-2">${cartItem.title}</p>
                                   <p class="font-semibold text-brand-action mt-2"><span class="cartItem__salePrice">${cartItem.sale_price}</span> ден</p>
                                   <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                       <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">

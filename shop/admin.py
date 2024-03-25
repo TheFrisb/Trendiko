@@ -22,6 +22,13 @@ class ProductAdminForm(forms.ModelForm):
         widget=FilteredSelectMultiple(verbose_name="Categories", is_stacked=False),
     )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        product_type = cleaned_data.get("type")
+        stock_item = cleaned_data.get("stock_item")
+        if product_type == Product.ProductType.SIMPLE and not stock_item:
+            raise ValidationError("Stock item must be selected for simple product type")
+
     class Meta:
         model = Product
         fields = "__all__"
@@ -49,9 +56,15 @@ class ProductAttributeInlineFormSet(BaseInlineFormSet):
         attribute_types = set()
         for form in self.forms:
             if not form.cleaned_data:
-                continue  # Skip empty forms
+                continue
             attribute_type = form.cleaned_data.get("type")
             attribute_types.add(attribute_type)
+
+            # if attribute doesn't have a stock item assigned to it, raise an error
+            if not form.cleaned_data.get("stock_item") and not form.cleaned_data.get(
+                "DELETE"
+            ):
+                raise ValidationError("Stock item must be selected for each attribute.")
 
             if len(attribute_types) > 1:
                 raise ValidationError("All attributes must be of the same type.")

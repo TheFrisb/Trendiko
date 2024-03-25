@@ -133,6 +133,37 @@ AUTH_PASSWORD_VALIDATORS = [
 #     "EXCEPTION_HANDLER": "common.utils.global_exception_handler",
 # }
 
+# Loggers
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file_warn": {
+            "level": "WARNING",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "warn.log",
+            "formatter": "detailed",
+        },
+        "file_error": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "error.log",
+            "formatter": "detailed",
+        },
+    },
+    "formatters": {
+        "detailed": {"format": "%(asctime)s %(levelname)s %(name)s %(message)s"},
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file_warn", "file_error"],
+            "level": "WARNING",
+            "propagate": True,
+        },
+    },
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -197,41 +228,6 @@ CKEDITOR_CONFIGS = {
         ),
     }
 }
-#
-# CKEDITOR_CONFIGS = {
-#     "default": {
-#         "toolbar": "Custom",
-#         "toolbar_Custom": [
-#             [
-#                 "Format",
-#                 "Bold",
-#                 "Italic",
-#                 "Underline",
-#                 "Strike",
-#                 "NumberedList",
-#                 "BulletedList",
-#             ],
-#             ["JustifyLeft", "JustifyCenter", "JustifyRight"],
-#             ["Image"],
-#             ["Undo", "Redo", "Html5video"],
-#         ],
-#         "extraPlugins": ",".join(
-#             [
-#                 "dialogui",
-#                 "dialog",
-#                 "button",
-#                 "widgetselection",
-#                 "toolbar",
-#                 "notification",
-#                 "clipboard",
-#                 "lineutils",
-#                 "widget",
-#                 "html5video",
-#             ]
-#         ),
-#     }
-# }
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

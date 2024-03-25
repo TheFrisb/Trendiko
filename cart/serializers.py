@@ -59,6 +59,19 @@ SUPPORTED_CITIES = [
     {"latin": "Suto Orizari", "cyrillic": "Шуто Оризари"},
 ]
 
+SUPPORTED_MUNICIPALITIES = [
+    {"latin": "Aerodrom", "cyrillic": "Аеродром"},
+    {"latin": "Butel", "cyrillic": "Бутел"},
+    {"latin": "Gazi Baba", "cyrillic": "Гази Баба"},
+    {"latin": "Gjorce Petrov", "cyrillic": "Ѓорче Петров"},
+    {"latin": "Kisela Voda", "cyrillic": "Кисела Вода"},
+    {"latin": "Karpos", "cyrillic": "Карпош"},
+    {"latin": "Centar", "cyrillic": "Центар"},
+    {"latin": "Cair", "cyrillic": "Чаир"},
+    {"latin": "Suto Orizari", "cyrillic": "Шуто Оризари"},
+    {"latin": "Saraj", "cyrillic": "Сарај"},
+]
+
 
 class AddProductToCartSerializer(serializers.Serializer):
     """
@@ -360,7 +373,7 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
             return None
 
         municipality = value
-        if municipality not in [c["latin"] for c in SUPPORTED_CITIES]:
+        if municipality not in [c["latin"] for c in SUPPORTED_MUNICIPALITIES]:
             raise ValueError({"municipality": "Одберете ја вашата општина од листата"})
         return municipality
 

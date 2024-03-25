@@ -34,7 +34,7 @@
 
 .footer__itemsGroup {
     @apply flex flex-col gap-4 w-full;
-    @apply lg:flex-row lg:justify-between lg:items-center md:gap-8;
+    @apply lg:flex-row lg:justify-between lg:items-start md:gap-8;
     @apply mb-8;
 }
 
@@ -53,6 +53,10 @@
     -webkit-appearance: none !important;
     margin: 0 !important;
     -moz-appearance: textfield !important;
+}
+
+.cartItem {
+    word-break: break-word;
 }
 
 
@@ -2431,3 +2435,4 @@ html.disable--interaction.show--consent, html.disable--interaction.show--consent
         transform: translateY(0) !important
     }
 }
+

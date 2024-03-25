@@ -5,6 +5,7 @@ from rest_framework.exceptions import ValidationError
 
 from cart.models import ShippingDetails, OrderItem, Order
 from common.exceptions import OutOfStockException
+from common.mailer.MailJetClient import MailJetClient
 from shop.models import Product
 from stock.models import ImportItem, ReservedStockItem
 
@@ -26,6 +27,7 @@ class CheckoutService:
         """
         self.request = request
         self.cart = request.cart
+        self.email_client = MailJetClient()
 
     @transaction.atomic
     def checkout(self, shipping_details):
@@ -55,6 +57,13 @@ class CheckoutService:
         shipping_details = self.create_shipping_details(shipping_details, order)
 
         self.cart.delete()
+
+        if shipping_details.email:
+            result = self.email_client.send_mail(
+                "Потврда за нарачка",
+                f"Вашата нарачка е успешно примена. Вашата нарачка е под број {order.tracking_number}.",
+                [{"Email": shipping_details.email}],
+            )
 
         return order
 

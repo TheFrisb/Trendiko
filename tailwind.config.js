@@ -4,7 +4,7 @@ module.exports = {
     // path to all app templates
     // '**/templates/**/*.html',
     // '**/templates/**/**/*.html',
-    '**/static/**/*.js',
+    // '**/static/**/*.js',
 
     // Build shop
     './shop/templates/**/*.html',

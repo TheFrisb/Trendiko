@@ -3,7 +3,6 @@ from django.http import Http404
 from django.views.generic import TemplateView, DetailView, ListView
 
 from cart.models import Order
-from facebook.services.facebook_pixel import FacebookPixel
 from shop.mixins import FetchCategoriesMixin
 from shop.models import Category, Product, BrandPage
 
@@ -54,20 +53,13 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
         """Override get_object to include custom prefetching and selecting."""
 
         queryset = self.get_queryset().prefetch_related(
-            "attributes", "reviews", "images"
+            "attributes", "reviews", "images", "stock_item", "attributes__stock_item"
         )
 
         slug = self.kwargs.get(self.slug_url_kwarg)
 
         try:
             product = queryset.get(slug=slug, status=Product.ProductStatus.PUBLISHED)
-            print(product.thumbnail.url)
-            try:
-                fb = FacebookPixel(self.request)
-                fb.view_content(product)
-            except Exception as e:
-                pass
-
         except Product.DoesNotExist:
             raise Http404("Product does not exist or is not published.")
 

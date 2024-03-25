@@ -31,7 +31,7 @@ class StockItemService:
                 ReservedStockItem.objects.filter(
                     order_item__stock_item=stock_item,
                     quantity__gt=0,
-                    status=ReservedStockItem.STATUS.PENDING,
+                    status=ReservedStockItem.Status.PENDING,
                 )
                 .order_by("import_item__created_at")
                 .first()

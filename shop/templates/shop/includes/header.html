@@ -97,7 +97,7 @@
                 <div class="absolute top-0 right-0 left-0 bottom-0 overflow-auto overflow-x-hidden" id="cartBody">
                     <!-- Cart Item -->
                     {% for cart_item in cart.cart_items.all %}
-                        <div class="flex gap-2 items-center py-4 border-b-2 p-5 cartItem"
+                        <div class="flex gap-2 items-start py-4 border-b-2 p-5 cartItem"
                              data-cart-item-id="{{ cart_item.id }}">
                             {% with currentThumbnails=cart_item.thumbnails %}
                                 <picture class="">
@@ -109,7 +109,7 @@
                             {% endwith %}
 
                             <div class="flex-grow">
-                                <p class="font-semibold">{{ cart_item.title }}</p>
+                                <p class="font-semibold line-clamp-2">{{ cart_item.title }}</p>
                                 <p class="font-semibold text-brand-action mt-2"><span
                                         class="cartItem__salePrice">{{ cart_item.sale_price }}</span>
                                     ден</p>
@@ -180,7 +180,7 @@
 
             <div id="checkoutBody">
                 {% for cart_item in cart.cart_items.all %}
-                    <div class="flex gap-2 items-center py-4 border-b cartItem first-of-type:pt-0"
+                    <div class="flex gap-2 items-start py-4 border-b cartItem first-of-type:pt-0"
                          data-cart-item-id="{{ cart_item.id }}">
                         {% with currentThumbnails=cart_item.thumbnails %}
                             <picture class="">
@@ -191,7 +191,7 @@
                             </picture>
                         {% endwith %}
                         <div class="flex-grow">
-                            <p class="font-semibold">{{ cart_item.title }}</p>
+                            <p class="font-semibold line-clamp-2">{{ cart_item.title }}</p>
                             <p class="font-semibold text-brand-action mt-2"><span
                                     class="cartItem__salePrice">{{ cart_item.sale_price }}</span>
                                 ден</p>
@@ -230,7 +230,13 @@
                         </svg>
                         <p class="text-sm">Достава до врата</p>
                     </div>
-                    <p class="font-bold">бесплатна достава</p>
+                    <p id="checkout__selectedShipping">
+                        {% if cart.has_free_shipping %}
+                            бесплатна достава
+                        {% else %}
+                            130 ден
+                        {% endif %}
+                    </p>
                 </div>
             </div>
 
@@ -247,7 +253,7 @@
                     </div>
                     <div class="flex justify-between items-center">
                         <p class="text-sm">Достава</p>
-                        <p class="font-bold" id="checkout__selectedShipping">
+                        <p class="font-bold" id="checkout__selectedShipping2">
                             {% if cart.has_free_shipping %}
                                 бесплатна достава
                             {% else %}

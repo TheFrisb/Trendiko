@@ -1,3 +1,5 @@
+import random
+
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from django.db.models import Q
@@ -131,7 +133,7 @@ class Product(BaseProduct):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        verbose_name="Магацински предмет",
+        verbose_name="Stock Item",
     )
     description = RichTextUploadingField(verbose_name="Опис")
     has_free_shipping = models.BooleanField(
@@ -181,7 +183,21 @@ class Product(BaseProduct):
             "money_saved_percent": money_saved_percent,
             "faq_items": faq_items,
             "attribute_label": attribute_label,
+            "sellable_stock": self.get_sellable_stock_to_show(),
         }
+
+    @property
+    def get_discount(self):
+        if self.sale_price and self.regular_price:
+            return int(
+                (self.regular_price - self.sale_price) / self.regular_price * 100
+            )
+        return 0
+
+    def get_sellable_stock_to_show(self):
+        if self.stock_item and self.stock_item.stock < 10:
+            return self.stock_item.stock
+        return random.randint(5, 10)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -253,7 +269,7 @@ class ProductAttribute(BaseProduct):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        verbose_name="Магацински предмет",
+        verbose_name="Stock Item",
     )
     value = models.CharField(max_length=140, verbose_name="Содржина")
     regular_price = models.PositiveIntegerField(verbose_name="Цена без попуст")
