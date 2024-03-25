@@ -17,7 +17,7 @@
                         <th class="font-normal">SKU</th>
                         <th class="font-normal">Label</th>
                         <th class="font-normal">Reserved Stock</th>
-                        <th class="font-normal">Stock</th>
+                        <th class="font-normal">Sellable stock</th>
                         <th class="font-normal">Qr code</th>
                     </tr>
                     </thead>
@@ -44,7 +44,7 @@
                                 <p>{{ item.reserved_stock }}</p>
                             </td>
                             <td class="table_field">
-                                <p>{{ item.stock }}</p>
+                                <p>{{ item.available_stock }}</p>
                             </td>
                             <td class="table_field">
                                 <img src="{{ item.qr_code.url }}" alt="" class="w-24 h-24 object-cover">

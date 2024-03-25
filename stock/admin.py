@@ -50,7 +50,7 @@ class ImportAdmin(admin.ModelAdmin):
 @admin.register(StockItem)
 class StockItemAdmin(admin.ModelAdmin):
     search_fields = ["label", "sku"]
-    readonly_fields = ["qr_code"]
+    readonly_fields = ["stock", "available_stock", "reserved_stock", "qr_code"]
 
     form = StockItemForm
 

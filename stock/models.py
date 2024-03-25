@@ -1,6 +1,7 @@
 from io import BytesIO
 
 import qrcode
+from django.contrib import admin
 from django.core.files import File
 from django.db import models
 
@@ -16,7 +17,9 @@ class StockItem(BaseProduct):
         max_length=255, unique=True, verbose_name="SKU", db_index=True
     )
     label = models.CharField(max_length=255, verbose_name="Label")
-    stock = models.PositiveIntegerField(default=0, verbose_name="Залиха")
+    stock = models.PositiveIntegerField(
+        default=0, verbose_name="Вистинска залиха, без резервирана"
+    )
 
     def save(self, *args, **kwargs):
         if not self.qr_code:
@@ -44,6 +47,7 @@ class StockItem(BaseProduct):
         return file
 
     @property
+    @admin.display(description="Вкупна резервирана залиха")
     def reserved_stock(self):
         # for items in import items sum the reserved stock and return
         if self.importitem_set.exists():
@@ -51,6 +55,7 @@ class StockItem(BaseProduct):
         return 0
 
     @property
+    @admin.display(description="Достапна залиха за продажба")
     def available_stock(self):
         return self.stock - self.reserved_stock
 
