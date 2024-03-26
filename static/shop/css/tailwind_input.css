@@ -47,6 +47,7 @@
     -webkit-appearance: none !important;
     margin: 0 !important;
     -moz-appearance: textfield !important;
+    border-radius: 0 !important;
 }
 
 .cartItem__quantityInput, .cartItem__quantityInput::-webkit-outer-spin-button, .cartItem__quantityInput::-webkit-inner-spin-button {
