@@ -417,7 +417,7 @@
 
     {% include 'shop/includes/benefits.html' %}
 
-    <div class="fixed bottom-0 left-0 w-full bg-brand-secondary z-10 {% if product.type == 'variable' %} hidden {% endif %}"
+    <div class="md:hidden fixed bottom-0 left-0 w-full bg-brand-secondary z-10 {% if product.type == 'variable' %} hidden {% endif %}"
          id="stickyAddToCartContainer">
         <div class="w-full flex justify-between items-center p-2">
             <div class="flex items-end gap-2 basis-6/12">
