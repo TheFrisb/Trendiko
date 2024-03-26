@@ -144,7 +144,7 @@ class SearchView(FetchCategoriesMixin, ListView):
         context = super().get_context_data(**kwargs)
         query = self.request.GET.get("q", "")
 
-        context["title"] = f"Пребарување: {self.request.GET.get('q', " ")}"
+        context["title"] = f"Пребарување: {self.request.GET.get('q', ' ')}"
         context[
             "empty_message"
         ] = f"Не се пронајдени производи за пребарувањето: {query}."
