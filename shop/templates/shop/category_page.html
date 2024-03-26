@@ -2,10 +2,10 @@
 {% load static %}
 
 {% block content %}
-    {% if not products %}
-        <h1 class="font-bold">Во моментот немаме производи на залиха во оваа категорија</h1>
+    {% if not products and empty_message %}
+        <h1 class="font-bold">{{ empty_message }}</h1>
     {% else %}
-         
+
         {% with list=products %}
             {% include 'shop/includes/product_list.html' %}
         {% endwith %}

@@ -1,5 +1,5 @@
 {% load static %}
-<footer class="bg-brand-primary rounded-t-lg">
+<footer class="bg-brand-primary rounded-t-lg z-20">
     <div class="shop-container shop-container--footerContent">
         <div>
             <img src="{% static 'common/assets/brand/logo-white.png' %}" alt="" width="105" class="mx-auto h-auto mb-6">
@@ -59,3 +59,20 @@
         </div>
     </div>
 </footer>
+
+<form action="{% url 'shop:search_page' %}" method="get" class="z-[100] hidden" id="searchScreenContainer">
+    <svg class="absolute top-6 right-6 text-white " width="32"
+         height="32" fill="currentColor" id="searchScreenContainer__closeSearch">
+        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#close"></use>
+    </svg>
+    <div class="flex items-center justify-center border-b border-white ">
+        <input type="text" name="q" placeholder="Пребарај..."
+               class="w-full bg-transparent outline-none text-2xl border-none text-center p-2.5 text-brand-action "
+               id="searchScreenContainer__searchBar">
+        <button type="submit" class="p-4">
+            <svg class="text-white" width="24" height="24" fill="currentColor">
+                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#search"></use>
+            </svg>
+        </button>
+    </div>
+</form>

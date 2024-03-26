@@ -1,5 +1,6 @@
 import {attachCartItemInputListeners, removeCartItem} from "./quantityInput";
 import {checkout} from "./checkout";
+import {formatNumberToLocale, parseLocaleNumber} from "../../utils/numberFormatter";
 
 const body = document.querySelector("body");
 const cartOverlay = document.getElementById("sideCartOverlay");
@@ -118,24 +119,24 @@ function updateCartQuantityAndTotal(hasFreeShipping) {
   cartItems.forEach(function (item) {
     let quantity = item.querySelector(".cartItem__quantityInput").value;
     let salePrice = item.querySelector(".cartItem__salePrice").innerText;
-    totalQuantity += parseInt(quantity);
-    cartTotalPrice += parseInt(salePrice) * parseInt(quantity);
+    totalQuantity += parseLocaleNumber(quantity);
+    cartTotalPrice += parseLocaleNumber(salePrice) * parseLocaleNumber(quantity);
   });
 
-  cartQuantity.innerHTML = totalQuantity;
-  cartTotal.innerHTML = cartTotalPrice;
+  cartQuantity.innerHTML = formatNumberToLocale(totalQuantity);
+  cartTotal.innerHTML = formatNumberToLocale(cartTotalPrice);
 
   checkoutSubtotal.innerHTML = cartTotalPrice;
   if (hasFreeShipping) {
     cartTotalPrice += 20;
     checkoutShipping.innerHTML = "бесплатна достава";
     checkoutShipping2.innerHTML = "бесплатна достава";
-    checkoutTotal.innerHTML = cartTotalPrice;
+    checkoutTotal.innerHTML = formatNumberToLocale(cartTotalPrice)
   } else {
     cartTotalPrice += 20 + 130;
     checkoutShipping.innerHTML = "130 ден";
     checkoutShipping2.innerHTML = "130 ден";
-    checkoutTotal.innerHTML = cartTotalPrice
+    checkoutTotal.innerHTML = formatNumberToLocale(cartTotalPrice)
   }
 
 }
@@ -162,7 +163,7 @@ function createSideCartItem(cartItem) {
                               </picture>
                               <div class="flex-grow">
                                   <p class="font-semibold line-clamp-2">${cartItem.title}</p>
-                                  <p class="font-semibold text-brand-action mt-2"><span class="cartItem__salePrice">${cartItem.sale_price}</span> ден</p>
+                                  <p class="font-semibold text-brand-action mt-2"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p>
                                   <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                       <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
                                           -
@@ -198,7 +199,7 @@ function createSideCartItem(cartItem) {
 function createCheckoutItem(cartItem) {
   const thumbnails = cartItem.thumbnails;
   const checkoutCartItemDiv = document.createElement("div");
-  checkoutCartItemDiv.classList.add("flex", "gap-2", "items-start", "pb-4", "border-b", "cartItem");
+  checkoutCartItemDiv.classList.add("flex", "gap-2", "items-start", "py-4", "border-b", "cartItem", "first-of-type:pt-0");
   checkoutCartItemDiv.setAttribute("data-cart-item-id", cartItem.id);
   checkoutCartItemDiv.innerHTML = `
                                 <picture class="">
@@ -209,7 +210,7 @@ function createCheckoutItem(cartItem) {
                               </picture>
                               <div class="flex-grow">
                                   <p class="font-semibold line-clamp-2">${cartItem.title}</p>
-                                  <p class="font-semibold text-brand-action mt-2"><span class="cartItem__salePrice">${cartItem.sale_price}</span> ден</p>
+                                  <p class="font-semibold text-brand-action mt-2"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p>
                                   <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                       <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
                                           -
@@ -248,8 +249,8 @@ function updateCart(response) {
   if (cartItem) {
     const cartItemQuantityInput = cartItem.querySelector(".cartItem__quantityInput");
     const checkoutItemQuantityInput = checkoutItem.querySelector(".cartItem__quantityInput");
-    cartItemQuantityInput.value = response.quantity;
-    checkoutItemQuantityInput.value = response.quantity;
+    cartItemQuantityInput.value = formatNumberToLocale(response.quantity);
+    checkoutItemQuantityInput.value = formatNumberToLocale(response.quantity);
   } else {
     createSideCartItem(response);
     createCheckoutItem(response);

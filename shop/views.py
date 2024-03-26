@@ -3,6 +3,7 @@ from django.http import Http404
 from django.views.generic import TemplateView, DetailView, ListView
 
 from cart.models import Order
+from common.utils import calculate_delivery_dates
 from shop.mixins import FetchCategoriesMixin
 from shop.models import Category, Product, BrandPage
 
@@ -17,7 +18,7 @@ class HomeView(FetchCategoriesMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         categories = context.get("categories", Category.objects.none())
         promotion_category = categories.filter(is_on_promotion=True).first()
-        print(promotion_category.promotion_image)
+
         if not promotion_category:
             promotion_category = categories.first()
 
@@ -37,7 +38,7 @@ class HomeView(FetchCategoriesMixin, TemplateView):
                     ).order_by("-created_at")[:4],
                     "redirect_slug": "besplatna-dostava",
                 },
-                "title": "Home",
+                "title": "Почетна",
             }
         )
         return context
@@ -76,9 +77,14 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
             ).order_by("-created_at")[:4],
             "redirect_slug": "site-proizvodi",
         }
-
         context["show_call_button"] = True
+        context["scheduled_delivery_dates"] = self.get_scheduled_delivery_dates()
         return context
+
+    def get_scheduled_delivery_dates(self):
+        """Return the scheduled delivery dates for the current day."""
+        current_day = self.request.GET.get("current_day")
+        return calculate_delivery_dates(current_day)
 
 
 class CategoryListView(FetchCategoriesMixin, ListView):
@@ -104,8 +110,45 @@ class CategoryListView(FetchCategoriesMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
+        context["title"] = self.category.name
         context["category"] = self.category
+        context[
+            "empty_message"
+        ] = f"Немаме производи на залиха од оваа категорија во моментот."
+        context["heading"] = self.category.name
+        return context
+
+
+class SearchView(FetchCategoriesMixin, ListView):
+    model = Product
+    template_name = "shop/category_page.html"
+    context_object_name = "products"
+    paginate_by = 24
+
+    def get_queryset(self):
+        query = self.request.GET.get("q", None)
+        if not query:
+            return Product.objects.none()
+
+        return (
+            Product.objects.filter(
+                title__icontains=query,
+                stock_item__title__icontains=query,
+                status=Product.ProductStatus.PUBLISHED,
+            )
+            .distinct()
+            .order_by("created_at")
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        query = self.request.GET.get("q", "")
+
+        context["title"] = f"Пребарување: {self.request.GET.get('q', " ")}"
+        context[
+            "empty_message"
+        ] = f"Не се пронајдени производи за пребарувањето: {query}."
+        context["heading"] = f"Пребарување: {query}"
         return context
 
 
@@ -132,7 +175,7 @@ class ThankYouDetailView(FetchCategoriesMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Thank You"
+        context["title"] = "Ви благодариме"
         context["promotion_product"] = self.object.make_thank_you_product()
         return context
 

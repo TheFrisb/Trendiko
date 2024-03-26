@@ -1,5 +1,6 @@
 import {HTTP, URLS} from "../../http/client";
 import {notyf__long, notyf__short} from "../../utils/error";
+import {formatNumberToLocale, parseLocaleNumber} from "../../utils/numberFormatter";
 
 const orderItemsContainer = document.getElementById('orderItemsContainer');
 const orderSubtotalPriceContainer = document.getElementById('order__subtotalPrice');
@@ -25,14 +26,16 @@ function addToOrder(orderId, orderItemId, quantity, trackingCode, promotionPrice
       let status_code = response.status;
       if (status_code === 403) {
         notyf__long.error(data.message);
+      } else {
+        notyf__long.error("Се случи грешка, ве молиме обидете се повторно.");
       }
     }
   });
 }
 
 function updateOrderTotals(data) {
-  orderSubtotalPriceContainer.innerText = data.order_subtotal;
-  orderTotalPriceContainer.innerText = data.order_total;
+  orderSubtotalPriceContainer.innerText = formatNumberToLocale(data.order_subtotal);
+  orderTotalPriceContainer.innerText = formatNumberToLocale(data.order_total);
   orderShippingMethodContainer.innerText = data.order_shipping_method;
 }
 
@@ -41,8 +44,8 @@ function makeOrUpdateOrderItemRow(orderItem) {
   if (orderItemRow) {
     const quantity = orderItemRow.querySelector('.orderItem__quantity');
     const totalPrice = orderItemRow.querySelector('.orderItem__totalPrice');
-    quantity.innerText = orderItem.quantity;
-    totalPrice.innerText = orderItem.total_price;
+    quantity.innerText = formatNumberToLocale(orderItem.quantity);
+    totalPrice.innerText = formatNumberToLocale(orderItem.total_price);
   } else {
     const orderItemHtml = makeOrderItemHtml(orderItem);
     orderItemsContainer.insertAdjacentHTML('beforeend', orderItemHtml);
@@ -62,11 +65,11 @@ function makeOrderItemHtml(orderItem) {
                                     </picture>
                                 <div>
                                     <p class="font-bold">${orderItem.get_readable_name}</p>
-                                    <p class="text-sm">${orderItem.price} ден x <span
+                                    <p class="text-sm">${formatNumberToLocale(orderItem.price)} ден x <span
                                             class="orderItem__quantity">${orderItem.quantity}</span></p> 
                                 </div>
                             </div>
-                            <p class="font-bold"><span class="orderItem__totalPrice">${orderItem.total_price}</span>
+                            <p class="font-bold"><span class="orderItem__totalPrice">${formatNumberToLocale(orderItem.total_price)}</span>
                                 ден</p>
                         </div>
   `;
@@ -80,7 +83,7 @@ function initializeAddToOrderButtons() {
       const quantity = button.getAttribute('data-quantity');
       const orderId = button.getAttribute('data-order-id');
       const trackingCode = window.location.pathname.split('/')[2];
-      const promotionPrice = parseInt(button.getAttribute('data-promotion-price'));
+      const promotionPrice = parseLocaleNumber(button.getAttribute('data-promotion-price'));
       addToOrder(orderId, orderItemId, quantity, trackingCode, promotionPrice);
     });
   });

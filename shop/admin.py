@@ -4,6 +4,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 
+from facebook.admin import FacebookCampaignsInline
 from .models import (
     Product,
     ProductAttribute,
@@ -101,7 +102,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ["title", "status", "type", "regular_price", "sale_price"]
     list_filter = ["status", "type"]
     search_fields = ["title"]
-    inlines = [ProductImageInline, ProductAttributeInline]
+    inlines = [ProductImageInline, ProductAttributeInline, FacebookCampaignsInline]
     readonly_fields = ["slug"]
 
     class Meta:

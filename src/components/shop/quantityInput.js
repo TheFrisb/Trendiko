@@ -1,6 +1,7 @@
 import {HTTP, URLS} from "../../http/client";
 import {removeCartItemElement, updateCart} from "./cart";
 import {notyf__short} from "../../utils/error";
+import {parseLocaleNumber} from "../../utils/numberFormatter";
 
 const ACTION_TYPES = {
   INCREMENT: 'INCREMENT',
@@ -54,18 +55,20 @@ function attachProductInputListeners(inputEl) {
     addToCartButtons.forEach(function (button) {
       button.setAttribute('data-quantity', quantity);
     });
+
+    // updateStickyAddToCartBtnIfExists(null, quantity)
   }
 
 
   incrementButton.addEventListener('click', function () {
-    let quantity = parseInt(inputEl.value);
+    let quantity = parseLocaleNumber(inputEl.value)
     console.log("before increment", quantity)
     quantity = updateQuantity(ACTION_TYPES.INCREMENT, quantity);
     inputEl.value = quantity;
     updateAddToCartButtons(quantity);
   });
   decrementButton.addEventListener('click', function () {
-    let quantity = parseInt(inputEl.value);
+    let quantity = parseLocaleNumber(inputEl.value)
     quantity = updateQuantity(ACTION_TYPES.DECREMENT, quantity);
     inputEl.value = quantity;
     updateAddToCartButtons(quantity);

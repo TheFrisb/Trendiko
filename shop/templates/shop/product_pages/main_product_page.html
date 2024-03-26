@@ -161,8 +161,10 @@
             <!-- Expected shipping date -->
             <div class="w-full flex items-center md:items-start justify-center flex-col">
                 <p class="text-sm font-bold">Предвидена испорака: </p>
-                <p class="text-sm">Измеѓу Сабота <span class="font-bold">27 Ное.</span> - Петок <span
-                        class="font-bold">03 Дек.</span></p>
+                <p class="text-sm">Измеѓу {{ scheduled_delivery_dates.start_day }} <span
+                        class="font-bold">{{ scheduled_delivery_dates.start_month_formatted }}</span>
+                    - {{ scheduled_delivery_dates.end_day }} <span
+                            class="font-bold">{{ scheduled_delivery_dates.end_month_formatted }}</span></p>
             </div>
             <!-- End expected shipping date -->
 
@@ -252,11 +254,13 @@
                     <p class="">Опис на производот</p>
                     <p class="toggle-icon">-</p>
                 </div>
-                <div class="toggle"
-                     data-content-id="technicalSpecifications">
-                    <p class="">Технички спецификации</p>
-                    <p class="toggle-icon">+</p>
-                </div>
+                {% if product.technical_specifications %}
+                    <div class="toggle"
+                         data-content-id="technicalSpecifications">
+                        <p class="">Технички спецификации</p>
+                        <p class="toggle-icon">+</p>
+                    </div>
+                {% endif %}
                 <div class="toggle"
                      data-content-id="faq">
                     <p class="">Често поставувани прашања</p>
@@ -270,9 +274,11 @@
                 <div id="description" class="canBeToggled">
                     {{ product.description|safe }}
                 </div>
-                <div id="technicalSpecifications" class="canBeToggled hidden">
-                    {{ product.technical_specifications|safe }}
-                </div>
+                {% if product.techical_specifications %}
+                    <div id="technicalSpecifications" class="canBeToggled hidden">
+                        {{ product.technical_specifications|safe }}
+                    </div>
+                {% endif %}
                 <div id="faq" class="canBeToggled hidden flex flex-col gap-4">
                     {% for faqItem in product_misc_data.faq_items %}
                         <div class="faqItem flex flex-col gap-2 justify-start items-start w-full rounded-lg ">
@@ -410,5 +416,37 @@
     </div>
 
     {% include 'shop/includes/benefits.html' %}
+
+    <div class="fixed bottom-0 left-0 w-full bg-brand-secondary z-10 {% if product.type == 'variable' %} hidden {% endif %}"
+         id="stickyAddToCartContainer">
+        <div class="w-full flex justify-between items-center p-2">
+            <div class="flex items-end gap-2 basis-6/12">
+                <picture>
+                    <source srcset="{{ product.thumbnail.url }}" type="image/webp">
+                    <source srcset="{{ product.thumbnail_as_jpeg.url }}" type="image/png">
+                    <img src="{{ product.thumbnail_as_jpeg.url }}" alt="" width="48" height="48"
+                         class="min-w-[48px] min-h-[48px] rounded-lg">
+                </picture>
+                <div class="flex flex-col items-start justify-start gap-1">
+                    <p class="text-xs font-bold line-clamp-2">{{ product.title }} Lorem ipsum dolor sit
+                        amet,
+                        consectetur adipisicing elit. Aperiam autem dolor earum, esse quidem quos velit voluptatibus! Id
+                        molestiae praesentium quis.</p>
+                    <p class="text-lg font-bold text-brand-action leading-none">
+                        {#                        <span#}
+                        {#                            class="text-xs font-bold text-brand-primary pr-1"#}
+                        {#                            id="stickyAddToCartContainer__quantityHolder">1x</span>#}
+                        <span
+                                id="stickyAddToCartContainer__currentPrice">{{ product.sale_price }}</span>
+                        ден.</p>
+                </div>
+            </div>
+            <button class=" h-full bg-brand-action rounded-lg text-white font-bold p-2 hover:bg-brand-primary transition-all duration-100 ease-in-out addToCartButton buyNowButton text-sm"
+                    data-product-id="{{ product.id }}" data-product-type="{{ product.type }}"
+                    data-quantity="1" id="stickyAddToCartButton">
+                НАРАЧАЈ ВЕДНАШ
+            </button>
+        </div>
+    </div>
 {% endblock content %}
 

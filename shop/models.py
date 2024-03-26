@@ -136,6 +136,9 @@ class Product(BaseProduct):
         verbose_name="Stock Item",
     )
     description = RichTextUploadingField(verbose_name="Опис")
+    technical_specifications = RichTextUploadingField(
+        null=True, blank=True, verbose_name="Технички спецификации"
+    )
     has_free_shipping = models.BooleanField(
         default=False, verbose_name="Бесплатна испорака", db_index=True
     )

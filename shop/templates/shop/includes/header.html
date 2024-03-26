@@ -16,8 +16,9 @@
             <div class="flex items-center justify-center gap-4">
                 <div class="p-2">
                     <svg class="text-white cursor-pointer hover:text-brand-action" width="22" height="22"
+                         id="searchIcon"
                          fill="currentColor">
-                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#person"></use>
+                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#search"></use>
                     </svg>
                 </div>
                 <div class="relative" id="cartIcon">
@@ -71,7 +72,7 @@
     </div>
 {% endif %}
 <!-- Overlay -->
-<div class="container-fluid w-full h-full overflow-hidden fixed top-0 right-0 bg-black/70 z-[100]"
+<div class="container-fluid w-full h-full overflow-hidden fixed top-0 right-0 bg-brand-primary/80 z-[100]"
      id="sideCartOverlay">
 
 </div>
@@ -143,7 +144,7 @@
 
                 <div class="flex justify-between items-center text-lg mb-2 sideCart__buyableAction--flex">
                     <p class="font-semibold">Вкупно</p>
-                    <p id="cartTotal">{{ cart.get_items_total }} ден</p>
+                    <p><span id="cartTotal">{{ cart.get_items_total }}</span> ден</p>
                 </div>
                 <p class="text-sm text-black/60 mb-2 sideCart__buyableAction">Данок вклучен. Испораката е пресметанa при
                     наплата</p>
@@ -165,7 +166,7 @@
 
 
     <div id="checkoutContainer"
-         class="container-fluid w-full h-full overflow-auto fixed top-0 right-0 bg-black/70 z-[100] flex items-center justify-center">
+         class="container-fluid w-full h-full overflow-auto fixed top-0 right-0 bg-brand-primary/70 z-[100] flex items-center justify-center">
         <div class="bg-white p-6 rounded-lg w-[95%] max-h-[95%] lg:max-w-[720px] lg:h-auto lg:max-h-[95%] flex flex-col gap-4 overflow-y-auto"
              id="checkout">
             <div class="relative border-b border-black/20 py-6 flex items-center justify-between">
@@ -220,17 +221,17 @@
             </div>
 
             <div>
-                <div class="flex justify-between items-center p-2 rounded-lg border border-brand-action ">
+                <div class="flex justify-between items-center p-2 rounded-lg border border-brand-action">
                     <div class="flex items-center justify-center gap-3">
-                        <svg class="text-brand-action cursor-pointer hover:text-black/60 cartItem__removeItem"
+                        <svg class="text-brand-action cursor-pointer hover:text-black/60 min-w-[24px] min-h-[24px]"
                              width="24"
                              height="24"
                              fill="currentColor">
                             <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#toggledCircle"></use>
                         </svg>
-                        <p class="text-sm">Достава до врата</p>
+                        <p class="text-sm text-left">Достава до врата</p>
                     </div>
-                    <p id="checkout__selectedShipping">
+                    <p id="checkout__selectedShipping" class="text-right text-sm text-brand-action">
                         {% if cart.has_free_shipping %}
                             бесплатна достава
                         {% else %}
@@ -243,17 +244,18 @@
             <div class="bg-brand-primary/20 rounded-lg border border-black/20 ">
                 <div class="p-2 flex flex-col gap-3">
                     <div class="flex justify-between items-center">
-                        <p class="text-sm">Цена</p>
-                        <p class="font-bold"><span id="checkout__subtotalPrice">{{ cart.get_items_total }}</span> ден
+                        <p class="text-sm text-left">Цена</p>
+                        <p class="font-bold text-right"><span
+                                id="checkout__subtotalPrice">{{ cart.get_items_total }}</span> ден
                         </p>
                     </div>
                     <div class="flex justify-between items-center">
-                        <p class="text-sm">Провизија за готовинско работење</p>
-                        <p class="font-bold">20 ден</p>
+                        <p class="text-sm text-left">Провизија за готовинско работење</p>
+                        <p class="font-bold text-right min-w-[60px]">20 ден</p>
                     </div>
                     <div class="flex justify-between items-center">
-                        <p class="text-sm">Достава</p>
-                        <p class="font-bold" id="checkout__selectedShipping2">
+                        <p class="text-sm text-left">Достава</p>
+                        <p class="font-bold text-right" id="checkout__selectedShipping2">
                             {% if cart.has_free_shipping %}
                                 бесплатна достава
                             {% else %}
@@ -262,8 +264,9 @@
                         </p>
                     </div>
                     <div class="flex justify-between items-center border-t border-black/40 py-2">
-                        <p>Вкупно за плаќање на курирот</p>
-                        <p class="font-bold text-lg"><span id="checkout__totalPrice">{{ cart.get_total_price }}</span>
+                        <p class="text-left">Вкупно за плаќање на курирот</p>
+                        <p class="font-bold text-lg text-right min-w-[90px]"><span
+                                id="checkout__totalPrice">{{ cart.get_total_price }}</span>
                             ден</p>
                     </div>
                 </div>

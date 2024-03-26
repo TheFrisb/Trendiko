@@ -1,3 +1,6 @@
+import {updateStickyAddToCartBtnIfExists} from "../shop/stickyAddToCart";
+import {parseLocaleNumber} from "../../utils/numberFormatter";
+
 const mainProduct = document.querySelector('.mainProduct');
 const chosenVariationTextContainer = document.querySelector('#chosenVariationTextContainer');
 let variationPriceContainer = document.querySelector('#variation__priceContainer');
@@ -39,10 +42,13 @@ function updateUI(el, attributesContainer, chosenVariationText) {
 
 function chooseAttribute(el, attributesContainer, addToCartButtons) {
   const attributeId = el.getAttribute('data-attribute-id');
+  const price = parseLocaleNumber(el.getAttribute('data-attribute-sale-price'));
   const chosenVariationText = el.getAttribute('data-attribute-name');
   addToCartButtons.forEach(function (button) {
     button.setAttribute('data-attribute-id', attributeId);
   });
+
+  updateStickyAddToCartBtnIfExists(price, null, attributeId);
 
   updateUI(el, attributesContainer, chosenVariationText);
 }

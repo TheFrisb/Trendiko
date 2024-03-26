@@ -1,3 +1,12 @@
+1. SEO Titles
+2. Sumite da se formatirani na 1000ka
+3. Predvidena isporaka so tocna data
+4. Search Bar
+5. Sticky add to cart
+6. Praj faktura
+7. Praki mails
+8. Staj facebook campaigns.
+--------------------------------------------------------------------------------------------------------------------
 Facebook Pixel & Catalogue
 8. Facebook pixel view content event
 9. Facebook pixel add to cart event
@@ -20,6 +29,7 @@ Miscellaneous:
 4. Podobri checkout error handling, so scrolling.
 5. Disable buttons na click i pos enable
 6. Napraj banner funkcionalen
+7. Streamline stock showcase za variable
 --------------------------------------------------------------------------------------------------------------------
 Facebook campaigns creation: Total should be 8 hours
 1. Implement UI - 3
@@ -28,9 +38,4 @@ Facebook campaigns creation: Total should be 8 hours
 4. Implement backend db storage - 1
 5. On Product Out Of Stock turn off Campaign
 
---------------------------------------------------------------------------------------------------------------------
-I will receive 1000$ from this
--> 400 na mama
--> 150 na kavazo
-==============================
-I GET 450$ BABY
+

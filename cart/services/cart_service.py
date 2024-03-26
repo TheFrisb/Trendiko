@@ -105,7 +105,7 @@ class CartService:
             }
 
             raise OutOfStockException(
-                quantity, cart_item.get_stock_item().stock, extraDict
+                quantity, cart_item.get_stock_item().available_stock, extraDict
             )
         cart_item.quantity = quantity
         cart_item.save()

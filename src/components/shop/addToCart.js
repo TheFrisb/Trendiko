@@ -32,6 +32,8 @@ function addToCart(product_id, product_type, quantity, attributeId, isBuyNow) {
       let status_code = response.status;
       if (status_code === 403) {
         notyf__short.error(data.message);
+      } else {
+        notyf__short.error('Проблем со додавањето на продуктот во кошничка. Ве молиме обидете се повторно.');
       }
     }
   });

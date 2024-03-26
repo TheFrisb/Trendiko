@@ -6,6 +6,7 @@ from .views import (
     CategoryListView,
     ThankYouDetailView,
     BrandPageDetailView,
+    SearchView,
 )
 
 app_name = "shop"
@@ -20,4 +21,5 @@ urlpatterns = [
         name="thank_you_page",
     ),
     path("brand/<slug:slug>/", BrandPageDetailView.as_view(), name="brand_page"),
+    path("search/", SearchView.as_view(), name="search_page"),
 ]

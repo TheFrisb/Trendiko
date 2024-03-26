@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "shop_manager.apps.ShopManagerConfig",
     "cart.apps.CartConfig",
     "stock.apps.StockConfig",
+    "facebook.apps.FacebookConfig",
 ]
 
 MIDDLEWARE = [
@@ -236,3 +237,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CRONJOBS = [
     ("50 23 * * *", "facebook.cron.update_facebook_catalogue_feed"),
 ]
+
+
+USE_THOUSAND_SEPARATOR = True

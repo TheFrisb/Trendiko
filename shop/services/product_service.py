@@ -78,21 +78,24 @@ class ProductService:
             if not self.stock_validator.check_stock_item_stock(
                 attribute.stock_item, data.get("quantity")
             ):
-                if attribute.stock_item.stock <= 0:
+                calculated_available_stock = attribute.stock_item.available_stock
+                if calculated_available_stock <= 0:
                     message = f'Производот "{product.title} - {attribute.title}" е распродаден.'
                 else:
-                    message = f'Имаме само {attribute.stock_item.stock} од "{product.title} - {attribute.title}" на залиха.'
+                    message = f'Имаме само {calculated_available_stock} од "{product.title} - {attribute.title}" на залиха.'
 
                 extraDict = {
                     "product_id": product_id,
                     "attribute_id": attribute_id,
                     "quantity": data.get("quantity"),
-                    "available_quantity": attribute.stock_item.stock,
+                    "available_quantity": calculated_available_stock,
                     "message": message,
                 }
 
                 raise OutOfStockException(
-                    data.get("quantity"), attribute.stock_item.stock, extraDict
+                    data.get("quantity"),
+                    calculated_available_stock,
+                    extraDict,
                 )
 
             return product, product_type, attribute, data.get("quantity")
@@ -100,20 +103,21 @@ class ProductService:
         if not self.stock_validator.check_stock_item_stock(
             product.stock_item, data.get("quantity")
         ):
-            if product.stock_item.stock <= 0:
+            calculated_available_stock = product.stock_item.available_stock
+            if calculated_available_stock <= 0:
                 message = f'Производот "{product.title}" е распродаден.'
             else:
-                message = f'Имаме само {product.stock_item.stock} од "{product.title}" на залиха.'
+                message = f'Имаме само {calculated_available_stock} од "{product.title}" на залиха.'
 
             extraDict = {
                 "product_id": product_id,
                 "quantity": data.get("quantity"),
-                "available_quantity": product.stock_item.stock,
+                "available_quantity": calculated_available_stock,
                 "message": message,
             }
 
             raise OutOfStockException(
-                data.get("quantity"), product.stock_item.stock, extraDict
+                data.get("quantity"), calculated_available_stock, extraDict
             )
 
         return product, product_type, None, data.get("quantity")
