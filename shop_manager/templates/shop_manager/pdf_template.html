@@ -1,0 +1,202 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        .flex-center-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .border-bottom {
+            border-bottom: 2px solid darkblue;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        th, td {
+            font-size: 12px;
+            padding: 2px 4px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 12px;
+            margin: 0;
+        }
+
+
+        .font-bold {
+            font-weight: bold;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-lg {
+            font-size: 20px;
+        }
+
+        .text-md {
+            font-size: 18px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<div class="flex-center-between border-bottom">
+    <img src="{% static 'common/assets/brand/logo-dark.png' %}" alt="" style="width: 100px; height: auto">
+    <img src="{{ order.barcode.url }}" alt="" style="width: 150px; height: auto">
+</div>
+<div class="flex-center-between" style="margin: 24px 0">
+    <div class="font-bold text-left text-lg">
+        <p>ТРЕНДИКО КОМЕРЦ ДОО</p>
+        <p>УЛ. КЛИМЕНТ ОХРИДСКИ 240</p>
+        <p>СТРУМИЦА</p>
+    </div>
+    <div class="font-bold text-right text-lg">
+        <p>{{ shipping_details.full_name }}</p>
+        <p>{{ shipping_details.address }}</p>
+        <p>{{ shipping_details.city }}</p>
+    </div>
+</div>
+
+<div class="font-bold text-md" style="margin-top: 24px">
+    <p>ЕДБ: 4027023538318</p>
+    <p>ХАЛКБАНК АД СКОПЈЕ</p>
+    <p>270076970070150</p>
+</div>
+
+<div style="margin-top:32px" class="text-md">
+    <h1>ФАКТУРА БР: {{ order.get_invoice_number }}</h1>
+    <p>Сериски број: {{ order.get_invoice_number }}</p>
+    <p>Датум: {{ order.created_at|date:"d.m.y" }}</p>
+    <p>Валута: {{ order.created_at|date:"d.m.y" }}</p>
+</div>
+
+<div style="margin-top:32px">
+    <table style="width:100%; border-collapse: collapse">
+        <thead>
+        <tr style="border-top: 2px solid darkblue; border-bottom: 2px solid darkblue;">
+            <th>Р.бр</th>
+            <th>Шифра/QR</th>
+            <th>Артикал</th>
+            <th>Мера</th>
+            <th>Количина</th>
+            <th>Цена без ДДВ</th>
+            <th>Цена со ДДВ</th>
+            <th>Рабат %</th>
+            <th>ДДВ %</th>
+            <th>Износ без ДДВ</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in order_items %}
+            <tr style="text-align: center" class="border-bottom">
+                <td>{{ forloop.counter }}</td>
+                <td>{{ item.stock_item.sku }}</td>
+                <td>{{ item.get_readable_name }}</td>
+                <td>бр</td>
+                <td>{{ item.quantity|floatformat:2 }}</td>
+                <td>{{ item.price|floatformat:2 }}</td>
+                <td>{{ item.price|floatformat:2 }}</td>
+                <td>0%</td>
+                <td>0%</td>
+                <td>{{ item.total_price|floatformat:2 }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div style="margin: 32px 0; display:flex; justify-content:space-between; align-items: flex-start">
+    <table style="border-collapse: collapse;">
+        <thead>
+        <tr style="border-top: 2px solid darkblue; border-bottom: 2px solid darkblue;">
+            <th>Тарифа</th>
+            <th>Данок</th>
+            <th>Износ без ДДВ</th>
+            <th>ДДВ</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr style="text-align: center">
+            <td>Т-1</td>
+            <td>0.00%</td>
+            <td>{{ order.subtotal_price|floatformat:2 }}</td>
+            <td>0%</td>
+        </tr>
+    </table>
+    <div style="width: 40%" class="text-right">
+        <div style="display:flex; justify-content: space-between; width: 100%">
+            <p>Износ без ДДВ:</p>
+            <p class="font-bold">{{ order.subtotal_price|floatformat:2 }}</p>
+        </div>
+        <div style="display:flex; justify-content: space-between; width: 100%">
+            <p style="">Рабат:</p>
+            <p class="font-bold">0.00</p>
+        </div>
+        <div style="display:flex; justify-content: space-between; width: 100%">
+            <p style="">ДДВ:</p>
+            <p class="font-bold">0.00</p>
+        </div>
+        <div style="display:flex; justify-content: space-between; width: 100%">
+            <p style="">Поштенски услуги со ДДВ:</p>
+            <p class="font-bold">{{ order.get_shipping_price|floatformat:2 }}</p>
+        </div>
+        <div style="display:flex; justify-content: space-between; margin-top: 12px; font-size:14px; width: 100%">
+            <p style="">За наплата:</p>
+            <p class="font-bold">{{ order.total_price|floatformat:2 }}</p>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top:32px">
+    <p>Фирмата не е даночен обврзник</p>
+    <p>Плаќањето на вкупниот износ од фактурата е задолжително при подигање на стоката. За секое задоцнување
+        пресметуваме законска затезна камата.
+        Рекламации се примаат во рок од 15 дена од денот на подигање на стоката. Во случај на спор надлежен е
+        Основниот
+        суд во Струмица.</p>
+</div>
+
+<div style="margin-top:32px; width:100%; display:flex; gap:24px; align-items: flex-start; justify-content: space-between"
+     class="text-center">
+    <div style="width:30%">
+        <p style="padding-bottom: 36px">Фактурирал</p>
+        <p style="border-top: 1px solid black">(потпис)</p>
+    </div>
+    <div style="width:30%">
+        <p style="padding-bottom: 36px">Примил</p>
+        <p style="border-top: 1px solid black">(потпис)</p>
+    </div>
+    <div style="width:30%; display:flex;flex-direction: row; align-items: center; flex-wrap: wrap">
+        <div style="width: 100%; margin-bottom: 36px">
+            <p style="padding-bottom: 36px">Управител / Лице одговорна за потпишување на фактури</p>
+            <p style="border-top: 1px solid black">(име и презиме)</p>
+        </div>
+        <div style="width: 100%">
+            <p style="border-top: 1px solid black">(потпис)</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

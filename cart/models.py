@@ -1,4 +1,9 @@
+from io import BytesIO
+
+import barcode
+from barcode.writer import ImageWriter
 from django.conf import settings
+from django.core.files import File
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -215,6 +220,7 @@ class Order(TimeStampedModel, LoggableModel):
     subtotal_price = models.IntegerField(default=0)
     total_price = models.IntegerField(default=0)
     tracking_number = models.CharField(max_length=100, unique=True, db_index=True)
+    barcode = models.ImageField(upload_to="barcodes/", null=True, blank=True)
 
     def get_absolute_url(self):
         """
@@ -248,6 +254,17 @@ class Order(TimeStampedModel, LoggableModel):
             "readable_name": order_item.get_readable_name,
         }
 
+    def get_shipping_price(self):
+        """
+        Get the shipping price of the order.
+
+        Returns:
+            int: The shipping price of the order.
+        """
+        if self.has_free_shipping:
+            return 0
+        return 130
+
     def recalculate_order(self):
         """
         Recalculate the prices of the order.
@@ -264,6 +281,46 @@ class Order(TimeStampedModel, LoggableModel):
             self.total_price = self.subtotal_price + 130
 
         self.save()
+
+    def generate_barcode(self):
+        # Ensure self.id is a string
+        barcode_content = str(self.id)
+        print(barcode_content)
+        # Check if the content length is less than 12
+        if len(barcode_content) < 12:
+            # Fill with leading zeros
+            barcode_content = barcode_content.zfill(12)
+        print(barcode_content)
+        ean13 = barcode.get_barcode_class("ean13")
+        barcode_image = ean13(barcode_content, writer=ImageWriter())
+
+        buffer = BytesIO()
+        barcode_image.write(buffer)
+        buffer.seek(0)
+
+        barcode_filename = f"barcode_{self.id}.png"
+        self.barcode.save(barcode_filename, File(buffer))
+
+        self.save()
+
+        # Return the barcode image field
+        return self.barcode
+
+    def get_invoice_number(self):
+        """
+        Get the invoice number of the order.
+
+        Returns:
+            str: The invoice number of the order.
+        """
+        year = str(self.created_at.year)[-2:]
+        return f"{self.id}/{year}"
+
+    # generate barcode image on order creation
+    def save(self, *args, **kwargs):
+        if not self.barcode and self.pk:
+            self.generate_barcode()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Order id: {self.id}, Status: {self.status}, Total: {self.total_price}, Created at: {self.created_at}"

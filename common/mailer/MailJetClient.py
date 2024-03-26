@@ -8,19 +8,17 @@ class MailJetClient:
         self.secretKey = config("MAILJET_SECRET_KEY")
         self.client = Client(auth=(self.apiKey, self.secretKey), version="v3.1")
 
-    def send_mail(self, subject, text_part, recipients):
+    def send_mail(self, subject, text_part, recipient):
         data = {
             "Messages": [
                 {
-                    "From": {"Email": "info@trendiko.mk", "Name": "Zhivko"},
-                    "To": recipients,
+                    "From": {"Email": "info@trendiko.mk"},
+                    "To": [{"Email": recipient}],
                     "Subject": subject,
                     "TextPart": text_part,
-                    "CustomID": "AppGettingStartedTest",
                 }
             ]
         }
 
         result = self.client.send.create(data=data)
-        print(result.status_code)
         return result.status_code

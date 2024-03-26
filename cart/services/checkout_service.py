@@ -62,7 +62,7 @@ class CheckoutService:
             result = self.email_client.send_mail(
                 "Потврда за нарачка",
                 f"Вашата нарачка е успешно примена. Вашата нарачка е под број {order.tracking_number}.",
-                [{"Email": shipping_details.email}],
+                shipping_details.email,
             )
 
         return order
@@ -244,6 +244,7 @@ class CheckoutService:
             phone=shipping_details["phone"],
             city=shipping_details["city"],
             municipality=shipping_details["municipality"],
+            email=shipping_details["email"],
         )
 
         return shipping_details

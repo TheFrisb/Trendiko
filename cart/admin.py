@@ -29,4 +29,4 @@ class ShippingDetailsInline(admin.StackedInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline, ShippingDetailsInline]
-    readonly_fields = ["ip", "user_agent"]
+    readonly_fields = ["ip", "user_agent", "barcode"]

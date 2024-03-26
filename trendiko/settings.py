@@ -151,18 +151,26 @@ LOGGING = {
             "filename": BASE_DIR / "error.log",
             "formatter": "detailed",
         },
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "detailed",
+        },
     },
     "formatters": {
         "detailed": {"format": "%(asctime)s %(levelname)s %(name)s %(message)s"},
     },
     "loggers": {
-        "django": {
+        "": {
             "handlers": ["file_warn", "file_error"],
             "level": "WARNING",
             "propagate": True,
         },
     },
 }
+
+if DEBUG:
+    LOGGING["loggers"][""]["handlers"].append("console")
 
 
 # Internationalization

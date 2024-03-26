@@ -1,5 +1,9 @@
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse, Http404
+from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.views import View
 from django.views.generic import ListView
+from weasyprint import HTML
 
 from cart.models import Order
 from stock.models import StockItem
@@ -121,3 +125,64 @@ class AnalyticsDashboard(AnalyticsManagerRequiredMixin, BaseDashboardView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Аналитика"
         return context
+
+
+class GenerateOrderInvoice(ShopManagerRequiredMixin, View):
+    def get(self, request, order_id, *args, **kwargs):
+        pdf_file = self.generate_pdf(request, order_id)
+        response = HttpResponse(pdf_file, content_type="application/pdf")
+        response["Content-Disposition"] = 'attachment; filename="example.pdf"'
+        return response
+
+    def generate_pdf(self, request, order_id):
+        order = (
+            Order.objects.filter(id=order_id)
+            .prefetch_related(
+                "order_items",
+                "order_items__product",
+                "order_items__attribute",
+                "order_items__stock_item",
+            )
+            .select_related("shipping_details")
+            .first()
+        )
+
+        if not order:
+            raise Http404("Order does not exist")
+
+        context = {
+            "order": order,
+            "order_items": order.order_items.all(),
+            "shipping_details": order.shipping_details,
+        }
+
+        html_string = render_to_string("shop_manager/pdf_template.html", context)
+
+        return HTML(
+            string=html_string, base_url=request.build_absolute_uri()
+        ).write_pdf()
+
+
+def test_template(request):
+    order = (
+        Order.objects.filter(id=59)
+        .prefetch_related(
+            "order_items",
+            "order_items__product",
+            "order_items__attribute",
+            "order_items__stock_item",
+        )
+        .select_related("shipping_details")
+        .first()
+    )
+
+    context = {
+        "order": order,
+        "order_items": order.order_items.all(),
+        "shipping_details": order.shipping_details,
+    }
+    return render(
+        request,
+        "shop_manager/pdf_template.html",
+        context,
+    )

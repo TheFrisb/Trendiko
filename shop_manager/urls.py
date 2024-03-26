@@ -1,7 +1,14 @@
 from django.urls import path
 
 from .actions_views import ChangeOrderStatus
-from .views import ShopManagerHome, StockManagerHome, ScanStock, AnalyticsDashboard
+from .views import (
+    ShopManagerHome,
+    StockManagerHome,
+    ScanStock,
+    AnalyticsDashboard,
+    test_template,
+    GenerateOrderInvoice,
+)
 
 app_name = "shop_manager"
 urlpatterns = [
@@ -21,5 +28,9 @@ urlpatterns = [
         "api/change-order-status/",
         ChangeOrderStatus.as_view(),
         name="change_order_status",
+    ),
+    path("test-template/", test_template, name="test_template"),
+    path(
+        "invoices/<int:order_id>/", GenerateOrderInvoice.as_view(), name="order_invoice"
     ),
 ]
