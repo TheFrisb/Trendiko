@@ -290,7 +290,7 @@ class Order(TimeStampedModel, LoggableModel):
         if len(barcode_content) < 12:
             # Fill with leading zeros
             barcode_content = barcode_content.zfill(12)
-        print(barcode_content)
+
         ean13 = barcode.get_barcode_class("ean13")
         barcode_image = ean13(barcode_content, writer=ImageWriter())
 
@@ -319,7 +319,8 @@ class Order(TimeStampedModel, LoggableModel):
     # generate barcode image on order creation
     def save(self, *args, **kwargs):
         if not self.barcode:
-            self.generate_barcode()
+            if self.id:
+                self.generate_barcode()
         super().save(*args, **kwargs)
 
     def __str__(self):
