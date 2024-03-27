@@ -110,8 +110,16 @@
                             {% endwith %}
 
                             <div class="flex-grow">
-                                <p class="font-semibold line-clamp-2">{{ cart_item.title }}</p>
-                                <p class="font-semibold text-brand-action my-2"><span
+                                <div>
+                                    <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem float-right"
+                                         width="22"
+                                         height="22"
+                                         fill="currentColor">
+                                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
+                                    </svg>
+                                    <p class="font-semibold line-clamp-2">{{ cart_item.title }}</p>
+                                </div>
+                                <p class="font-semibold text-brand-action my-2 leading-5"><span
                                         class="cartItem__salePrice">{{ cart_item.sale_price }}</span>
                                     ден</p>
                                 <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
@@ -123,15 +131,6 @@
                                     <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
                                         +
                                     </button>
-                                </div>
-                                <div>
-                                    <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem"
-                                         width="22"
-                                         height="22"
-                                         fill="currentColor">
-                                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
-                                    </svg>
-
                                 </div>
                             </div>
                         </div>
@@ -196,8 +195,16 @@
                             </picture>
                         {% endwith %}
                         <div class="flex-grow">
-                            <p class="font-semibold line-clamp-2">{{ cart_item.title }}</p>
-                            <p class="font-semibold text-brand-action my-2"><span
+                            <div>
+                                <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem float-right"
+                                     width="22"
+                                     height="22"
+                                     fill="currentColor">
+                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
+                                </svg>
+                                <p class="font-semibold line-clamp-2">{{ cart_item.title }}</p>
+                            </div>
+                            <p class="font-semibold text-brand-action my-2 leading-5"><span
                                     class="cartItem__salePrice">{{ cart_item.sale_price }}</span>
                                 ден</p>
                             <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
@@ -209,15 +216,6 @@
                                 <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
                                     +
                                 </button>
-                            </div>
-                            <div>
-                                <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem"
-                                     width="22"
-                                     height="22"
-                                     fill="currentColor">
-                                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
-                                </svg>
-
                             </div>
                         </div>
                     </div>

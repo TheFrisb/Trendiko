@@ -162,8 +162,16 @@ function createSideCartItem(cartItem) {
                                        class="rounded-lg min-w-[120px]" width="120" height="120">
                               </picture>
                               <div class="flex-grow">
-                                  <p class="font-semibold line-clamp-2">${cartItem.title}</p>
-                                  <p class="font-semibold text-brand-action my-2"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p>
+                                  <div>
+                                      <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem float-right" width="22"
+                                           height="22"
+                                           fill="currentColor">
+                                          <use xlink:href="/static/common/assets/svg_sprite.svg#trash"></use>
+                                      </svg> 
+                                    <p class="font-semibold line-clamp-2">${cartItem.title}</p>
+                                  </div> 
+                                  
+                                  <p class="font-semibold text-brand-action my-2 leading-5"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p> 
                                   <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                       <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
                                           -
@@ -173,14 +181,6 @@ function createSideCartItem(cartItem) {
                                       <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
                                           +
                                       </button>
-                                  </div>
-                                  <div>
-                                      <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem" width="22"
-                                           height="22"
-                                           fill="currentColor">
-                                          <use xlink:href="/static/common/assets/svg_sprite.svg#trash"></use>
-                                      </svg>
-                      
                                   </div>
                               </div>
   `;
@@ -207,10 +207,18 @@ function createCheckoutItem(cartItem) {
                                   <source srcset="${thumbnails.jpg}" type="image/png">
                                   <img src="${thumbnails.jpg}" alt=""
                                        class="rounded-lg min-w-[120px]" width="120" height="120"> 
-                              </picture>
+                              </picture> 
                               <div class="flex-grow">
-                                  <p class="font-semibold line-clamp-2">${cartItem.title}</p>
-                                  <p class="font-semibold text-brand-action my-2"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p>
+                                  <div>
+                                      <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem float-right" width="22"
+                                           height="22"
+                                           fill="currentColor">
+                                          <use xlink:href="/static/common/assets/svg_sprite.svg#trash"></use>
+                                      </svg>
+                                    <p class="font-semibold line-clamp-2">${cartItem.title}</p> 
+                                  </div> 
+
+                                  <p class="font-semibold text-brand-action my-2 leading-5"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p>
                                   <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                       <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
                                           -
@@ -222,13 +230,6 @@ function createCheckoutItem(cartItem) {
                                       </button>
                                   </div>
                                   <div>
-                                      <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem" width="22"
-                                           height="22"
-                                           fill="currentColor">
-                                          <use xlink:href="/static/common/assets/svg_sprite.svg#trash"></use>
-                                      </svg>
-                      
-                                  </div>
                               </div>
   `;
 
