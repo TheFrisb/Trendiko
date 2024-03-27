@@ -318,7 +318,7 @@ class Order(TimeStampedModel, LoggableModel):
 
     # generate barcode image on order creation
     def save(self, *args, **kwargs):
-        if not self.barcode and self.pk:
+        if not self.barcode:
             self.generate_barcode()
         super().save(*args, **kwargs)
 
