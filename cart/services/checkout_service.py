@@ -121,6 +121,7 @@ class CheckoutService:
             ip=self.get_ip_addr(),
             user_agent=self.get_user_agent(),
         )
+        order.generate_barcode()
 
         return order
 

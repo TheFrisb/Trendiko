@@ -317,11 +317,6 @@ class Order(TimeStampedModel, LoggableModel):
         return f"{self.id}/{year}"
 
     # generate barcode image on order creation
-    def save(self, *args, **kwargs):
-        if not self.barcode:
-            if self.id:
-                self.generate_barcode()
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Order id: {self.id}, Status: {self.status}, Total: {self.total_price}, Created at: {self.created_at}"
