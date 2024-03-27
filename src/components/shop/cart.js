@@ -126,7 +126,7 @@ function updateCartQuantityAndTotal(hasFreeShipping) {
   cartQuantity.innerHTML = formatNumberToLocale(totalQuantity);
   cartTotal.innerHTML = formatNumberToLocale(cartTotalPrice);
 
-  checkoutSubtotal.innerHTML = cartTotalPrice;
+  checkoutSubtotal.innerHTML = formatNumberToLocale(cartTotalPrice);
   if (hasFreeShipping) {
     cartTotalPrice += 20;
     checkoutShipping.innerHTML = "бесплатна достава";
@@ -163,7 +163,7 @@ function createSideCartItem(cartItem) {
                               </picture>
                               <div class="flex-grow">
                                   <p class="font-semibold line-clamp-2">${cartItem.title}</p>
-                                  <p class="font-semibold text-brand-action mt-2"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p>
+                                  <p class="font-semibold text-brand-action my-2"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p>
                                   <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                       <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
                                           -
@@ -210,7 +210,7 @@ function createCheckoutItem(cartItem) {
                               </picture>
                               <div class="flex-grow">
                                   <p class="font-semibold line-clamp-2">${cartItem.title}</p>
-                                  <p class="font-semibold text-brand-action mt-2"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p>
+                                  <p class="font-semibold text-brand-action my-2"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p>
                                   <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                       <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
                                           -

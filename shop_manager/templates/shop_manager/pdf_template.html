@@ -62,10 +62,10 @@
 
     </style>
 </head>
-<body>
+<body style="margin: 0; padding:0">
 <div class="flex-center-between border-bottom">
     <img src="{% static 'common/assets/brand/logo-dark.png' %}" alt="" style="width: 100px; height: auto">
-    <img src="{{ order.barcode.url }}" alt="" style="width: 150px; height: auto">
+    <img src="{{ order.barcode.url }}" alt="" style="width: 100px; height: auto">
 </div>
 <div class="flex-center-between" style="margin: 24px 0">
     <div class="font-bold text-left text-lg">
@@ -114,7 +114,7 @@
             <tr style="text-align: center" class="border-bottom">
                 <td>{{ forloop.counter }}</td>
                 <td>{{ item.stock_item.sku }}</td>
-                <td>{{ item.get_readable_name }}</td>
+                <td>{{ item.stock_item.title }}</td>
                 <td>бр</td>
                 <td>{{ item.quantity|floatformat:2 }}</td>
                 <td>{{ item.price|floatformat:2 }}</td>
@@ -162,6 +162,10 @@
             <p style="">Поштенски услуги со ДДВ:</p>
             <p class="font-bold">{{ order.get_shipping_price|floatformat:2 }}</p>
         </div>
+        <div style="display:flex; justify-content: space-between; width: 100%">
+            <p style="">Провизија за готовинско работење:</p>
+            <p class="font-bold">20.00</p>
+        </div>
         <div style="display:flex; justify-content: space-between; margin-top: 12px; font-size:14px; width: 100%">
             <p style="">За наплата:</p>
             <p class="font-bold">{{ order.total_price|floatformat:2 }}</p>
@@ -198,5 +202,19 @@
         </div>
     </div>
 </div>
+
+<h4 style="margin-top:32px; ">QR CODES</h4>
+<div style="display:flex; gap:24px; justify-content: space-between; align-items: center; flex-wrap: wrap">
+
+    {% for item in order_items %}
+        <div>
+            <p class="text-center">{{ item.quantity }}x</p>
+            <p class="text-center">{{ item.stock_item.title }}</p>
+            <p class="text-center">{{ item.stock_item.sku }}</p>
+            <img src="{{ item.stock_item.qr_code.url }}" alt="" style="width: 100px; height: auto">
+        </div>
+    {% endfor %}
+</div>
+
 </body>
 </html>

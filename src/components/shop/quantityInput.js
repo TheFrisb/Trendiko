@@ -37,7 +37,7 @@ function updateCartItemQuantity(quantity, pk) {
 function removeCartItem(pk) {
   HTTP.delete(`${URLS.REMOVE_CART_ITEM}${pk}`).then(response => {
     if (response) {
-
+      console.log(response);
       removeCartItemElement(pk, response.data.has_free_shipping);
     }
   });

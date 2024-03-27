@@ -283,27 +283,19 @@ class Order(TimeStampedModel, LoggableModel):
         self.save()
 
     def generate_barcode(self):
-        # Ensure self.id is a string
-        barcode_content = str(self.id)
-        print(barcode_content)
-        # Check if the content length is less than 12
-        if len(barcode_content) < 12:
-            # Fill with leading zeros
-            barcode_content = barcode_content.zfill(12)
-
-        ean13 = barcode.get_barcode_class("ean13")
-        barcode_image = ean13(barcode_content, writer=ImageWriter())
+        barcode_content = f"TRENDIKO-{str(self.id)}"
+        code128 = barcode.get_barcode_class("code128")
+        barcode_image = code128(barcode_content, writer=ImageWriter())
 
         buffer = BytesIO()
         barcode_image.write(buffer)
         buffer.seek(0)
 
-        barcode_filename = f"barcode_{self.id}.png"
+        barcode_filename = f"order_barcode{self.id}.png"
         self.barcode.save(barcode_filename, File(buffer))
 
         self.save()
 
-        # Return the barcode image field
         return self.barcode
 
     def get_invoice_number(self):

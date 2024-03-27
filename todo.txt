@@ -1,12 +1,8 @@
-1. SEO Titles
-2. Sumite da se formatirani na 1000ka
-3. Predvidena isporaka so tocna data
-4. Search Bar
-5. Sticky add to cart
-6. Praj faktura
-7. Praki mails
-8. Staj facebook campaigns.
+9. Kantata podmestana
 --------------------------------------------------------------------------------------------------------------------
+1. Export all invoices
+
+
 Facebook Pixel & Catalogue
 8. Facebook pixel view content event
 9. Facebook pixel add to cart event
@@ -30,6 +26,8 @@ Miscellaneous:
 5. Disable buttons na click i pos enable
 6. Napraj banner funkcionalen
 7. Streamline stock showcase za variable
+8. Optimize all d stuff, make shit fun and fast baby
+9. One last overview
 --------------------------------------------------------------------------------------------------------------------
 Facebook campaigns creation: Total should be 8 hours
 1. Implement UI - 3

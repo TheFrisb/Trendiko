@@ -1,31 +1,30 @@
 import {updateStickyAddToCartBtnIfExists} from "../shop/stickyAddToCart";
-import {parseLocaleNumber} from "../../utils/numberFormatter";
+import {formatNumberToLocale, parseLocaleNumber} from "../../utils/numberFormatter";
 
 const mainProduct = document.querySelector('.mainProduct');
 const chosenVariationTextContainer = document.querySelector('#chosenVariationTextContainer');
-let variationPriceContainer = document.querySelector('#variation__priceContainer');
-let chooseVariationBanner = document.querySelector('#chooseVariationBanner');
 let moneySavedEl = document.querySelector('#productMisc__moneySaved');
 let percentageSavedEl = document.querySelector('#productMisc__percentageSaved');
 let salePriceEl = document.querySelector('#productMisc__salePrice');
 let regularPriceEl = document.querySelector('#productMisc__regularPrice');
-
+// let variationPriceContainer = document.querySelector('#variation__priceContainer');
+// let chooseVariationBanner = document.querySelector('#chooseVariationBanner');
 
 function updatePrices(el) {
   let currentSalePrice = el.getAttribute('data-attribute-sale-price');
   let currentRegularPrice = el.getAttribute('data-attribute-regular-price');
-  let currentMoneySaved = parseInt(currentRegularPrice) - parseInt(currentSalePrice);
+  let currentMoneySaved = parseLocaleNumber(currentRegularPrice) - parseLocaleNumber(currentSalePrice);
   let currentPercentageSaved = Math.round((currentMoneySaved / currentRegularPrice) * 100);
 
-  moneySavedEl.textContent = currentMoneySaved;
-  salePriceEl.textContent = currentSalePrice;
-  regularPriceEl.textContent = currentRegularPrice;
-  percentageSavedEl.textContent = currentPercentageSaved;
+  moneySavedEl.textContent = formatNumberToLocale(currentMoneySaved);
+  salePriceEl.textContent = formatNumberToLocale(currentSalePrice);
+  regularPriceEl.textContent = formatNumberToLocale(currentRegularPrice);
+  percentageSavedEl.textContent = formatNumberToLocale(currentPercentageSaved);
 
-  if (variationPriceContainer.classList.contains('hidden')) {
-    variationPriceContainer.classList.remove('hidden');
-    chooseVariationBanner.classList.add('hidden');
-  }
+  // if (variationPriceContainer.classList.contains('hidden')) {
+  //   variationPriceContainer.classList.remove('hidden');
+  //   chooseVariationBanner.classList.add('hidden');
+  // }
 }
 
 function updateUI(el, attributesContainer, chosenVariationText) {

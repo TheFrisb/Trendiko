@@ -95,6 +95,8 @@ class CartItemView(APIView):
         cart_service = CartService(request.cart, ProductService())
 
         cart_service.remove_from_cart(pk)
+        request.cart.refresh_from_db()
+
         return Response(CartSerializer(request.cart).data, status=status.HTTP_200_OK)
 
 

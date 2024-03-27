@@ -80,27 +80,22 @@
 
             <!-- Product pricing -->
             <div class="pb-2">
-                {% if product.type == 'variable' %}
-                    <p class="font-bold text-xl text-brand-action" id="chooseVariationBanner">
-                        Одберете {{ product_misc_data.attribute_label }} за да
-                        ја видете цената</p>
-                    <div class="hidden" id="variation__priceContainer">
-                        <p class="text-sm">Заштедувате: <span
-                                class="font-bold"><span
-                                id="productMisc__moneySaved">{{ product_misc_data.money_saved }}</span> ден.</span>
-                        </p>
+                {% if product.isVariable %}
+                    <p class="text-sm">Заштедувате: <span
+                            class="font-bold"><span
+                            id="productMisc__moneySaved">{{ product.attributes.first.money_saved }}</span> ден.</span>
+                    </p>
 
-                        <div class="flex gap-2 justify-start items-baseline">
-                            <p class="font-bold text-2xl text-brand-action"><span
-                                    id="productMisc__salePrice">{{ product.sale_price }}</span> ден.</p>
-                            <p class="font-bold text-lg text-brand-gray line-through"><span
-                                    id="productMisc__regularPrice">{{ product.regular_price }}</span>
-                                ден</p>
-                            <p class="ml-1 px-1.5 py-0.5 rounded-lg bg-brand-accent font-bold">
-                                -<span
-                                    id="productMisc__percentageSaved">{{ product_misc_data.money_saved_percent }}</span>%
-                            </p>
-                        </div>
+                    <div class="flex gap-2 justify-start items-baseline">
+                        <p class="font-bold text-2xl text-brand-action"><span
+                                id="productMisc__salePrice">{{ product.attributes.first.sale_price }}</span> ден.</p>
+                        <p class="font-bold text-lg text-brand-gray line-through"><span
+                                id="productMisc__regularPrice">{{ product.attributes.first.regular_price }}</span>
+                            ден</p>
+                        <p class="ml-1 px-1.5 py-0.5 rounded-lg bg-brand-accent font-bold">
+                            -<span
+                                id="productMisc__percentageSaved">{{ product.attributes.first.money_saved_percent }}</span>%
+                        </p>
                     </div>
                 {% else %}
                     <p class="text-sm">Заштедувате: <span
@@ -126,11 +121,13 @@
             {% if product.isVariable %}
                 <div class="w-full flex flex-col gap-2">
                     <p class="font-bold capitalize">{{ product_misc_data.attribute_label }} <span
-                            id="chosenVariationTextContainer" class="font-normal"></span>
+                            id="chosenVariationTextContainer"
+                            class="font-normal">{{ product.attributes.first.title }}</span>
                     </p>
                     <div class="flex gap-3 justify-start items-center productAttributesContainer">
                         {% for attribute in product.attributes.all %}
-                            <div class="min-w-[50px] min-h-[50px] border border-black/60 rounded-lg cursor-pointer hover:opacity-80 flex justify-center items-center font-bold productAttribute"
+                            <div class="min-w-[50px] min-h-[50px] border border-black/60 rounded-lg cursor-pointer hover:opacity-80 flex justify-center items-center font-bold productAttribute {% if attribute == product.attributes.first %} selected {% endif %}"
+
                                     {% if attribute.type == 'color' %}
                                  style="background-color: {{ attribute.value }}"
                                     {% endif %}
@@ -202,7 +199,9 @@
 
                         <button class="h-10 w-8/12 bg-brand-primary rounded-lg text-white font-bold flex items-center justify-between p-1 hover:bg-brand-action transition-all duration-100 ease-in-out addToCartButton"
                                 data-product-id="{{ product.id }}" data-product-type="{{ product.type }}"
-                                data-attribute-id=""
+                                {% if product.isVariable %}
+                                data-attribute-id="{{ product.attributes.first.id }}"
+                                {% endif %}
                                 data-quantity="1">
                             <span class="w-10/12">Во кошничка</span>
                             <div class="w-2/12 h-full flex items-center justify-center bg-white rounded-lg">
@@ -217,6 +216,9 @@
                     <div class="w-full">
                         <button class="h-12 w-full bg-brand-action rounded-lg text-white font-bold flex items-center justify-between p-1 hover:bg-brand-primary transition-all duration-100 ease-in-out addToCartButton buyNowButton"
                                 data-product-id="{{ product.id }}" data-product-type="{{ product.type }}"
+                                {% if product.isVariable %}
+                                data-attribute-id="{{ product.attributes.first.id }}"
+                                {% endif %}
                                 data-quantity="1">
                             <div class="w-2/12 h-full flex items-center justify-center bg-white rounded-lg">
                                 <svg class="text-white" width="24" height="21" fill="currentColor">
@@ -231,7 +233,7 @@
             <!-- End Product Add To Cart Section -->
 
             <!-- Brand benefits section -->
-            <div class="w-full flex justify-between items-center gap-2 pt-1 pb-2">
+            <div class="w-full flex justify-between items-stretch gap-2 pt-1 pb-2">
                 <div class="p-2 gap-1 rounded-lg border border-black/40 flex justify-between items-center">
                     <p class="w-11/12 text-xs font-bold ">Плаќање при испорака на курир</p>
                     <svg width="24" height="21" fill="currentColor">

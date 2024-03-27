@@ -303,6 +303,20 @@ class ProductAttribute(BaseProduct):
             "jpg": self.product.thumbnail_as_jpeg.url,
         }
 
+    @property
+    def money_saved(self):
+        if self.sale_price and self.regular_price:
+            return self.regular_price - self.sale_price
+        return 0
+
+    @property
+    def money_saved_percent(self):
+        if self.sale_price and self.regular_price:
+            return int(
+                (self.regular_price - self.sale_price) / self.regular_price * 100
+            )
+        return 0
+
     class Meta:
         verbose_name = "Атрибут"
         verbose_name_plural = "Атрибути"

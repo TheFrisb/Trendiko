@@ -6,7 +6,6 @@ from .views import (
     StockManagerHome,
     ScanStock,
     AnalyticsDashboard,
-    test_template,
     GenerateOrderInvoice,
 )
 
@@ -29,7 +28,6 @@ urlpatterns = [
         ChangeOrderStatus.as_view(),
         name="change_order_status",
     ),
-    path("test-template/", test_template, name="test_template"),
     path(
         "invoices/<int:order_id>/", GenerateOrderInvoice.as_view(), name="order_invoice"
     ),

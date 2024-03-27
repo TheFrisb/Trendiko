@@ -23,7 +23,7 @@
                 </div>
                 <div class="relative" id="cartIcon">
                     <div class="p-2">
-                        <svg class="text-white cursor-pointer hover:text-brand-action" width="22" height="22"
+                        <svg class="text-white cursor-pointer hover:text-brand-action" width="24" height="21"
                              fill="currentColor">
                             <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#cart2"></use>
                         </svg>
@@ -111,7 +111,7 @@
 
                             <div class="flex-grow">
                                 <p class="font-semibold line-clamp-2">{{ cart_item.title }}</p>
-                                <p class="font-semibold text-brand-action mt-2"><span
+                                <p class="font-semibold text-brand-action my-2"><span
                                         class="cartItem__salePrice">{{ cart_item.sale_price }}</span>
                                     ден</p>
                                 <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
@@ -169,8 +169,12 @@
          class="container-fluid w-full h-full overflow-auto fixed top-0 right-0 bg-brand-primary/70 z-[100] flex items-center justify-center">
         <div class="bg-white p-6 rounded-lg w-[95%] max-h-[95%] lg:max-w-[720px] lg:h-auto lg:max-h-[95%] flex flex-col gap-4 overflow-y-auto"
              id="checkout">
-            <div class="relative border-b border-black/20 py-6 flex items-center justify-between">
-                <h3 class="font-bold text-2xl text-brand-action text-center">Колку парчиња сакате?</h3>
+            <div class="flex items-center justify-center">
+                <img src="{% static 'common/assets/brand/logo-dark.png' %}" width="120"
+                     alt="Image of Trendiko's brand logo">
+            </div>
+            <div class="relative border-b border-black/20 pt-0.5 pb-6 flex items-center justify-between">
+                <h3 class="font-bold text-2xl text-brand-action text-left">Колку парчиња сакате?</h3>
                 <svg class="text-black/60 cursor-pointer hover:text-brand-action" width="26"
                      height="26"
                      fill="currentColor"
@@ -193,7 +197,7 @@
                         {% endwith %}
                         <div class="flex-grow">
                             <p class="font-semibold line-clamp-2">{{ cart_item.title }}</p>
-                            <p class="font-semibold text-brand-action mt-2"><span
+                            <p class="font-semibold text-brand-action my-2"><span
                                     class="cartItem__salePrice">{{ cart_item.sale_price }}</span>
                                 ден</p>
                             <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
@@ -229,7 +233,10 @@
                              fill="currentColor">
                             <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#toggledCircle"></use>
                         </svg>
-                        <p class="text-sm text-left">Достава до врата</p>
+                        <div class="flex flex-col items-start justify-start gap-1">
+                            <p class="text-sm text-left">Достава до врата</p>
+                            <p class="text-xs text-left text-brand-action">2 до 3 работни дена</p>
+                        </div>
                     </div>
                     <p id="checkout__selectedShipping" class="text-right text-sm text-brand-action">
                         {% if cart.has_free_shipping %}
@@ -282,7 +289,7 @@
                                 class="text-red-600">*</span></label>
                         <div class="flex items-center inputContainer">
                             <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
-                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
+                                <svg class="text-brand-primary cursor-pointer hover:text-black/60"
                                      width="24"
                                      height="24"
                                      fill="currentColor">
@@ -293,6 +300,7 @@
                                    name="full_name"
                                    id="checkoutForm__fullName"
                                    class="checkoutFormInput"
+                                   placeholder="Име и презиме"
                                    required>
                         </div>
                     </div>
@@ -301,7 +309,7 @@
                                 class="text-red-600">*</span></label>
                         <div class="flex items-start inputContainer">
                             <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
-                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
+                                <svg class="text-brand-primary cursor-pointer hover:text-black/60"
                                      width="24"
                                      height="24"
                                      fill="currentColor">
@@ -321,7 +329,7 @@
                                 class="text-red-600">*</span></label>
                         <div class="flex items-start inputContainer">
                             <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
-                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
+                                <svg class="text-brand-primary cursor-pointer hover:text-black/60"
                                      width="24"
                                      height="24"
                                      fill="currentColor">
@@ -340,7 +348,7 @@
                                 class="text-red-600">*</span></label>
                         <div class="flex items-center inputContainer">
                             <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
-                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
+                                <svg class="text-brand-primary cursor-pointer hover:text-black/60"
                                      width="24"
                                      height="24"
                                      fill="currentColor">
@@ -351,6 +359,7 @@
                                    name="address"
                                    id="checkoutForm__address"
                                    class="checkoutFormInput"
+                                   placeholder="Адреса и број"
                                    required>
                         </div>
                     </div>
@@ -360,7 +369,7 @@
                                 class="text-red-600">*</span></label>
                         <div class="flex items-center inputContainer">
                             <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
-                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
+                                <svg class="text-brand-primary cursor-pointer hover:text-black/60"
                                      width="24"
                                      height="24"
                                      fill="currentColor">
@@ -371,6 +380,7 @@
                                    name="phone"
                                    id="checkoutForm__phone"
                                    class="checkoutFormInput"
+                                   placeholder="Телефон"
                                    required>
                         </div>
                     </div>
@@ -379,7 +389,7 @@
                         <label for="checkoutForm__email" class="font-bold text-sm">E-mail</label>
                         <div class="flex items-center inputContainer">
                             <div class="flex items-center justify-center bg-brand-primary/20 h-[43px] w-[43px] rounded-tl-lg rounded-bl-lg inputIcon">
-                                <svg class="text-brand-action cursor-pointer hover:text-black/60"
+                                <svg class="text-brand-primary cursor-pointer hover:text-black/60"
                                      width="24"
                                      height="24"
                                      fill="currentColor">
@@ -390,18 +400,38 @@
                                    name="email"
                                    id="checkoutForm__email"
                                    class="checkoutFormInput"
-                            >
+                                   placeholder="E-mail (не е задолжително)">
                         </div>
                     </div>
                 </form>
             </div>
-            <button
-                    class="w-full text-center cursor-pointer bg-brand-action font-semibold text-white rounded-lg p-2 hover:bg-brand-primary/80 sideCart__buyableAction"
-                    id="checkoutBtn">
-                Кон
-                Нарачка
-            </button>
 
+            <div class="w-full">
+                <button class="h-12 w-full bg-brand-action rounded-lg text-white font-bold flex items-center justify-between p-1 hover:bg-brand-primary transition-all duration-100 ease-in-out sideCart__buyableAction"
+                        id="checkoutBtn">
+                    <div class="w-2/12 h-full flex items-center justify-center bg-white rounded-lg">
+                        <svg class="text-brand-action" width="24" height="24" fill="currentColor">
+                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#cart2"></use>
+                        </svg>
+                    </div>
+                    <span class="w-10/12 text-xl">Заврши нарачка</span>
+                </button>
+            </div>
+
+            <div class="w-full flex justify-between items-stretch gap-2 pt-1 pb-2">
+                <div class="p-2 gap-1 rounded-lg border border-black/40 flex justify-between items-center">
+                    <p class="w-11/12 text-xs font-bold ">Плаќање при испорака на курир</p>
+                    <svg width="24" height="21" fill="currentColor">
+                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#payOnDelivery"></use>
+                    </svg>
+                </div>
+                <div class="p-2 rounded-lg border border-black/40 flex justify-between items-center">
+                    <p class="w-11/12 text-xs font-bold ">Лесна замена на производи</p>
+                    <svg width="24" height="21" fill="currentColor">
+                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#exchangeProduct"></use>
+                    </svg>
+                </div>
+            </div>
         </div>
     </div>
 {% endwith %}

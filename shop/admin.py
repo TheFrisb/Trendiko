@@ -25,10 +25,23 @@ class ProductAdminForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        product_type = cleaned_data.get("type")
         stock_item = cleaned_data.get("stock_item")
-        if product_type == Product.ProductType.SIMPLE and not stock_item:
-            raise ValidationError("Stock item must be selected for simple product type")
+        status = cleaned_data.get("status")
+
+        if self.status_requires_stock_item(status) and not stock_item:
+            raise ValidationError(
+                "Stock item must be selected for Products with status 'Published' or 'Out of Stock'"
+            )
+
+    def status_requires_stock_item(self, status):
+        """
+        Check if the status requires a stock item
+        :param status: Product status
+        :return: True if status requires stock item, False otherwise
+        """
+        if status != Product.ProductStatus.ARCHIVED:
+            return True
+        return False
 
     class Meta:
         model = Product

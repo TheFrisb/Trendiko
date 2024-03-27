@@ -1,5 +1,4 @@
 from django.http import FileResponse, HttpResponse, Http404
-from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views import View
 from django.views.generic import ListView
@@ -150,6 +149,9 @@ class GenerateOrderInvoice(ShopManagerRequiredMixin, View):
         if not order:
             raise Http404("Order does not exist")
 
+        if not order.barcode:
+            order.generate_barcode()
+
         context = {
             "order": order,
             "order_items": order.order_items.all(),
@@ -161,28 +163,3 @@ class GenerateOrderInvoice(ShopManagerRequiredMixin, View):
         return HTML(
             string=html_string, base_url=request.build_absolute_uri()
         ).write_pdf()
-
-
-def test_template(request):
-    order = (
-        Order.objects.filter(id=59)
-        .prefetch_related(
-            "order_items",
-            "order_items__product",
-            "order_items__attribute",
-            "order_items__stock_item",
-        )
-        .select_related("shipping_details")
-        .first()
-    )
-
-    context = {
-        "order": order,
-        "order_items": order.order_items.all(),
-        "shipping_details": order.shipping_details,
-    }
-    return render(
-        request,
-        "shop_manager/pdf_template.html",
-        context,
-    )

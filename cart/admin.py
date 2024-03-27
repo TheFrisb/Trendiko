@@ -30,3 +30,5 @@ class ShippingDetailsInline(admin.StackedInline):
 class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline, ShippingDetailsInline]
     readonly_fields = ["ip", "user_agent", "barcode"]
+
+    change_form_template = "admin/order/change_form.html"
