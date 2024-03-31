@@ -75,7 +75,11 @@ class CatalogueManager:
         condition = "new"
         price = f"{attribute.regular_price} {self.currency}"
         link = f"{self.base_url}{product.get_absolute_url()}"
-        image_link = self.base_url + attribute.thumbnail_as_jpeg.url
+        # check if attribute has thumbnail
+        if attribute.thumbnail.name:
+            image_link = self.base_url + attribute.thumbnail_as_jpeg.url
+        else:
+            image_link = self.base_url + product.thumbnail_as_jpeg.url
         brand = self.brand
         sale_price = f"{attribute.sale_price} {self.currency}"
         additional_image_link = self.get_additional_images(product)

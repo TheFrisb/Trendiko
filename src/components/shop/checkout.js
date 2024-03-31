@@ -6,7 +6,7 @@ function checkout(formEl) {
   console.log("checkout formEl", formEl)
   if (!validateForm(formEl)) {
     notyf__long.error('Полињата обележани со црвено се задолжителни!');
-    return;
+    return Promise.resolve();
   }
 
   let formData = new FormData(formEl);
@@ -17,7 +17,7 @@ function checkout(formEl) {
 
   console.log("jsonFormData", jsonFormData)
 
-  HTTP.post(URLS.CHECKOUT, jsonFormData).then(response => {
+  return HTTP.post(URLS.CHECKOUT, jsonFormData).then(response => {
     if (response.success) {
       window.location.href = response.data.thank_you_page_url;
     } else {

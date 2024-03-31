@@ -1,18 +1,26 @@
+import base64
+from datetime import datetime
 from io import BytesIO
 
 import barcode
 from barcode.writer import ImageWriter
 from django.conf import settings
-from django.core.files import File
 from django.db import models
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from weasyprint import HTML
 
 from common.models import TimeStampedModel, LoggableModel
 from shop.models import Product, ProductAttribute
 
 
 # Create your models here.
+
+
+def invoice_upload_to(instance, filename):
+    today = datetime.now()
+    return f"{today.year}/{today.month}/{today.day}/{filename}"
 
 
 class Cart(TimeStampedModel):
@@ -220,7 +228,6 @@ class Order(TimeStampedModel, LoggableModel):
     subtotal_price = models.IntegerField(default=0)
     total_price = models.IntegerField(default=0)
     tracking_number = models.CharField(max_length=100, unique=True, db_index=True)
-    barcode = models.ImageField(upload_to="barcodes/", null=True, blank=True)
 
     def get_absolute_url(self):
         """
@@ -282,8 +289,48 @@ class Order(TimeStampedModel, LoggableModel):
 
         self.save()
 
+    # def generate_invoice(self):
+    #     """
+    #     Generate an invoice for the order.
+    #     """
+    #     if self.invoice.name:
+    #         self.invoice.delete()
+    #
+    #     context = {
+    #         "order": self,
+    #         "order_items": self.order_items.all(),
+    #         "shipping_details": self.shipping_details,
+    #     }
+    #
+    #     html_string = render_to_string("shop_manager/pdf_template.html", context)
+    #
+    #     pdf_bytes = HTML(
+    #         string=html_string, base_url=settings.WEBSITE_BASE_URL
+    #     ).write_pdf()
+    #
+    #     pdf_file = BytesIO(pdf_bytes)
+    #     pdf_file.name = f"order_{self.id}_invoice.pdf"
+    #
+    #     self.invoice.save(pdf_file.name, pdf_file)
+
+    def generate_invoice_pdf(self, base_url, write_to=None, show_qr_code=True):
+        context = {
+            "order": self,
+            "order_items": self.order_items.all(),
+            "shipping_details": self.shipping_details,
+            "show_qr_code": show_qr_code,
+        }
+
+        html_string = render_to_string("shop_manager/pdf_template.html", context)
+
+        if write_to:
+            HTML(string=html_string, base_url=base_url).write_pdf(target=write_to)
+            return write_to
+
+        return HTML(string=html_string, base_url=base_url).write_pdf()
+
     def generate_barcode(self):
-        barcode_content = f"TRENDIKO-{str(self.id)}"
+        barcode_content = self.make_barcode_content()
         code128 = barcode.get_barcode_class("code128")
         barcode_image = code128(barcode_content, writer=ImageWriter())
 
@@ -291,12 +338,9 @@ class Order(TimeStampedModel, LoggableModel):
         barcode_image.write(buffer)
         buffer.seek(0)
 
-        barcode_filename = f"order_barcode{self.id}.png"
-        self.barcode.save(barcode_filename, File(buffer))
+        base64_image = base64.b64encode(buffer.getvalue()).decode("utf-8")
 
-        self.save()
-
-        return self.barcode
+        return f"data:image/png;base64,{base64_image}"
 
     def get_invoice_number(self):
         """
@@ -308,7 +352,18 @@ class Order(TimeStampedModel, LoggableModel):
         year = str(self.created_at.year)[-2:]
         return f"{self.id}/{year}"
 
-    # generate barcode image on order creation
+    @property
+    def get_total_quantity(self):
+        """
+        Calculate the total quantity of all items in the order.
+
+        Returns:
+            int: The total quantity of all items in the order.
+        """
+        return sum(item.quantity for item in self.order_items.all())
+
+    def make_barcode_content(self):
+        return f"TRENDIKO-{str(self.id)}"
 
     def __str__(self):
         return f"Order id: {self.id}, Status: {self.status}, Total: {self.total_price}, Created at: {self.created_at}"

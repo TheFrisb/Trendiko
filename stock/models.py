@@ -100,9 +100,6 @@ class ImportItem(TimeStampedModel):
     def __str__(self):
         return f"{self.stock_item.title} - {self.quantity}"
 
-    def get_stock_with_reserved(self):
-        return self.stock_item.stock - self.reserved_stock
-
     def save(self, *args, **kwargs):
         self.stock_item.stock = self.calculate_parent_stock()
         self.stock_item.save()

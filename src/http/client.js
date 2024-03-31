@@ -1,6 +1,7 @@
 import {getCsrfToken} from "../utils/csrf";
 
 let INTERNAL_API_BASE_PATH = "/api";
+let FACEBOOK_PIXEL_EVENTS_URL = INTERNAL_API_BASE_PATH + "/facebook/pixel"
 
 const URLS = {
   'ADD_TO_CART': INTERNAL_API_BASE_PATH + '/cart/cart-item/',
@@ -10,6 +11,10 @@ const URLS = {
   'ADD_TO_ORDER': INTERNAL_API_BASE_PATH + '/cart/order-item/',
 }
 
+const FACEBOOK_PIXEL_EVENTS_URLS = {
+  'INITIATE_CHECKOUT': FACEBOOK_PIXEL_EVENTS_URL + '/initiate-checkout/',
+  'VIEW_CONTENT': FACEBOOK_PIXEL_EVENTS_URL + '/view-content/',
+}
 const HTTP = {
   post: async (url, data) => {
     const response = await fetch(url, {
@@ -78,5 +83,5 @@ const HTTP = {
   }
 }
 
-export {HTTP, URLS};
+export {HTTP, URLS, FACEBOOK_PIXEL_EVENTS_URLS};
 

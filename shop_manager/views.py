@@ -1,11 +1,10 @@
 from django.http import FileResponse, HttpResponse, Http404
-from django.template.loader import render_to_string
 from django.views import View
 from django.views.generic import ListView
-from weasyprint import HTML
 
 from cart.models import Order
 from stock.models import StockItem
+from .forms.export_invoices import ExportInvoicesForm
 from .forms.export_orders_form import ExportOrdersForm
 from .forms.export_stock_information_form import ExportStockInformationForm
 from .utils import (
@@ -129,8 +128,9 @@ class AnalyticsDashboard(AnalyticsManagerRequiredMixin, BaseDashboardView):
 class GenerateOrderInvoice(ShopManagerRequiredMixin, View):
     def get(self, request, order_id, *args, **kwargs):
         pdf_file = self.generate_pdf(request, order_id)
+        filename = f"order_{order_id}_invoice.pdf"
         response = HttpResponse(pdf_file, content_type="application/pdf")
-        response["Content-Disposition"] = 'attachment; filename="example.pdf"'
+        response["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
     def generate_pdf(self, request, order_id):
@@ -149,17 +149,16 @@ class GenerateOrderInvoice(ShopManagerRequiredMixin, View):
         if not order:
             raise Http404("Order does not exist")
 
-        if not order.barcode:
-            order.generate_barcode()
+        return order.generate_invoice_pdf(request.build_absolute_uri())
 
-        context = {
-            "order": order,
-            "order_items": order.order_items.all(),
-            "shipping_details": order.shipping_details,
-        }
 
-        html_string = render_to_string("shop_manager/pdf_template.html", context)
-
-        return HTML(
-            string=html_string, base_url=request.build_absolute_uri()
-        ).write_pdf()
+class ExportInvoices(ShopManagerRequiredMixin, View):
+    def post(self, request):
+        form = ExportInvoicesForm(request.POST, request.build_absolute_uri())
+        if form.is_valid():
+            return FileResponse(
+                form.export_invoices(base_url=request.build_absolute_uri()),
+                as_attachment=True,
+                filename="invoices.pdf",
+            )
+        return HttpResponse("Invalid form data", status=400)

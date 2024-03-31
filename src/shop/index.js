@@ -10,6 +10,7 @@ import {initializeAddToOrderButtons} from "../components/shop/addToOrder";
 import {makeCountDownByMinutesAndSeconds} from "../components/timer/timer";
 import {initializeCookieConsent} from "../components/cookies/cookieconsent-config";
 import {initializeSearchBar} from "../components/searchBar";
+import {sendViewContentFacebookPixelEvent} from "../components/facebook/pixelEvents";
 
 document.addEventListener('DOMContentLoaded', function () {
   initializeToggles();
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initCheckoutCityListeners();
   initializeCookieConsent();
   initializeSearchBar();
+  sendViewContentFacebookPixelEvent();
   const menuIcon = document.getElementById('menuIcon');
   const navbar = document.getElementById('navbar');
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;

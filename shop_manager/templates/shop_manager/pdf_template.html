@@ -65,7 +65,7 @@
 <body style="margin: 0; padding:0">
 <div class="flex-center-between border-bottom">
     <img src="{% static 'common/assets/brand/logo-dark.png' %}" alt="" style="width: 100px; height: auto">
-    <img src="{{ order.barcode.url }}" alt="" style="width: 100px; height: auto">
+    <img src="{{ order.generate_barcode }}" alt="" style="width: 100px; height: auto">
 </div>
 <div class="flex-center-between" style="margin: 24px 0">
     <div class="font-bold text-left text-lg">
@@ -203,18 +203,18 @@
     </div>
 </div>
 
-<h4 style="margin-top:32px; ">QR CODES</h4>
-<div style="display:flex; gap:24px; justify-content: space-between; align-items: center; flex-wrap: wrap">
+{% if show_qr_code %}
+    <div style="display:flex; gap:100px; justify-content: flex-start; align-items: center; flex-wrap: wrap">
 
-    {% for item in order_items %}
-        <div>
-            <p class="text-center">{{ item.quantity }}x</p>
-            <p class="text-center">{{ item.stock_item.title }}</p>
-            <p class="text-center">{{ item.stock_item.sku }}</p>
-            <img src="{{ item.stock_item.qr_code.url }}" alt="" style="width: 100px; height: auto">
-        </div>
-    {% endfor %}
-</div>
+        {% for item in order_items %}
+            <div style="max-width: 100px; word-break: break-word">
+                <p class="text-center">{{ item.quantity }}x</p>
+                <p class="text-center">{{ item.stock_item.sku }}</p>
+                <img src="{{ item.stock_item.qr_code.url }}" alt="" style="width: 100px; height: auto">
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
 </body>
 </html>

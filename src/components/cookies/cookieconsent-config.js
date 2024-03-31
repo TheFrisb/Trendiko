@@ -20,7 +20,9 @@ function initializeCookieConsent() {
       necessary: {
         readOnly: true
       },
-      marketing: {}
+      marketing: {
+        enabled: true,
+      }
     },
     language: {
       default: "en",

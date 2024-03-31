@@ -1,3 +1,5 @@
+import logging
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -44,9 +46,11 @@ class CartItemView(APIView):
 
             try:
                 fb_pixel = FacebookPixel(request)
-                fb_pixel.add_to_cart(cart_item.product)
+                fb_pixel.add_to_cart(cart_item)
             except Exception as e:
-                pass
+                logging.error(
+                    f"[Facebook Pixel] Error when sending add to cart event: {e}"
+                )
 
             return Response(
                 CartItemSerializer(cart_item).data, status=status.HTTP_200_OK
@@ -122,6 +126,14 @@ class CheckoutView(APIView):
         if serializer.is_valid():
             checkout_service = CheckoutService(request)
             order = checkout_service.checkout(serializer.validated_data)
+
+            try:
+                fb_pixel = FacebookPixel(request)
+                fb_pixel.purchase(order)
+            except Exception as e:
+                logging.error(
+                    f"[Facebook Pixel] Error when sending checkout event: {e}"
+                )
 
             return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
 

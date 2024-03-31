@@ -8,7 +8,7 @@ class MailJetClient:
         self.secretKey = config("MAILJET_SECRET_KEY")
         self.client = Client(auth=(self.apiKey, self.secretKey), version="v3.1")
 
-    def send_mail(self, subject, text_part, recipient):
+    def send_mail(self, subject, text_part, recipient, attachment=None):
         data = {
             "Messages": [
                 {
@@ -16,6 +16,13 @@ class MailJetClient:
                     "To": [{"Email": recipient}],
                     "Subject": subject,
                     "TextPart": text_part,
+                    "Attachments": [
+                        {
+                            "ContentType": "application/pdf",
+                            "Filename": "invoice.pdf",
+                            "Base64Content": attachment,
+                        }
+                    ],
                 }
             ]
         }

@@ -1,3 +1,4 @@
+import base64
 import uuid
 
 from django.db import transaction
@@ -6,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 from cart.models import ShippingDetails, OrderItem, Order
 from common.exceptions import OutOfStockException
 from common.mailer.MailJetClient import MailJetClient
+from common.utils import get_ip_addr, get_user_agent
 from shop.models import Product
 from stock.models import ImportItem, ReservedStockItem
 
@@ -63,6 +65,11 @@ class CheckoutService:
                 "Потврда за нарачка",
                 f"Вашата нарачка е успешно примена. Вашата нарачка е под број {order.tracking_number}.",
                 shipping_details.email,
+                attachment=base64.b64encode(
+                    order.generate_invoice_pdf(
+                        base_url=self.request.build_absolute_uri(), show_qr_code=False
+                    )
+                ).decode("utf-8"),
             )
 
         return order
@@ -118,10 +125,9 @@ class CheckoutService:
             total_price=self.cart.get_total_price,
             has_free_shipping=self.cart.has_free_shipping,
             tracking_number=self.generate_tracking_number(),
-            ip=self.get_ip_addr(),
-            user_agent=self.get_user_agent(),
+            ip=get_ip_addr(self.request),
+            user_agent=get_user_agent(self.request),
         )
-        order.generate_barcode()
 
         return order
 
@@ -314,19 +320,9 @@ class CheckoutService:
                 quantity_to_be_reserved -= removeable_quantity
 
             reserved_stock_items.append(reserved_stock_item)
+
         if quantity_to_be_reserved > 0:
             available_quantity = order_item.quantity - quantity_to_be_reserved
             raise OutOfStockException(order_item.quantity, available_quantity)
 
         return reserved_stock_items
-
-    def get_ip_addr(self):
-        x_forwarded_for = self.request.META.get("HTTP_X_FORWARDED_FOR", None)
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(",")[0]
-        else:
-            ip = self.request.META.get("REMOTE_ADDR", None)
-        return ip
-
-    def get_user_agent(self):
-        return self.request.META.get("HTTP_USER_AGENT", None)

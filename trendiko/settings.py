@@ -16,6 +16,7 @@ from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+WEBSITE_BASE_URL = config("BASE_URL")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -243,8 +244,9 @@ CKEDITOR_CONFIGS = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CRONJOBS = [
-    ("50 23 * * *", "facebook.cron.update_facebook_catalogue_feed"),
+    ("10 23 * * *", "facebook.cron.update_facebook_catalogue_feed"),
 ]
 
+INVOICES_DIR = BASE_DIR / "invoices"
 
 USE_THOUSAND_SEPARATOR = True

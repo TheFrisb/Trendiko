@@ -12,7 +12,7 @@ def archive_products_if_stock_item_is_out_of_stock(sender, instance, created, **
     """
     if instance.stock == 0:
         Product.objects.filter(stock_item=instance).update(
-            status=Product.ProductStatus.ARCHIVED
+            status=Product.ProductStatus.OUT_OF_STOCK
         )
 
 

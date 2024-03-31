@@ -6,6 +6,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import BasePermission
 
 from cart.models import Order
+from shop_manager.forms.export_invoices import ExportInvoicesForm
 from shop_manager.forms.export_orders_form import ExportOrdersForm
 from shop_manager.forms.export_stock_information_form import ExportStockInformationForm
 
@@ -113,7 +114,14 @@ class SidebarItemsMixin:
                     "action": reverse("shop_manager:order_dashboard"),
                     "method": "POST",
                     "button_text": "Export orders",
-                }
+                },
+                {
+                    "title": "Export invoices:",
+                    "form": ExportInvoicesForm(),
+                    "action": reverse("shop_manager:export-invoices"),
+                    "method": "POST",
+                    "button_text": "Export invoices",
+                },
             ],
         }
 

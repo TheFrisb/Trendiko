@@ -18,7 +18,7 @@ function addToCart(product_id, product_type, quantity, attributeId, isBuyNow) {
     return;
   }
 
-  HTTP.post(URLS.ADD_TO_CART, data).then(response => {
+  return HTTP.post(URLS.ADD_TO_CART, data).then(response => {
     // see if response is successful
     const data = response.data;
     if (response.success) {
@@ -48,7 +48,20 @@ function initializeAddToCartButtons() {
       const quantity = button.getAttribute('data-quantity');
       const attributeId = button.getAttribute('data-attribute-id');
       const isBuyNow = button.classList.contains('buyNowButton');
-      addToCart(product_id, product_type, quantity, attributeId, isBuyNow)
+
+      const buttonText = button.querySelector('.buttonText');
+      const buttonSpinner = button.querySelector('.buttonSpinner');
+
+      button.disabled = true;
+      buttonText.classList.add('hidden');
+      buttonSpinner.classList.remove('hidden');
+      buttonSpinner.classList.add('flex');
+      addToCart(product_id, product_type, quantity, attributeId, isBuyNow).finally(() => {
+        button.disabled = false;
+        buttonText.classList.remove('hidden');
+        buttonSpinner.classList.add('hidden');
+        buttonSpinner.classList.remove('flex');
+      });
     });
   });
 }

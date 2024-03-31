@@ -34,6 +34,7 @@ urlpatterns = [
     path("shop-manager/", include("shop_manager.urls")),
     path("api/cart/", include("cart.urls")),
     path("api/stock/", include("stock.urls")),
+    path("api/facebook/", include("facebook.urls")),
     # path("facebook/", include("facebook.urls")),
     path("", include("shop.urls")),
 ]

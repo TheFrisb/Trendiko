@@ -47,20 +47,21 @@ class ExportOrdersForm(forms.Form):
             worksheet.write(
                 row, 0, order.created_at.strftime("%d-%m-%Y"), centered_cell_format
             )
+            worksheet.write(row, 1, order.make_barcode_content(), centered_cell_format)
             worksheet.write(
-                row, 1, order.shipping_details.full_name, centered_cell_format
+                row, 2, order.shipping_details.full_name, centered_cell_format
             )
             worksheet.write(
-                row, 2, order.shipping_details.address, centered_cell_format
+                row, 3, order.shipping_details.address, centered_cell_format
             )
-            worksheet.write(row, 3, order.shipping_details.city, centered_cell_format)
+            worksheet.write(row, 4, order.shipping_details.city, centered_cell_format)
             worksheet.write(
-                row, 4, order.shipping_details.municipality, centered_cell_format
+                row, 5, order.shipping_details.municipality, centered_cell_format
             )
-            worksheet.write(row, 5, order.shipping_details.phone, centered_cell_format)
-            worksheet.write(row, 6, "ORDER FEES", centered_cell_format)
-            worksheet.write(row, 7, order.total_price, centered_cell_format)
-            worksheet.write(row, 8, order.get_shipping_method, centered_cell_format)
+            worksheet.write(row, 6, order.shipping_details.phone, centered_cell_format)
+            worksheet.write(row, 7, "ORDER FEES", centered_cell_format)
+            worksheet.write(row, 8, order.total_price, centered_cell_format)
+            worksheet.write(row, 9, order.get_shipping_method, centered_cell_format)
 
             product_titles = ""
             product_skus = ""
@@ -69,7 +70,7 @@ class ExportOrdersForm(forms.Form):
 
             for order_item in order.order_items.all():
                 product_titles += (
-                    f"{order_item.product.title} x {order_item.quantity}\n"
+                    f"{order_item.get_readable_name} x {order_item.quantity}\n"
                 )
                 product_skus += (
                     f"{order_item.stock_item.label} x {order_item.quantity}\n"
@@ -80,7 +81,7 @@ class ExportOrdersForm(forms.Form):
                 if order_item.promotion_type == OrderItem.PromotionType.THANK_YOU:
                     if order_item.stock_item.label in thank_you_offers:
                         thank_you_offers[
-                            order_item.product.title
+                            order_item.stock_item.label
                         ] += order_item.quantity
                     else:
                         thank_you_offers[
@@ -100,16 +101,17 @@ class ExportOrdersForm(forms.Form):
                         }
 
             worksheet.set_row(row, cell_height)
-            worksheet.write(row, 9, product_titles, centered_cell_format)
-            worksheet.write(row, 10, product_skus, centered_cell_format)
-            worksheet.write(row, 11, f"X {quantity}", centered_cell_format)
-            worksheet.write(row, 12, quantity, centered_cell_format)
+            worksheet.write(row, 10, product_titles, centered_cell_format)
+            worksheet.write(row, 11, product_skus, centered_cell_format)
+            worksheet.write(row, 12, f"X {quantity}", centered_cell_format)
+            worksheet.write(row, 13, quantity, centered_cell_format)
             worksheet.write(
-                row, 13, order.shipping_details.comment, centered_cell_format
+                row, 14, order.shipping_details.comment, centered_cell_format
             )
 
-            row += 5
+            row += 1
 
+        row += 5
         worksheet.write(row, 0, "THANK YOU OFFERS", centered_cell_format)
         row += 1
         row, col = self.write_thank_you_headers(worksheet, centered_cell_format, row, 0)
@@ -184,6 +186,7 @@ class ExportOrdersForm(forms.Form):
     def write_order_headers(self, worksheet, format, row, col):
         headers = [
             "DATA NA PORACKA",
+            "BARCODE",
             "IME I PREZIME",
             "ADRESA",
             "GRAD",

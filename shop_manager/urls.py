@@ -7,6 +7,7 @@ from .views import (
     ScanStock,
     AnalyticsDashboard,
     GenerateOrderInvoice,
+    ExportInvoices,
 )
 
 app_name = "shop_manager"
@@ -31,4 +32,5 @@ urlpatterns = [
     path(
         "invoices/<int:order_id>/", GenerateOrderInvoice.as_view(), name="order_invoice"
     ),
+    path("invoices/export/", ExportInvoices.as_view(), name="export-invoices"),
 ]

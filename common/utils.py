@@ -98,3 +98,19 @@ def calculate_delivery_dates(current_day=None):
         "start_month_formatted": f"{start_delivery_date.day} {start_month[:3]}.",
         "end_month_formatted": f"{end_delivery_date.day} {end_month[:3]}.",
     }
+
+
+def get_ip_addr(request):
+    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR", None)
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(",")[0]
+    else:
+        ip = request.META.get("REMOTE_ADDR", None)
+
+    if ip is None:
+        ip = "None"
+    return ip
+
+
+def get_user_agent(request):
+    return request.META.get("HTTP_USER_AGENT", "None")

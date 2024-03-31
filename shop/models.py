@@ -161,6 +161,9 @@ class Product(BaseProduct):
     def isVariable(self):
         return self.type == self.ProductType.VARIABLE
 
+    def isOutOfStock(self):
+        return self.status == self.ProductStatus.OUT_OF_STOCK
+
     def get_product_misc_data(self):
         review_data = self.review_data()
         money_saved = self.regular_price - self.selling_price

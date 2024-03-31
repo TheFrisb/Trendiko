@@ -60,7 +60,13 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
         slug = self.kwargs.get(self.slug_url_kwarg)
 
         try:
-            product = queryset.get(slug=slug, status=Product.ProductStatus.PUBLISHED)
+            product = queryset.get(
+                slug=slug,
+                status__in=[
+                    Product.ProductStatus.PUBLISHED,
+                    Product.ProductStatus.OUT_OF_STOCK,
+                ],
+            )
         except Product.DoesNotExist:
             raise Http404("Product does not exist or is not published.")
 
@@ -94,9 +100,12 @@ class CategoryListView(FetchCategoriesMixin, ListView):
     paginate_by = 24
 
     def get_queryset(self):
-        products_queryset = Product.objects.filter(status="published").order_by(
-            "created_at"
-        )
+        products_queryset = Product.objects.filter(
+            status__in=[
+                Product.ProductStatus.PUBLISHED,
+                Product.ProductStatus.OUT_OF_STOCK,
+            ]
+        ).order_by("created_at")
 
         slug = self.kwargs.get("slug")
         try:

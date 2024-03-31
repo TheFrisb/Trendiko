@@ -1,6 +1,7 @@
 import {attachCartItemInputListeners, removeCartItem} from "./quantityInput";
-import {checkout} from "./checkout";
 import {formatNumberToLocale, parseLocaleNumber} from "../../utils/numberFormatter";
+import {sendInitiateCheckoutFacebookPixelEvent} from "../facebook/pixelEvents";
+import {checkout} from "./checkout";
 
 const body = document.querySelector("body");
 const cartOverlay = document.getElementById("sideCartOverlay");
@@ -55,6 +56,10 @@ function toggleCheckout() {
 
   });
   checkoutEl.classList.toggle("active");
+
+  if (isCheckoutActive()) {
+    sendInitiateCheckoutFacebookPixelEvent();
+  }
 }
 
 function initializeCart() {
@@ -92,10 +97,19 @@ function initializeCart() {
   });
 
   checkoutButton.addEventListener("click", function () {
-    console.log("checkout button clicked");
+    const buttonText = checkoutButton.querySelector('.buttonText');
+    const buttonSpinner = checkoutButton.querySelector('.buttonSpinner');
+
     checkoutButton.disabled = true;
-    checkout(checkoutForm);
-    checkoutButton.disabled = false;
+    buttonText.classList.add('hidden');
+    buttonSpinner.classList.remove('hidden');
+
+    checkout(checkoutForm).finally(() => {
+      checkoutButton.disabled = false;
+      buttonText.classList.remove('hidden');
+      buttonSpinner.classList.add('hidden');
+    });
+
 
   });
 
