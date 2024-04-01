@@ -155,12 +155,12 @@
 
             </div>
             <div class="flex flex-col gap-2 justify-start w-full">
-                <p>Доколку имате потреба од потреба на податоците, обратете се на
-                    <a href="tel:+38970123456"
-                       class="text-brand-primary transform-all duration-200 ease-in-out hover:text-brand-action">070123456</a>
-                </p>
+                <a href="{% url 'shop:brand_page' slug='dostava' %}"
+                   class="text-brand-primary underline font-bold pb-2">Погледнете ја нашата Политика на достава</a>
+                <a href="{% url 'shop:brand_page' slug='reklamacija' %}"
+                   class="text-brand-primary underline font-bold pb-2">Погледнете ја нашата Политика на рекламација</a>
 
-                <p>Ви благодариме што не избравте нас!</p>
+                <p class="text-lg text-brand-action font-bold">Ви благодариме што не избравте нас!</p>
             </div>
         </div>
     </div>
