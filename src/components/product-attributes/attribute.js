@@ -11,9 +11,9 @@ let regularPriceEl = document.querySelector('#productMisc__regularPrice');
 // let chooseVariationBanner = document.querySelector('#chooseVariationBanner');
 
 function updatePrices(el) {
-  let currentSalePrice = el.getAttribute('data-attribute-sale-price');
-  let currentRegularPrice = el.getAttribute('data-attribute-regular-price');
-  let currentMoneySaved = parseLocaleNumber(currentRegularPrice) - parseLocaleNumber(currentSalePrice);
+  let currentSalePrice = parseLocaleNumber(el.getAttribute('data-attribute-sale-price'));
+  let currentRegularPrice = parseLocaleNumber(el.getAttribute('data-attribute-regular-price'));
+  let currentMoneySaved = currentRegularPrice - currentSalePrice;
   let currentPercentageSaved = Math.round((currentMoneySaved / currentRegularPrice) * 100);
 
   moneySavedEl.textContent = formatNumberToLocale(currentMoneySaved);
