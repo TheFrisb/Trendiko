@@ -102,10 +102,6 @@ class CategoryListView(FetchCategoriesMixin, ListView):
     context_object_name = "products"
     paginate_by = 24
 
-    def __init__(self, **kwargs):
-        super().__init__(kwargs)
-        self.category = None
-
     def get_queryset(self):
         products_queryset = (
             Product.objects.filter(
