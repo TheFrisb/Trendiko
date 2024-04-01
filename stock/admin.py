@@ -54,11 +54,6 @@ class ImportItemInline(admin.StackedInline):
     readonly_fields = ["reserved_stock"]
     form = ImportItemForm
 
-    def get_readonly_fields(self, request, obj=None):
-        if obj:
-            return self.readonly_fields + ["initial_quantity"]
-        return self.readonly_fields
-
 
 @admin.register(Import)
 class ImportAdmin(admin.ModelAdmin):

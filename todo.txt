@@ -1,17 +1,8 @@
-
+1. Abandoned Carts
+2. Kategorija plus pole bg image repeat i bg color
+3. Na mobilen menuto ima margin
+4. Tab index na checkout pole
 --------------------------------------------------------------------------------------------------------------------
-Facebook Pixel & Catalogue
-1. Facebook pixel view content event
-2. Facebook pixel add to cart event
-3. Facebook pixel checkout event
-4. Facebook pixel purchase event.
-5. Facebook pixel view page event
-6. Implement Facebook Chat
-7. Implement logs deka i da treba
-18. Napraj cookies bannero da e funkcionalen so pikselo
-19. Verifici fb catalogue feed
-
-
 12. Sredi pdf invoices da se zacuvuvat i da se gledat so nekoj endpoint
 13. Sredi export na pdf invoices po data
 15. Sredi thank you mailo da praka poraka + pdf invoice
@@ -38,5 +29,7 @@ Facebook campaigns creation: Total should be 8 hours
 3. Verify it works - 1
 4. Implement backend db storage - 1
 5. On Product Out Of Stock turn off Campaign
+
+
 
 
