@@ -21,13 +21,19 @@
                             <span class="text-center font-bold text-sm">-{{ product.get_discount }}%</span>
                         </div>
                     {% endif %}
-                    <a href="{{ product.get_absolute_url }}">
+
+                    <a href="{{ product.get_absolute_url }}" class="relative">
                         <picture>
                             <source srcset="{{ product.thumbnail_loop.url }}" type="image/webp">
                             <source srcset="{{ product.thumbnail_loop_as_jpeg }}" type="image/jpeg">
                             <img src="{{ product.thumbnail_loop_as_jpeg.url }}" alt="Image of a product"
                                  class="rounded-lg" width="250" height="250">
                         </picture>
+                        {% if product.has_free_shipping %}
+                            <div class="flex flex-col items-center justify-center bg-brand-action rounded-lg absolute px-2 py-0.5 bottom-2 right-2">
+                                <span class="text-white font-bold text-xs">бесплатна достава</span>
+                            </div>
+                        {% endif %}
                     </a>
 
                     <a href="{{ product.get_absolute_url }}"
@@ -36,18 +42,14 @@
 
                     <div class="relative flex justify-center gap-2 items-baseline">
                         {% if product.type == 'variable' %}
-                            <span class="font-bold text-brand-action text-center">Варијабилен производ</span>
+                            {% with attributes_price_range=product.get_attributes_price_range %}
+                                <span class="font-bold text-brand-action text-center">Од {{ attributes_price_range.min }} ден.</span>
+                            {% endwith %}
                         {% else %}
                             <span class="font-bold text-brand-action">{{ product.sale_price }} ден.</span>
                             <span class="font-bold text-sm text-brand-gray -top-0.5 relative line-through">{{ product.regular_price }} ден.</span>
                         {% endif %}
                     </div>
-
-                    {% if product.has_free_shipping %}
-                        <div class="flex items-center justify-center bg-brand-accent py-1 px-1.5 rounded-lg">
-                            <p class="text-xs">Бесплатна испорака</p>
-                        </div>
-                    {% endif %}
 
 
                 </div>

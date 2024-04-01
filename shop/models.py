@@ -139,7 +139,7 @@ class Product(BaseProduct):
     technical_specifications = RichTextUploadingField(
         null=True, blank=True, verbose_name="Технички спецификации"
     )
-    has_free_shipping = models.BooleanField(
+    free_shipping = models.BooleanField(
         default=False, verbose_name="Бесплатна испорака", db_index=True
     )
 
@@ -193,12 +193,29 @@ class Product(BaseProduct):
         }
 
     @property
+    def has_free_shipping(self):
+        return self.free_shipping or self.selling_price > 1500
+
+    @property
     def get_discount(self):
         if self.sale_price and self.regular_price:
             return int(
                 (self.regular_price - self.sale_price) / self.regular_price * 100
             )
         return 0
+
+    @property
+    def get_attributes_price_range(self):
+        if self.attributes.exists():
+            prices = [attribute.sale_price for attribute in self.attributes.all()]
+            return {
+                "min": min(prices),
+                "max": max(prices),
+            }
+        return {
+            "min": self.sale_price,
+            "max": self.sale_price,
+        }
 
     def get_sellable_stock_to_show(self):
         if self.stock_item and self.stock_item.available_stock < 10:

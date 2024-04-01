@@ -102,11 +102,9 @@
             <th>Артикал</th>
             <th>Мера</th>
             <th>Количина</th>
-            <th>Цена без ДДВ</th>
-            <th>Цена со ДДВ</th>
             <th>Рабат %</th>
             <th>ДДВ %</th>
-            <th>Износ без ДДВ</th>
+            <th>Единечна Цена</th>
         </tr>
         </thead>
         <tbody>
@@ -117,8 +115,6 @@
                 <td>{{ item.stock_item.title }}</td>
                 <td>бр</td>
                 <td>{{ item.quantity|floatformat:2 }}</td>
-                <td>{{ item.price|floatformat:2 }}</td>
-                <td>{{ item.price|floatformat:2 }}</td>
                 <td>0%</td>
                 <td>0%</td>
                 <td>{{ item.total_price|floatformat:2 }}</td>
@@ -127,25 +123,8 @@
     </table>
 </div>
 
-<div style="margin: 32px 0; display:flex; justify-content:space-between; align-items: flex-start">
-    <table style="border-collapse: collapse;">
-        <thead>
-        <tr style="border-top: 2px solid darkblue; border-bottom: 2px solid darkblue;">
-            <th>Тарифа</th>
-            <th>Данок</th>
-            <th>Износ без ДДВ</th>
-            <th>ДДВ</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr style="text-align: center">
-            <td>Т-1</td>
-            <td>0.00%</td>
-            <td>{{ order.subtotal_price|floatformat:2 }}</td>
-            <td>0%</td>
-        </tr>
-    </table>
-    <div style="width: 40%" class="text-right">
+<div style="margin: 32px 0; width: 100%">
+    <div style="width: 40%; margin-left: auto" class="text-right">
         <div style="display:flex; justify-content: space-between; width: 100%">
             <p>Износ без ДДВ:</p>
             <p class="font-bold">{{ order.subtotal_price|floatformat:2 }}</p>
@@ -182,28 +161,29 @@
         суд во Струмица.</p>
 </div>
 
-<div style="margin-top:32px; width:100%; display:flex; gap:24px; align-items: flex-start; justify-content: space-between"
-     class="text-center">
-    <div style="width:30%">
-        <p style="padding-bottom: 36px">Фактурирал</p>
-        <p style="border-top: 1px solid black">(потпис)</p>
-    </div>
-    <div style="width:30%">
-        <p style="padding-bottom: 36px">Примил</p>
-        <p style="border-top: 1px solid black">(потпис)</p>
-    </div>
-    <div style="width:30%; display:flex;flex-direction: row; align-items: center; flex-wrap: wrap">
-        <div style="width: 100%; margin-bottom: 36px">
-            <p style="padding-bottom: 36px">Управител / Лице одговорна за потпишување на фактури</p>
-            <p style="border-top: 1px solid black">(име и презиме)</p>
-        </div>
-        <div style="width: 100%">
+{% if show_details %}
+    <div style="margin-top:32px; width:100%; display:flex; gap:24px; align-items: flex-start; justify-content: space-between"
+         class="text-center">
+        <div style="width:30%">
+            <p style="padding-bottom: 36px">Фактурирал</p>
             <p style="border-top: 1px solid black">(потпис)</p>
         </div>
+        <div style="width:30%">
+            <p style="padding-bottom: 36px">Примил</p>
+            <p style="border-top: 1px solid black">(потпис)</p>
+        </div>
+        <div style="width:30%; display:flex;flex-direction: row; align-items: center; flex-wrap: wrap">
+            <div style="width: 100%; margin-bottom: 36px">
+                <p style="padding-bottom: 36px">Управител / Лице одговорна за потпишување на фактури</p>
+                <p style="border-top: 1px solid black">(име и презиме)</p>
+            </div>
+            <div style="width: 100%">
+                <p style="border-top: 1px solid black">(потпис)</p>
+            </div>
+        </div>
     </div>
-</div>
 
-{% if show_qr_code %}
+
     <div style="display:flex; gap:100px; justify-content: flex-start; align-items: center; flex-wrap: wrap">
 
         {% for item in order_items %}

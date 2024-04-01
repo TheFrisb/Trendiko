@@ -126,15 +126,17 @@ class ExportOrdersForm(forms.Form):
         row += 1
         for import_id, data in nabavki.items():
             stock_worksheet.set_row(row, 94)
-            image_path = data["stock_item"].thumbnail_loop_as_jpeg.path
-            # absolute_image_path = os.path.join(settings.MEDIA_ROOT, relative_image_path)
+            if data["stock_item"].thumbnail.name:
+                image_path = data["stock_item"].thumbnail_loop_as_jpeg.path
 
-            stock_worksheet.insert_image(
-                row,
-                0,
-                image_path,
-                {"x_scale": 0.5, "y_scale": 0.5},
-            )
+                stock_worksheet.insert_image(
+                    row,
+                    0,
+                    image_path,
+                    {"x_scale": 0.5, "y_scale": 0.5},
+                )
+            else:
+                stock_worksheet.write(row, 0, "No image", centered_cell_format)
             stock_worksheet.write(
                 row, 1, data["stock_item"].title, centered_cell_format
             )
@@ -229,8 +231,8 @@ class ExportOrdersForm(forms.Form):
         to_date = make_timezone_aware(self.cleaned_data["to_date"])
         orders = (
             Order.objects.filter(
-                created_at__gte=from_date,
-                created_at__lt=to_date,
+                updated_at__gte=from_date,
+                updated_at__lt=to_date,
                 status__in=[Order.OrderStatus.PENDING, Order.OrderStatus.CONFIRMED],
             )
             .prefetch_related(

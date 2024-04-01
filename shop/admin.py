@@ -25,12 +25,17 @@ class ProductAdminForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        type = cleaned_data.get("type")
+
+        if type == Product.ProductType.VARIABLE:
+            return
+
         stock_item = cleaned_data.get("stock_item")
         status = cleaned_data.get("status")
 
         if self.status_requires_stock_item(status) and not stock_item:
             raise ValidationError(
-                "Stock item must be selected for Products with status 'Published' or 'Out of Stock'"
+                "Stock item must be selected for Simple Products with status 'Published' or 'Out of Stock'"
             )
 
     def status_requires_stock_item(self, status):
@@ -62,6 +67,13 @@ class FrequentlyAskedQuestionAdminForm(forms.ModelForm):
     class Meta:
         model = FrequentlyAskedQuestion
         fields = "__all__"
+
+
+class FAQInline(admin.TabularInline):
+    model = FrequentlyAskedQuestion
+    extra = 0
+    form = FrequentlyAskedQuestionAdminForm
+    fields = ["question", "answer"]
 
 
 class ProductAttributeInlineFormSet(BaseInlineFormSet):
@@ -115,7 +127,12 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ["title", "status", "type", "regular_price", "sale_price"]
     list_filter = ["status", "type"]
     search_fields = ["title"]
-    inlines = [ProductImageInline, ProductAttributeInline, FacebookCampaignsInline]
+    inlines = [
+        ProductImageInline,
+        ProductAttributeInline,
+        FAQInline,
+        FacebookCampaignsInline,
+    ]
     readonly_fields = ["slug"]
 
     class Meta:

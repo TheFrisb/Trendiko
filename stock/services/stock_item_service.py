@@ -33,12 +33,17 @@ class StockItemService:
                     quantity__gt=0,
                     status=ReservedStockItem.Status.PENDING,
                 )
+                .prefetch_related("import_item")
                 .order_by("import_item__created_at")
                 .first()
             )
             if reserved_stock_item:
                 reserved_stock_item.quantity -= 1
                 reserved_stock_item.save()
+
+                import_item = reserved_stock_item.import_item
+                import_item.quantity -= 1
+                import_item.save()
                 return stock_item
             else:
                 message = "No reserved stock found for this product"

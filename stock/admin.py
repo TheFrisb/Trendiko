@@ -27,6 +27,10 @@ class ImportItemForm(forms.ModelForm):
         quantity = self.cleaned_data["quantity"]
 
         if instance and instance.pk:
+            if quantity > instance.initial_quantity:
+                raise forms.ValidationError(
+                    "Quantity cannot be greater than the initial quantity."
+                )
             if quantity < instance.reserved_stock:
                 raise forms.ValidationError(
                     "Quantity cannot be less than the reserved stock."
@@ -48,8 +52,12 @@ class ImportItemInline(admin.StackedInline):
     extra = 1
     autocomplete_fields = ["stock_item"]
     readonly_fields = ["reserved_stock"]
-
     form = ImportItemForm
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return self.readonly_fields + ["initial_quantity"]
+        return self.readonly_fields
 
 
 @admin.register(Import)

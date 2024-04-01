@@ -313,12 +313,12 @@ class Order(TimeStampedModel, LoggableModel):
     #
     #     self.invoice.save(pdf_file.name, pdf_file)
 
-    def generate_invoice_pdf(self, base_url, write_to=None, show_qr_code=True):
+    def generate_invoice_pdf(self, base_url, write_to=None, show_details=True):
         context = {
             "order": self,
             "order_items": self.order_items.all(),
             "shipping_details": self.shipping_details,
-            "show_qr_code": show_qr_code,
+            "show_details": show_details,
         }
 
         html_string = render_to_string("shop_manager/pdf_template.html", context)

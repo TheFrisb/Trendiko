@@ -43,21 +43,14 @@
     @apply md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6;
 }
 
-.quantityInput, .quantityInput::-webkit-outer-spin-button, .quantityInput::-webkit-inner-spin-button {
-    -webkit-appearance: none !important;
-    margin: 0 !important;
-    -moz-appearance: textfield !important;
-    border-radius: 0 !important;
-    -webkit-border-radius: 0 !important;
+input[type="number"], input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    -moz-appearance: textfield;
+    border-radius: 0;
+    -webkit-border-radius: 0;
 }
 
-.cartItem__quantityInput, .cartItem__quantityInput::-webkit-outer-spin-button, .cartItem__quantityInput::-webkit-inner-spin-button {
-    -webkit-appearance: none !important;
-    margin: 0 !important;
-    -moz-appearance: textfield !important;
-    border-radius: 0 !important;
-    -webkit-border-radius: 0 !important;
-}
 
 .cartItem {
     word-break: break-word;
@@ -148,7 +141,8 @@
 }
 
 .checkoutFormInput {
-    @apply rounded-tr-lg rounded-br-lg;
+    @apply rounded-tr-lg !important;
+    @apply rounded-br-lg !important;
     @apply border border-black/20;
     @apply h-[43px] px-3 w-full;
     @apply focus:outline-brand-action;

@@ -63,11 +63,11 @@ class CheckoutService:
         if shipping_details.email:
             result = self.email_client.send_mail(
                 "Потврда за нарачка",
-                f"Вашата нарачка е успешно примена. Вашата нарачка е под број {order.tracking_number}.",
+                f"Ви благодариме за нарачката! Вашата нарачка е успешно примена. Во прилог Ви ја испраќаме фактурата за нарачката.",
                 shipping_details.email,
                 attachment=base64.b64encode(
                     order.generate_invoice_pdf(
-                        base_url=self.request.build_absolute_uri(), show_qr_code=False
+                        base_url=self.request.build_absolute_uri(), show_details=False
                     )
                 ).decode("utf-8"),
             )

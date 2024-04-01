@@ -28,14 +28,17 @@ class HomeView(FetchCategoriesMixin, TemplateView):
                 "recommended_products_promotion": {
                     "products": Product.objects.all()
                     .filter(status=Product.ProductStatus.PUBLISHED)
+                    .prefetch_related("attributes")
                     .order_by("-created_at")[:6],
                     "redirect_slug": "site-proizvodi",
                 },
                 "free_shipping_promotion": {
                     "products": Product.objects.filter(
-                        has_free_shipping=True,
+                        free_shipping=True,
                         status=Product.ProductStatus.PUBLISHED,
-                    ).order_by("-created_at")[:4],
+                    )
+                    .prefetch_related("attributes")
+                    .order_by("-created_at")[:4],
                     "redirect_slug": "besplatna-dostava",
                 },
                 "title": "Почетна",
@@ -78,9 +81,9 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
         context["title"] = self.object.title
         context["product_misc_data"] = self.object.get_product_misc_data()
         context["recommended_products_promotion"] = {
-            "products": Product.objects.filter(
-                status=Product.ProductStatus.PUBLISHED
-            ).order_by("-created_at")[:4],
+            "products": Product.objects.filter(status=Product.ProductStatus.PUBLISHED)
+            .prefetch_related("attributes")
+            .order_by("-created_at")[:4],
             "redirect_slug": "site-proizvodi",
         }
         context["show_call_button"] = True
@@ -100,12 +103,16 @@ class CategoryListView(FetchCategoriesMixin, ListView):
     paginate_by = 24
 
     def get_queryset(self):
-        products_queryset = Product.objects.filter(
-            status__in=[
-                Product.ProductStatus.PUBLISHED,
-                Product.ProductStatus.OUT_OF_STOCK,
-            ]
-        ).order_by("created_at")
+        products_queryset = (
+            Product.objects.filter(
+                status__in=[
+                    Product.ProductStatus.PUBLISHED,
+                    Product.ProductStatus.OUT_OF_STOCK,
+                ]
+            )
+            .prefetch_related("attributes")
+            .order_by("created_at")
+        )
 
         slug = self.kwargs.get("slug")
         try:
@@ -146,6 +153,7 @@ class SearchView(FetchCategoriesMixin, ListView):
                 status=Product.ProductStatus.PUBLISHED,
             )
             .distinct()
+            .prefetch_related("attributes")
             .order_by("created_at")
         )
 

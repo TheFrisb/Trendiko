@@ -223,7 +223,8 @@
                                     -
                                 </button>
                                 <input type="number" value="1" min="1"
-                                       class="w-6/12 h-full text-center font-bold text-lg quantityInput border-t border-b border-black/60 focus:outline-0">
+                                       class="w-6/12 h-full text-center font-bold text-lg quantityInput border-t border-b border-black/60 focus:outline-0"
+                                       readonly>
                                 <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
                                     +
                                 </button>
@@ -475,7 +476,7 @@
     {% include 'shop/includes/benefits.html' %}
 
     {% if not product.isOutOfStock %}
-        <div class="md:hidden fixed bottom-0 left-0 w-full bg-brand-secondary z-10 {% if product.type == 'variable' %} hidden {% endif %}"
+        <div class="md:hidden fixed bottom-0 left-0 w-full bg-brand-secondary z-10"
              id="stickyAddToCartContainer">
             <div class="w-full flex justify-between items-center p-2">
                 <div class="flex items-end gap-2 basis-6/12">
@@ -486,18 +487,25 @@
                              class="min-w-[48px] min-h-[48px] rounded-lg">
                     </picture>
                     <div class="flex flex-col items-start justify-start gap-1">
-                        <p class="text-xs font-bold line-clamp-2">{{ product.title }}</p>
+                        <p class="text-xs font-bold line-clamp-2">
+                            {{ product.title }}{% if product.isVariable %} - {{ attributes.first.title }}{% endif %}</p>
                         <p class="text-lg font-bold text-brand-action leading-none">
-                            {#                        <span#}
-                            {#                            class="text-xs font-bold text-brand-primary pr-1"#}
-                            {#                            id="stickyAddToCartContainer__quantityHolder">1x</span>#}
                             <span
-                                    id="stickyAddToCartContainer__currentPrice">{{ product.sale_price }}</span>
+                                    id="stickyAddToCartContainer__currentPrice">
+                                {% if product.isVariable %}
+                                    {{ product.attributes.first.sale_price }}
+                                {% else %}
+                                    {{ product.sale_price }}
+                                {% endif %}
+                            </span>
                             ден.</p>
                     </div>
                 </div>
                 <button class=" h-full bg-brand-action rounded-lg text-white font-bold p-2 hover:bg-brand-primary transition-all duration-100 ease-in-out addToCartButton buyNowButton text-sm"
                         data-product-id="{{ product.id }}" data-product-type="{{ product.type }}"
+                        {% if product.isVariable %}
+                        data-attribute-id="{{ product.attributes.first.id }}"
+                        {% endif %}
                         data-quantity="1" id="stickyAddToCartButton">
                     <span class="buttonText">НАРАЧАЈ ВЕДНАШ</span>
                     <div class="buttonSpinner w-10/12 hidden items-center justify-center" role="status">

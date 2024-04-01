@@ -127,7 +127,8 @@
                                         -
                                     </button>
                                     <input type="number" value="{{ cart_item.quantity }}" min="1"
-                                           class="w-6/12 h-full text-center cartItem__quantityInput border-t border-b border-black/60 focus:outline-0">
+                                           class="w-6/12 h-full text-center cartItem__quantityInput border-t border-b border-black/60 focus:outline-0"
+                                           readonly>
                                     <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
                                         +
                                     </button>
@@ -212,7 +213,8 @@
                                     -
                                 </button>
                                 <input type="number" value="{{ cart_item.quantity }}" min="1"
-                                       class="w-4/12 h-full text-center cartItem__quantityInput border-t border-b border-black/60 focus:outline-0">
+                                       class="w-4/12 h-full text-center cartItem__quantityInput border-t border-b border-black/60 focus:outline-0"
+                                       readonly>
                                 <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
                                     +
                                 </button>
@@ -279,7 +281,7 @@
             </div>
             <div>
                 <p class="text-center text-xl font-bold text-brand-action pb-1">Податоци за испорака</p>
-                <p class="text-sm text-center">Плаќање на врата</p>
+                <p class="text-sm text-center pb-2">Плаќање на врата</p>
                 <form action="" class="flex flex-col gap-3" id="checkoutForm">
 
                     <div>
@@ -357,7 +359,7 @@
                                    name="address"
                                    id="checkoutForm__address"
                                    class="checkoutFormInput"
-                                   placeholder="Адреса и број"
+                                   placeholder="Адреса"
                                    required>
                         </div>
                     </div>
@@ -374,7 +376,7 @@
                                     <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#phone"></use>
                                 </svg>
                             </div>
-                            <input type="text"
+                            <input type="number"
                                    name="phone"
                                    id="checkoutForm__phone"
                                    class="checkoutFormInput"

@@ -318,15 +318,18 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
         """
         if value:
             parts = value.split()
-            if len(parts) < 2:
-                raise ValueError(
-                    {"full_name": "Ве молиме внесете го целото име и презиме"}
-                )
+            # if len(parts) < 2:
+            #     raise ValueError(
+            #         {"full_name": "Ве молиме внесете го целото име и презиме"}
+            #     )
             first_name = parts[0]
-            last_name = " ".join(parts[1:])
+            if len(parts) == 1:
+                last_name = ""
+            else:
+                last_name = "".join(parts[1:])
             return first_name, last_name
         else:
-            raise ValueError({"full_name": "Ве молиме внесете го целото име и презиме"})
+            raise ValueError({"full_name": "Ве молиме внесете го вашето име и презиме"})
 
     def validate_and_set_phone_number(self, value):
         """
@@ -338,12 +341,16 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
         if value:
             phone = "".join(filter(str.isdigit, value))
             length = len(phone)
-            if phone.startswith("07") and length != 9:
+            # if phone.startswith("07") and length != 9:
+            #     raise ValueError({"phone": "Телефонскиот број е невалиден"})
+            # elif phone.startswith("389") and length != 11:
+            #     raise ValueError({"phone": "Телефонскиот број е невалиден"})
+            # elif length < 9:
+            #     raise ValueError({"phone": "Телефонскиот број е невалиден"})
+
+            if length == 0:
                 raise ValueError({"phone": "Телефонскиот број е невалиден"})
-            elif phone.startswith("389") and length != 11:
-                raise ValueError({"phone": "Телефонскиот број е невалиден"})
-            elif length < 9:
-                raise ValueError({"phone": "Телефонскиот број е невалиден"})
+
             return phone
 
         else:
