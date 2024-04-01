@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from django.http import Http404
 from django.views.generic import TemplateView, DetailView, ListView
 
@@ -101,26 +102,31 @@ class CategoryListView(FetchCategoriesMixin, ListView):
     context_object_name = "products"
     paginate_by = 24
 
-    def get_queryset(self):
-        slug = self.kwargs.get("slug", None)
-        try:
-            self.category = Category.objects.get(slug=slug)
-        except Category.DoesNotExist:
-            raise Http404("Category does not exist")
+    def __init__(self, **kwargs):
+        super().__init__(kwargs)
+        self.category = None
 
+    def get_queryset(self):
         products_queryset = (
             Product.objects.filter(
                 status__in=[
                     Product.ProductStatus.PUBLISHED,
                     Product.ProductStatus.OUT_OF_STOCK,
-                ],
-                categories=self.category,
+                ]
             )
             .prefetch_related("attributes")
             .order_by("created_at")
         )
 
-        return products_queryset
+        slug = self.kwargs.get("slug")
+        try:
+            self.category = Category.objects.prefetch_related(
+                Prefetch("products", queryset=products_queryset)
+            ).get(slug=slug)
+        except Category.DoesNotExist:
+            raise Http404("Category does not exist")
+
+        return self.category.products.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
