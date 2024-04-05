@@ -193,7 +193,7 @@ class ThankYouDetailView(FetchCategoriesMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Ви благодариме"
-        context["promotion_product"] = self.object.make_thank_you_product()
+        # context["promotion_product"] = self.object.make_thank_you_product()
         return context
 
 
