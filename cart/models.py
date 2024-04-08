@@ -391,7 +391,8 @@ class Order(TimeStampedModel, LoggableModel):
         return sum(item.quantity for item in self.order_items.all())
 
     def make_barcode_content(self):
-        return f"TRENDIKO-{str(self.id)}"
+        id_str = str(self.id).zfill(5)
+        return f"TR-{id_str}"
 
     def __str__(self):
         return f"Order id: {self.id}, Status: {self.status}, Total: {self.total_price}, Created at: {self.created_at}"
