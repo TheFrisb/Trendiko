@@ -282,6 +282,7 @@ class Order(TimeStampedModel, LoggableModel):
             "promotion_price": price,
             "order_item": order_item,
             "readable_name": order_item.get_readable_name,
+            "time_left": 300 - (timezone.now() - self.created_at).seconds,
         }
 
     def get_shipping_price(self):
