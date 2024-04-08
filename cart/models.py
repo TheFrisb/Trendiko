@@ -277,7 +277,7 @@ class Order(TimeStampedModel, LoggableModel):
             return None
 
         order_item = self.order_items.order_by("created_at").first()
-        price = int(order_item.price * 0.8)
+        price = int(order_item.price * 0.9)
         return {
             "promotion_price": price,
             "order_item": order_item,
