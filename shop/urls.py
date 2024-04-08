@@ -11,6 +11,7 @@ from .views import (
 
 app_name = "shop"
 
+
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("category/<slug:slug>/", CategoryListView.as_view(), name="category_page"),

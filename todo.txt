@@ -1,7 +1,28 @@
 1. Abandoned Carts
 2. Kategorija plus pole bg image repeat i bg color
 3. Na mobilen menuto ima margin
-4. Tab index na checkout pole
+4. Tab index na checkout pole za desktop
+5. Linkovi pogolem padding za klik
+6. Kosnicka da e pogolema za nekoj desktop ekrani
+7. Varijanti da ima pod ime na cartitem i checkoutitem ako e varijabilen
+8. Cookies bannero da e brendiran, i ne prifaki postavki da e crveno i malenko bez pozadina
+9. Teri stock item po ime i label
+10. Izmegu <data> <data> -> da e Pomegu <data> <data>
+11. Ak stock item nema thumbnail, najdi go prvio produkt so go koriste i zemi go thumbnail
+12. Napraj search baro da cite po latinica i kirilica
+13. Daj cookies na zlatko
+14. Ne validiri broj na cifri u telefon
+15. 5 min timer na thank you
+16. On buy scroll down, i krij offer
+17. Thank you offer rabat 10% za offer
+18. smeni favicon
+19. Premesti tekst dole pod offero
+20. Pretplati na mail, daj popup, i prekrsti u Pretplati se
+21. Ne validiri e-mail
+22. Majni text ako nema na primary category
+23. Sredi cookie banner
+24. Optimiziri Google Page Speed
+25. Sredi GreenGoShop fb issue
 --------------------------------------------------------------------------------------------------------------------
 12. Sredi pdf invoices da se zacuvuvat i da se gledat so nekoj endpoint
 13. Sredi export na pdf invoices po data

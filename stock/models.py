@@ -6,6 +6,7 @@ from django.core.files import File
 from django.db import models
 
 from common.models import BaseProduct, TimeStampedModel
+from shop.models import Product
 
 
 # Create your models here.

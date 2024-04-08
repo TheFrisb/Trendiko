@@ -155,15 +155,6 @@
             {% endif %}
             <!-- TODO END PRODUCT VARIATIONS -->
 
-            <!-- Expected shipping date -->
-            <div class="w-full flex items-center md:items-start justify-center flex-col">
-                <p class="text-sm font-bold">Предвидена испорака: </p>
-                <p class="text-sm">Измеѓу {{ scheduled_delivery_dates.start_day }} <span
-                        class="font-bold">{{ scheduled_delivery_dates.start_month_formatted }}</span>
-                    - {{ scheduled_delivery_dates.end_day }} <span
-                            class="font-bold">{{ scheduled_delivery_dates.end_month_formatted }}</span></p>
-            </div>
-            <!-- End expected shipping date -->
 
             <!-- Product Add To Cart Section -->
             <div class="px-6 py-4 bg-[#F4F4F4] border border-black/40 rounded-lg productDataContainer">
@@ -287,6 +278,16 @@
                 </div>
             </div>
             <!-- End Product Add To Cart Section -->
+
+            <!-- Expected shipping date -->
+            <div class="w-full flex items-center md:items-start justify-center flex-col">
+                <p class="text-sm font-bold">Предвидена испорака: </p>
+                <p class="text-sm">Помеѓу {{ scheduled_delivery_dates.start_day }} <span
+                        class="font-bold">{{ scheduled_delivery_dates.start_month_formatted }}</span>
+                    - {{ scheduled_delivery_dates.end_day }} <span
+                            class="font-bold">{{ scheduled_delivery_dates.end_month_formatted }}</span></p>
+            </div>
+            <!-- End expected shipping date -->
 
             <!-- Brand benefits section -->
             <div class="w-full flex justify-between items-stretch gap-2 pt-1 pb-2">

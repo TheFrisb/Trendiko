@@ -61,11 +61,34 @@ class AnalyticsManagerRequiredMixin(AccessMixin):
         return f"{resolve_url('admin:login')}?next={next_url}"
 
 
+class AbandonedCartsManagerRequiredMixin(AccessMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.groups.filter(name="abandoned_carts_manager").exists():
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+    def handle_no_permission(self):
+        return HttpResponseRedirect(self.get_login_url())
+
+    def get_login_url(self):
+        next_url = self.request.get_full_path()
+        return f"{resolve_url('admin:login')}?next={next_url}"
+
+
 # Permission class for DRF views
 class IsShopManagerPermission(ShopManagerBaseMixin, BasePermission):
     def has_permission(self, request, view):
         if not self.is_shop_manager(request):
             raise PermissionDenied(detail="You must be a shop manager to access this.")
+        return True
+
+
+class IsAbandonedCartPermission(BasePermission, ShopManagerBaseMixin):
+    def has_permission(self, request, view):
+        if not request.user.groups.filter(name="abandoned_carts_manager").exists():
+            raise PermissionDenied(
+                detail="You must be an abandoned carts manager to access this."
+            )
         return True
 
 
@@ -82,6 +105,9 @@ class SidebarItemsMixin:
 
         if user.groups.filter(name="analytics_manager").exists():
             sidebar_items.append(self.get_analytics_manager_items())
+
+        if user.groups.filter(name="abandoned_carts_manager").exists():
+            sidebar_items.append(self.get_abandoned_carts_manager_items())
 
         return sidebar_items
 
@@ -169,6 +195,22 @@ class SidebarItemsMixin:
                     "name": "Daily rows",
                     "url": analytics_dashboard_url,
                     "icon": "line-chart",
+                },
+            ],
+        }
+
+    def get_abandoned_carts_manager_items(self):
+        abandoned_carts_dashboard_url = reverse(
+            "shop_manager:abandoned_carts_dashboard"
+        )
+        return {
+            "title": "Напуштени кошнички",
+            "icon": "recycle",
+            "items": [
+                {
+                    "name": "Abandoned carts",
+                    "url": abandoned_carts_dashboard_url,
+                    "icon": "cart",
                 },
             ],
         }

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from cart.models import Order
+from cart.models import Order, Cart
 
 
 class ChangeOrderStatusSerializer(serializers.Serializer):
@@ -23,5 +23,20 @@ class ChangeOrderStatusSerializer(serializers.Serializer):
             raise serializers.ValidationError("Order already has this status")
 
         data["order"] = order
+
+        return data
+
+
+class RemoveAbandonedCartSerializer(serializers.Serializer):
+    cart_id = serializers.IntegerField(min_value=1)
+
+    def validate(self, data):
+        cart_id = data.get("cart_id")
+        cart = Cart.objects.filter(id=cart_id, status=Cart.CartStatus.ABANDONED).first()
+
+        if not cart:
+            raise serializers.ValidationError("Cart not found")
+
+        data["cart"] = cart
 
         return data

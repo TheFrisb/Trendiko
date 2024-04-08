@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .actions_views import ChangeOrderStatus
+from .actions_views import ChangeOrderStatus, RemoveAbandonedCart
 from .views import (
     ShopManagerHome,
     StockManagerHome,
@@ -8,6 +8,7 @@ from .views import (
     AnalyticsDashboard,
     GenerateOrderInvoice,
     ExportInvoices,
+    AbandonedCartsDashboard,
 )
 
 app_name = "shop_manager"
@@ -20,14 +21,24 @@ urlpatterns = [
     ),
     path("dashboard/scan-stock-items/", ScanStock.as_view(), name="scan_stock"),
     path(
-        "dashboard/analytics-dashboard,",
+        "dashboard/analytics-dashboard/",
         AnalyticsDashboard.as_view(),
         name="analytics_dashboard",
+    ),
+    path(
+        "dashboard/abandoned-carts/",
+        AbandonedCartsDashboard.as_view(),
+        name="abandoned_carts_dashboard",
     ),
     path(
         "api/change-order-status/",
         ChangeOrderStatus.as_view(),
         name="change_order_status",
+    ),
+    path(
+        "api/remove-abandoned-cart/",
+        RemoveAbandonedCart.as_view(),
+        name="remove_abandoned_cart",
     ),
     path(
         "invoices/<int:order_id>/", GenerateOrderInvoice.as_view(), name="order_invoice"

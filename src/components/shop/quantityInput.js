@@ -37,7 +37,6 @@ function updateCartItemQuantity(quantity, pk) {
 function removeCartItem(pk) {
   HTTP.delete(`${URLS.REMOVE_CART_ITEM}${pk}`).then(response => {
     if (response) {
-      console.log(response);
       removeCartItemElement(pk, response.data.has_free_shipping);
     }
   });
@@ -62,7 +61,6 @@ function attachProductInputListeners(inputEl) {
 
   incrementButton.addEventListener('click', function () {
     let quantity = parseLocaleNumber(inputEl.value)
-    console.log("before increment", quantity)
     quantity = updateQuantity(ACTION_TYPES.INCREMENT, quantity);
     inputEl.value = quantity;
     updateAddToCartButtons(quantity);

@@ -17,6 +17,7 @@ from .serializers import (
     OrderSerializer,
     AddOrderItemToOrderSerializer,
     OrderItemSerializer,
+    AbandonedCartDetailsSerializer,
 )
 
 
@@ -159,5 +160,23 @@ class OrderItemView(APIView):
             return Response(
                 OrderItemSerializer(order_item).data, status=status.HTTP_200_OK
             )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AbandonedCartView(APIView):
+    """
+    API view for handling abandoned carts.
+
+    The GET method is used to retrieve the abandoned carts.
+    """
+
+    def post(self, request):
+        serializer = AbandonedCartDetailsSerializer(data=request.data)
+        if serializer.is_valid():
+            cart_service = CartService(request.cart, ProductService())
+            cart_service.save_abandoned_cart_details(serializer.validated_data)
+
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

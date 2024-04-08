@@ -8,6 +8,7 @@ from django.conf import settings
 from django.db import models
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from weasyprint import HTML
 
@@ -35,12 +36,24 @@ class Cart(TimeStampedModel):
     so this field is set here only for future use should they choose to add a user account system.
     """
 
+    class CartStatus(models.TextChoices):
+        """Cart Status"""
+
+        ACTIVE = "active", _("Активна")
+        ABANDONED = "abandoned", _("Напуштена")
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
         default=None,
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=CartStatus.choices,
+        default=CartStatus.ACTIVE,
+        db_index=True,
     )
     session_key = models.CharField(max_length=40, default=None, db_index=True)
 
@@ -228,6 +241,7 @@ class Order(TimeStampedModel, LoggableModel):
     subtotal_price = models.IntegerField(default=0)
     total_price = models.IntegerField(default=0)
     tracking_number = models.CharField(max_length=100, unique=True, db_index=True)
+    mail_is_sent = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         """
@@ -253,6 +267,10 @@ class Order(TimeStampedModel, LoggableModel):
         return "130 ден"
 
     def make_thank_you_product(self):
+        # check if order is not older than 5 minutes
+        if (timezone.now() - self.created_at).seconds > 300:
+            return None
+
         order_item = self.order_items.order_by("created_at").first()
         price = int(order_item.price * 0.8)
         return {
@@ -481,7 +499,7 @@ class ShippingDetails(TimeStampedModel):
     municipality = models.CharField(max_length=50, null=True, blank=True)
     phone = models.CharField(max_length=20)
     comment = models.TextField(null=True, blank=True)
-    email = models.EmailField(null=True, blank=True)
+    email = models.CharField(max_length=100, null=True, blank=True)
 
     @property
     def full_name(self):
@@ -490,3 +508,21 @@ class ShippingDetails(TimeStampedModel):
         :return: str: The full name of the customer.
         """
         return f"{self.first_name} {self.last_name}"
+
+
+class AbandonedCartDetails(TimeStampedModel):
+    """
+    The AbandonedCartDetails model represents the details of an abandoned cart.
+    It contains a foreign key to the associated cart.
+    It also includes fields for the first name, last name, address, city,
+    and phone number for shipping.
+    """
+
+    cart = models.OneToOneField(
+        Cart, on_delete=models.CASCADE, related_name="abandoned_cart_details"
+    )
+    full_name = models.CharField(max_length=100, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    phone = models.CharField(max_length=100, null=True, blank=True)
+    email = models.CharField(max_length=100, null=True, blank=True)
+    address = models.CharField(max_length=100, null=True, blank=True)

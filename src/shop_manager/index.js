@@ -1,5 +1,6 @@
 import {initializeChangeOrderStatusButtons} from "../components/shop-manager/changeOrderStatus";
 import {initializeQRScanner} from "../components/shop-manager/htmlQRcodeScanner";
+import {initializeRemoveAbandonedCartButtons} from "../components/shop-manager/removeAbandonedCart";
 
 document.addEventListener('DOMContentLoaded', function () {
     const openMenuIcon = document.querySelector('#dashboard__menuIcon');
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     );
 
     initializeChangeOrderStatusButtons();
+    initializeRemoveAbandonedCartButtons();
     initializeQRScanner();
   }
 );

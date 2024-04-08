@@ -1,0 +1,59 @@
+{% extends 'shop_manager/base.html' %}
+{% load static %}
+
+{% block dashboard %}
+    <div class="py-4 px-4 lg:px-8 flex flex-col items-start gap-4">
+        <div class="p-4 w-full bg-white rounded-xl shadow-md flex flex-col gap-4 ">
+            <div class="flex items-center justify-between">
+                <h4 class="text-xl font-bold">Abandoned carts</h4>
+                {% include 'shop_manager/includes/dashboard_paginator.html' %}
+            </div>
+            <table class="table-auto w-full text-left">
+                <thead class="border-b border-gray-200">
+                <tr>
+                    <th class="font-normal">Customer</th>
+                    <th class="font-normal">Items</th>
+                    <th class="font-normal">Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for cart in page_obj %}
+                    <tr class="border-b-2 border-gray-200">
+                        <td class="table_field">
+                            {{ cart.abandoned_cart_details.name }}
+                            <br>
+                            {{ cart.abandoned_cart_details.address }}
+                            <br>
+                            {{ cart.abandoned_cart_details.city }}
+                            <br>
+                            {{ cart.abandoned_cart_details.phone }}
+                            <br>
+                            {{ cart.abandoned_cart_details.email }}
+                        </td>
+                        <td class="table_field">
+                            {% for item in cart.cart_items.all %}
+                                <span class="font-bold">{{ item.title }} x {{ item.quantity }}</span>
+                                <span> - {{ item.total_price }} ден</span>
+                                <br>
+                            {% endfor %}
+                            Вкупно: {{ cart.get_items_total }} ден
+                        </td>
+                        <td class="table_field flex flex-col items-start grow justify-between gap-1">
+                            <p>Креирана: {{ cart.created_at|date:"d/m/Y H:i" }}</p>
+
+                            {% with button_classes="py-1.5 px-4 rounded-lg text-sm font-bold w-full max-w-[120px] removeAbandonedCartBtn transition-all duration-100 ease-in-out" %}
+                                <button class="{{ button_classes }} bg-dashboard-blue text-white hover:bg-green-600"
+                                        data-cart-id="{{ cart.id }}"
+                                        data-change-to-status="{{ OrderStatuses.CONFIRMED }}">ИЗБРИШИ
+                                </button>
+                            {% endwith %}
+                        </td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock dashboard %}

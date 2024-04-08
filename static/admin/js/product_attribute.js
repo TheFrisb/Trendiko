@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
   const inlineContainer = document.getElementById('attributes-group');
-  console.log('loadded')
 
   function toggleFields(row) {
     var typeSelect = row.querySelector('.field-type select');
@@ -35,7 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initial application of toggleFields to existing rows
   const rows = inlineContainer.querySelectorAll('.form-row');
   rows.forEach(function (row) {
-    console.log(row)
     toggleFields(row);
   });
 });

@@ -11,6 +11,8 @@ import {makeCountDownByMinutesAndSeconds} from "../components/timer/timer";
 import {initializeCookieConsent} from "../components/cookies/cookieconsent-config";
 import {initializeSearchBar} from "../components/searchBar";
 import {sendViewContentFacebookPixelEvent} from "../components/facebook/pixelEvents";
+import {initializeSubscribeToMailButtons} from "../components/promotions/subscribeToMailButton";
+import {initializeAbandonedCart} from "../components/abandonedCart";
 
 document.addEventListener('DOMContentLoaded', function () {
   initializeToggles();
@@ -26,6 +28,8 @@ document.addEventListener('DOMContentLoaded', function () {
   initializeCookieConsent();
   initializeSearchBar();
   sendViewContentFacebookPixelEvent();
+  initializeSubscribeToMailButtons();
+  initializeAbandonedCart();
   const menuIcon = document.getElementById('menuIcon');
   const navbar = document.getElementById('navbar');
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;

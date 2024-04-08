@@ -1,6 +1,13 @@
 from django.contrib import admin
 
-from .models import Cart, CartItem, Order, OrderItem, ShippingDetails
+from .models import (
+    Cart,
+    CartItem,
+    Order,
+    OrderItem,
+    ShippingDetails,
+    AbandonedCartDetails,
+)
 
 
 # Register your models here.
@@ -9,9 +16,17 @@ class CartItemInline(admin.TabularInline):
     extra = 0
 
 
+class AbandonedCartDetailsInline(admin.StackedInline):
+    model = AbandonedCartDetails
+    extra = 0
+
+    def get_readonly_fields(self, request, obj=None):
+        return [f.name for f in self.model._meta.fields]
+
+
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
-    inlines = [CartItemInline]
+    inlines = [CartItemInline, AbandonedCartDetailsInline]
 
 
 class OrderItemInline(admin.TabularInline):

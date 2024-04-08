@@ -50,8 +50,6 @@ function toggleCheckout() {
     input.classList.remove('error');
     let sibling = input.closest('.inputContainer').querySelector('.inputIcon');
 
-    console.log(sibling);
-    console.log(input.closest('.inputContainer'))
     sibling.classList.remove('error');
 
   });
@@ -109,9 +107,8 @@ function initializeCart() {
       buttonText.classList.remove('hidden');
       buttonSpinner.classList.add('hidden');
     });
-
-
   });
+
 
 }
 
@@ -166,6 +163,7 @@ function removeCartItemElement(cartItemId, hasFreeShipping) {
 function createSideCartItem(cartItem) {
   const thumbnails = cartItem.thumbnails;
   const sideCartItemDiv = document.createElement("div");
+  const attributeTitleParagraph = cartItem.attribute_title ? `<p class="text-sm text-black/60">${cartItem.attribute_title}</p>` : "";
   sideCartItemDiv.classList.add("flex", "gap-2", "items-start", "py-4", "border-b-2", "p-5", "cartItem");
   sideCartItemDiv.setAttribute("data-cart-item-id", cartItem.id);
   sideCartItemDiv.innerHTML = `
@@ -184,7 +182,7 @@ function createSideCartItem(cartItem) {
                                       </svg> 
                                     <p class="font-semibold line-clamp-2">${cartItem.title}</p>
                                   </div> 
-                                  
+                                  ${attributeTitleParagraph}
                                   <p class="font-semibold text-brand-action my-2 leading-5"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p> 
                                   <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                       <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
@@ -213,6 +211,7 @@ function createSideCartItem(cartItem) {
 function createCheckoutItem(cartItem) {
   const thumbnails = cartItem.thumbnails;
   const checkoutCartItemDiv = document.createElement("div");
+  const attributeTitleParagraph = cartItem.attribute_title ? `<p class="text-sm text-black/60">${cartItem.attribute_title}</p>` : "";
   checkoutCartItemDiv.classList.add("flex", "gap-2", "items-start", "py-4", "border-b", "cartItem", "first-of-type:pt-0");
   checkoutCartItemDiv.setAttribute("data-cart-item-id", cartItem.id);
   checkoutCartItemDiv.innerHTML = `
@@ -231,7 +230,7 @@ function createCheckoutItem(cartItem) {
                                       </svg>
                                     <p class="font-semibold line-clamp-2">${cartItem.title}</p> 
                                   </div> 
-
+                                  ${attributeTitleParagraph} 
                                   <p class="font-semibold text-brand-action my-2 leading-5"><span class="cartItem__salePrice">${formatNumberToLocale(cartItem.sale_price)}</span> ден</p>
                                   <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                       <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
@@ -270,7 +269,7 @@ function updateCart(response) {
     createSideCartItem(response);
     createCheckoutItem(response);
   }
-  console.log(response);
+
   updateCartQuantityAndTotal(response.has_free_shipping);
 }
 

@@ -2,6 +2,7 @@ import {HTTP, URLS} from "../../http/client";
 import {notyf__long, notyf__short} from "../../utils/error";
 import {formatNumberToLocale, parseLocaleNumber} from "../../utils/numberFormatter";
 
+const ordersTable = document.getElementById('ordersTable');
 const orderItemsContainer = document.getElementById('orderItemsContainer');
 const orderSubtotalPriceContainer = document.getElementById('order__subtotalPrice');
 const orderTotalPriceContainer = document.getElementById('order__totalPrice');
@@ -16,21 +17,7 @@ function addToOrder(orderId, orderItemId, quantity, trackingCode, promotionPrice
     promotion_price: promotionPrice
   }
 
-  HTTP.post(URLS.ADD_TO_ORDER, data).then(response => {
-    const data = response.data;
-    if (response.success) {
-      notyf__short.success("Продуктот е додаден во порачката");
-      makeOrUpdateOrderItemRow(data);
-      updateOrderTotals(data);
-    } else {
-      let status_code = response.status;
-      if (status_code === 403) {
-        notyf__long.error(data.message);
-      } else {
-        notyf__long.error("Се случи грешка, ве молиме обидете се повторно.");
-      }
-    }
-  });
+  return HTTP.post(URLS.ADD_TO_ORDER, data)
 }
 
 function updateOrderTotals(data) {
@@ -61,7 +48,7 @@ function makeOrderItemHtml(orderItem) {
                                         <source srcset="${thumbnails.webp}" type="image/webp">
                                         <source srcset="${thumbnails.jpg}" type="image/jpeg">
                                         <img src="${thumbnails.jpg}" alt="Image of a product"
-                                             class="w-16 h-16 object-cover rounded-lg" width="64" height="64">
+                                             class="min-w-[64px] min-h-[64px] object-cover rounded-lg" width="64" height="64">
                                     </picture>
                                 <div>
                                     <p class="font-bold">${orderItem.get_readable_name}</p>
@@ -84,7 +71,41 @@ function initializeAddToOrderButtons() {
       const orderId = button.getAttribute('data-order-id');
       const trackingCode = window.location.pathname.split('/')[2];
       const promotionPrice = parseLocaleNumber(button.getAttribute('data-promotion-price'));
-      addToOrder(orderId, orderItemId, quantity, trackingCode, promotionPrice);
+
+      const buttonText = button.querySelector('.buttonText');
+      const buttonSpinner = button.querySelector('.buttonSpinner');
+
+      button.disabled = true;
+      buttonText.classList.add('hidden');
+      buttonSpinner.classList.remove('hidden');
+      buttonSpinner.classList.add('flex');
+
+
+      addToOrder(orderId, orderItemId, quantity, trackingCode, promotionPrice).then(response => {
+        const data = response.data;
+        if (response.success) {
+          notyf__short.success("Продуктот е додаден во порачката");
+          makeOrUpdateOrderItemRow(data);
+          updateOrderTotals(data);
+          ordersTable.scrollIntoView({behavior: "smooth"});
+
+          buttonText.textContent = 'Додаден';
+
+        } else {
+          let status_code = response.status;
+          if (status_code === 403) {
+            notyf__long.error(data.message);
+          } else {
+            notyf__long.error("Се случи грешка, ве молиме обидете се повторно.");
+          }
+
+          button.disabled = false;
+        }
+      }).finally(() => {
+        buttonText.classList.remove('hidden');
+        buttonSpinner.classList.add('hidden');
+        buttonSpinner.classList.remove('flex');
+      });
     });
   });
 }

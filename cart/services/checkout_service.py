@@ -1,7 +1,7 @@
-import base64
 import uuid
 
 from django.db import transaction
+from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
 from cart.models import ShippingDetails, OrderItem, Order
@@ -60,18 +60,6 @@ class CheckoutService:
 
         self.cart.delete()
 
-        if shipping_details.email:
-            result = self.email_client.send_mail(
-                "Потврда за нарачка",
-                f"Ви благодариме за нарачката! Вашата нарачка е успешно примена. Во прилог Ви ја испраќаме фактурата за нарачката.",
-                shipping_details.email,
-                attachment=base64.b64encode(
-                    order.generate_invoice_pdf(
-                        base_url=self.request.build_absolute_uri(), show_details=False
-                    )
-                ).decode("utf-8"),
-            )
-
         return order
 
     @transaction.atomic
@@ -101,6 +89,11 @@ class CheckoutService:
 
         if order.tracking_number != tracking_number:
             raise ValidationError({"message": "The tracking number is invalid."})
+
+        if (timezone.now() - order.created_at).seconds > 300:
+            raise ValidationError(
+                {"message": "The promotion for this order has expired."}
+            )
 
         copy_order_item = self.validate_thank_you_order_item(
             order, order_item_id, promotion_price

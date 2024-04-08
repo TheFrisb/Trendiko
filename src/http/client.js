@@ -9,6 +9,9 @@ const URLS = {
   'REMOVE_CART_ITEM': INTERNAL_API_BASE_PATH + '/cart/cart-item/',
   'CHECKOUT': INTERNAL_API_BASE_PATH + '/cart/checkout/',
   'ADD_TO_ORDER': INTERNAL_API_BASE_PATH + '/cart/order-item/',
+  'ABANDONED_CART_DETAILS': INTERNAL_API_BASE_PATH + '/cart/abandoned-cart-details/',
+
+  'SUBSCRIBE_TO_MAIL': INTERNAL_API_BASE_PATH + '/common/mail-subscription/',
 }
 
 const FACEBOOK_PIXEL_EVENTS_URLS = {

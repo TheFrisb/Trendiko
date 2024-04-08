@@ -3,7 +3,7 @@ import {notyf__long} from "../../utils/error";
 
 
 function checkout(formEl) {
-  console.log("checkout formEl", formEl)
+
   if (!validateForm(formEl)) {
     notyf__long.error('Полињата обележани со црвено се задолжителни!');
     return Promise.resolve();
@@ -15,7 +15,6 @@ function checkout(formEl) {
     jsonFormData[key] = value;
   });
 
-  console.log("jsonFormData", jsonFormData)
 
   return HTTP.post(URLS.CHECKOUT, jsonFormData).then(response => {
     if (response.success) {
@@ -26,7 +25,6 @@ function checkout(formEl) {
       if (status_code === 400) {
         let errors = response.data;
         Object.keys(errors).forEach(key => {
-          console.log("key", key)
           let input = formEl.querySelector(`input[name=${key}]`);
           input.classList.add('error');
           notyf__long.error(errors[key].join(' '));

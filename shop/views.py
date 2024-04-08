@@ -1,4 +1,4 @@
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from django.http import Http404
 from django.views.generic import TemplateView, DetailView, ListView
 
@@ -146,11 +146,20 @@ class SearchView(FetchCategoriesMixin, ListView):
         if not query:
             return Product.objects.none()
 
+        product_filter = (
+            Q(title__icontains=query)
+            | Q(stock_item__title__icontains=query)
+            | Q(stock_item__label__icontains=query)
+        )
+
+        # Filter products that match any of the conditions and are published
         return (
             Product.objects.filter(
-                title__icontains=query,
-                stock_item__title__icontains=query,
-                status=Product.ProductStatus.PUBLISHED,
+                product_filter,
+                status__in=[
+                    Product.ProductStatus.PUBLISHED,
+                    Product.ProductStatus.OUT_OF_STOCK,
+                ],
             )
             .distinct()
             .prefetch_related("attributes")
@@ -193,7 +202,7 @@ class ThankYouDetailView(FetchCategoriesMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Ви благодариме"
-        # context["promotion_product"] = self.object.make_thank_you_product()
+        context["promotion_product"] = self.object.make_thank_you_product()
         return context
 
 

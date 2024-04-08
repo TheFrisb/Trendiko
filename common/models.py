@@ -83,3 +83,14 @@ class SimplePage(TimeStampedModel):
 
     def __str__(self):
         return self.title
+
+
+class MailSubscription(TimeStampedModel):
+    email = models.EmailField(unique=True, verbose_name="Email адреса")
+
+    class Meta:
+        verbose_name = "Пријава за промоции"
+        verbose_name_plural = "Пријави за промоции"
+
+    def __str__(self):
+        return self.email

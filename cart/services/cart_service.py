@@ -1,6 +1,6 @@
 from rest_framework.exceptions import NotFound
 
-from cart.models import CartItem, Cart
+from cart.models import CartItem, Cart, AbandonedCartDetails
 from common.exceptions import OutOfStockException
 from shop.services.product_service import ProductService
 from stock.services.stock_validator import StockValidator
@@ -131,3 +131,36 @@ class CartService:
                 {"cart_item": f"Cart item with id {pk} does not exist for this cart"}
             )
         return cart_item
+
+    def save_abandoned_cart_details(self, data):
+        """
+        Save the details of an abandoned cart.
+
+        Args:
+            data (dict): The details of the abandoned cart.
+
+        Returns:
+            Cart: The cart instance that was updated with the abandoned cart details.
+        """
+        abandoned_details = AbandonedCartDetails.objects.filter(cart=self.cart).first()
+
+        if not abandoned_details:
+            abandoned_details = AbandonedCartDetails.objects.create(
+                cart=self.cart, **data
+            )
+
+        else:
+            if data.get("email") != "":
+                abandoned_details.email = data.get("email")
+            if data.get("phone") != "":
+                abandoned_details.phone = data.get("phone")
+            if data.get("full_name") != "":
+                abandoned_details.full_name = data.get("full_name")
+            if data.get("address") != "":
+                abandoned_details.address = data.get("address")
+            if data.get("city") != "":
+                abandoned_details.city = data.get("city")
+
+            abandoned_details.save()
+
+        return abandoned_details

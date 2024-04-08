@@ -2,7 +2,7 @@ from django.http import FileResponse, HttpResponse, Http404
 from django.views import View
 from django.views.generic import ListView
 
-from cart.models import Order
+from cart.models import Order, Cart
 from stock.models import StockItem
 from .forms.export_invoices import ExportInvoicesForm
 from .forms.export_orders_form import ExportOrdersForm
@@ -12,6 +12,7 @@ from .utils import (
     SidebarItemsMixin,
     StockManagerRequiredMixin,
     AnalyticsManagerRequiredMixin,
+    AbandonedCartsManagerRequiredMixin,
 )
 
 # Create your views here.
@@ -162,3 +163,23 @@ class ExportInvoices(ShopManagerRequiredMixin, View):
                 filename="invoices.pdf",
             )
         return HttpResponse("Invalid form data", status=400)
+
+
+class AbandonedCartsDashboard(AbandonedCartsManagerRequiredMixin, BaseDashboardView):
+    model = Cart
+    template_name = f"{dashboards_dir}/abandoned_carts.html"
+    context_object_name = "orders"
+    paginate_by = 24
+
+    def get_queryset(self):
+        return (
+            Cart.objects.filter(status=Cart.CartStatus.ABANDONED)
+            .select_related("abandoned_cart_details")
+            .prefetch_related("cart_items")
+            .order_by("-id")
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Abandoned Carts"
+        return context

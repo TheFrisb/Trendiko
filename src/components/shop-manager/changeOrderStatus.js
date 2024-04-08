@@ -17,8 +17,6 @@ function changeOrderStatus(event) {
 
   HTTP.post(ADMIN_URLS.CHANGE_ORDER_STATUS, data).then(response => {
     const data = response.data;
-    console.log(data)
-    console.log(response)
     if (response.success) {
       const tableRow = button.closest('tr');
       tableRow.remove();
@@ -32,7 +30,6 @@ function changeOrderStatus(event) {
 function initializeChangeOrderStatusButtons() {
   changeOrderButtons.forEach((button) => {
     button.addEventListener('click', changeOrderStatus);
-    console.log('changeOrderStatus button initialized')
   });
 }
 

@@ -1,7 +1,14 @@
 from rest_framework import serializers
 
 from shop.models import Product
-from .models import CartItem, ShippingDetails, Cart, Order, OrderItem
+from .models import (
+    CartItem,
+    ShippingDetails,
+    Cart,
+    Order,
+    OrderItem,
+    AbandonedCartDetails,
+)
 
 SUPPORTED_CITIES = [
     {"latin": "Aerodrom", "cyrillic": "Аеродром"},
@@ -102,6 +109,17 @@ class CartItemSerializer(serializers.ModelSerializer):
     """
 
     has_free_shipping = serializers.SerializerMethodField()
+    attribute_title = serializers.SerializerMethodField()
+
+    def get_attribute_title(self, obj):
+        """
+        Get the attribute name
+        :param obj:
+        :return:
+        """
+        if obj.attribute:
+            return obj.attribute.title
+        return None
 
     def get_has_free_shipping(self, obj):
         """
@@ -125,6 +143,7 @@ class CartItemSerializer(serializers.ModelSerializer):
             "thumbnails",
             "quantity",
             "attribute",
+            "attribute_title",
             "sale_price",
             "total_price",
             "has_free_shipping",
@@ -253,12 +272,12 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
     """
 
     full_name = serializers.CharField(max_length=100, required=True)
-    phone = serializers.CharField(max_length=12, required=True)
+    phone = serializers.CharField(required=True)
     city = serializers.CharField(max_length=50, required=True)
     municipality = serializers.CharField(
         max_length=50, required=False, allow_blank=True
     )
-    email = serializers.EmailField(required=False, allow_blank=True)
+    email = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         """
@@ -394,3 +413,29 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
             return None
 
         return value
+
+
+class AbandonedCartDetailsSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the AbandonedCartDetails model
+    """
+
+    full_name = serializers.CharField(
+        required=False, allow_blank=True, default="", max_length=100
+    )
+    phone = serializers.CharField(
+        required=False, allow_blank=True, default="", max_length=100
+    )
+    city = serializers.CharField(
+        required=False, allow_blank=True, default="", max_length=100
+    )
+    email = serializers.CharField(
+        required=False, allow_blank=True, default="", max_length=100
+    )
+    address = serializers.CharField(
+        required=False, allow_blank=True, default="", max_length=100
+    )
+
+    class Meta:
+        model = AbandonedCartDetails
+        fields = ["full_name", "city", "phone", "email", "address"]

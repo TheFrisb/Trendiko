@@ -1,4 +1,5 @@
 const timers = document.querySelectorAll('.countdownByMinutesAndSeconds');
+const buttonsToDisable = document.querySelectorAll('.canBeDisabledByTimerBtn');
 
 function makeCountDownByMinutesAndSeconds() {
   timers.forEach(timer => {
@@ -9,6 +10,7 @@ function makeCountDownByMinutesAndSeconds() {
     let interval = setInterval(() => {
       totalSeconds--;
       if (totalSeconds <= 0) {
+        disableButtons();
         clearInterval(interval);
       }
       minutes = Math.floor(totalSeconds / 60);
@@ -18,5 +20,17 @@ function makeCountDownByMinutesAndSeconds() {
 
   })
 }
+
+
+function disableButtons() {
+  buttonsToDisable.forEach(button => {
+    button.disabled = true;
+    let buttonText = button.getAttribute('data-disabled-text');
+    if (buttonText) {
+      button.querySelector('.buttonText').innerHTML = buttonText;
+    }
+  });
+}
+
 
 export {makeCountDownByMinutesAndSeconds};

@@ -179,7 +179,7 @@ if DEBUG:
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Skopje"
 
 USE_I18N = True
 
@@ -245,6 +245,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CRONJOBS = [
     ("10 23 * * *", "facebook.cron.update_facebook_catalogue_feed"),
+    ("0 0 * * *", "cart.cron.make_carts_abandoned"),
+    ("*/3 * * * *", "cart.cron.send_email_to_orders_older_than_5_min"),
 ]
 
 INVOICES_DIR = BASE_DIR / "invoices"

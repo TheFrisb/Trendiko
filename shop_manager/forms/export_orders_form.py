@@ -229,6 +229,7 @@ class ExportOrdersForm(forms.Form):
     def get_orders(self):
         from_date = make_timezone_aware(self.cleaned_data["from_date"])
         to_date = make_timezone_aware(self.cleaned_data["to_date"])
+        print(from_date, to_date)
         orders = (
             Order.objects.filter(
                 updated_at__gte=from_date,

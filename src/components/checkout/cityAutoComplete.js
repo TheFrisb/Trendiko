@@ -88,8 +88,8 @@ const cityAutocompleteJs = new autoComplete({
       },
       focus() {
         const inputValue = cityAutocompleteJs.input.value;
-
         if (inputValue.length) cityAutocompleteJs.start();
+         
       },
       blur: () => { // Adding a blur event
         const inputValue = cityAutocompleteJs.input.value;
@@ -113,10 +113,14 @@ const cityAutocompleteJs = new autoComplete({
       },
     }
   },
+
   threshold: 0,
   resultsList: {
     noResults: true,
+    maxResults: undefined,
+    tabSelect: true
   },
+
 
 });
 
@@ -175,10 +179,14 @@ const municipalityAutocompleteJs = new autoComplete({
       },
     }
   },
+
   threshold: 0,
   resultsList: {
     noResults: true,
+    maxResults: undefined,
+    tabSelect: true
   },
+
 
 });
 
