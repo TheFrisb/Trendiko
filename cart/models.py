@@ -279,7 +279,7 @@ class Order(TimeStampedModel, LoggableModel):
         order_item = self.order_items.order_by("created_at").first()
         price = int(order_item.price * 0.9)
         # make time_left as xx:xx
-        minutes_left = 5 - (timezone.now() - self.created_at).seconds // 60
+        minutes_left = 3 - (timezone.now() - self.created_at).seconds // 60
         seconds_left = 60 - (timezone.now() - self.created_at).seconds % 60
 
         return {
