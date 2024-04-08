@@ -12,7 +12,7 @@
 12. Napraj search baro da cite po latinica i kirilica
 13. Daj cookies na zlatko
 14. Ne validiri broj na cifri u telefon
-15. 5 min timer na thank you
+15. 3 min timer na thank you i praki mejl posle 3 min
 16. On buy scroll down, i krij offer
 17. Thank you offer rabat 10% za offer
 18. smeni favicon
@@ -21,7 +21,7 @@
 21. Ne validiri e-mail
 22. Majni text ako nema na primary category
 23. Sredi cookie banner
-24. Optimiziri Google Page Speed
+
 25. Sredi GreenGoShop fb issue
 --------------------------------------------------------------------------------------------------------------------
 12. Sredi pdf invoices da se zacuvuvat i da se gledat so nekoj endpoint

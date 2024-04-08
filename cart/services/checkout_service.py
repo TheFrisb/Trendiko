@@ -266,6 +266,14 @@ class CheckoutService:
 
     def validate_thank_you_order_item(self, order, order_item_id, promotion_price):
         check_promotion = order.make_thank_you_product()
+        if not check_promotion:
+            raise ValidationError(
+                {
+                    "message": "The order promotion is expired."
+                    "Please contact the administrator."
+                }
+            )
+
         if order_item_id != check_promotion["order_item"].id:
             raise ValidationError(
                 {"message": "The order item with the specified ID does not exist."}
