@@ -392,7 +392,7 @@ class Order(TimeStampedModel, LoggableModel):
 
     def make_barcode_content(self):
         id_str = str(self.id).zfill(5)
-        return f"TR-{id_str}"
+        return f"TR{id_str}"
 
     def __str__(self):
         return f"Order id: {self.id}, Status: {self.status}, Total: {self.total_price}, Created at: {self.created_at}"
