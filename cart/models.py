@@ -271,6 +271,11 @@ class Order(TimeStampedModel, LoggableModel):
         if (timezone.now() - self.created_at).seconds > 300:
             return None
 
+        if self.order_items.filter(
+            promotion_type=OrderItem.PromotionType.THANK_YOU
+        ).exists():
+            return None
+
         order_item = self.order_items.order_by("created_at").first()
         price = int(order_item.price * 0.8)
         return {
