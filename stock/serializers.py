@@ -2,7 +2,7 @@ from enum import Enum
 
 from rest_framework import serializers
 
-from shop.models import Product
+from shop.models import Product, ProductAttribute
 from stock.models import StockItem
 
 
@@ -31,7 +31,16 @@ class StockItemSerializer(serializers.ModelSerializer):
             if found_product:
                 return found_product.thumbnail.url
             else:
-                return ""
+                attribute = ProductAttribute.objects.filter(
+                    stock_item=obj, product__thumbnail__isnull=False
+                ).first()
+
+                if attribute:
+                    if attribute.thumbnail and attribute.thumbnail.url:
+                        return attribute.thumbnail.url
+                    else:
+                        return attribute.product.thumbnail.url
+            return ""
 
         return obj.thumbnail.url
 
