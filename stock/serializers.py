@@ -30,6 +30,8 @@ class StockItemSerializer(serializers.ModelSerializer):
             ).first()
             if found_product:
                 return found_product.thumbnail.url
+            else:
+                return ""
 
         return obj.thumbnail.url
 
