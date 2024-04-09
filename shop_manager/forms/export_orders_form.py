@@ -70,10 +70,10 @@ class ExportOrdersForm(forms.Form):
 
             for order_item in order.order_items.all():
                 product_titles += (
-                    f"{order_item.get_readable_name} x {order_item.quantity}\n"
+                    f"{order_item.get_readable_name} x {order_item.quantity} "
                 )
                 product_skus += (
-                    f"{order_item.stock_item.label} x {order_item.quantity}\n"
+                    f"{order_item.stock_item.label} x {order_item.quantity} "
                 )
                 quantity += order_item.quantity
                 cell_height += 15
