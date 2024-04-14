@@ -26,9 +26,7 @@ class LoggableModel(models.Model):
     """Loggable Model, contains IP and User Agent"""
 
     ip = models.GenericIPAddressField(blank=True, null=True, verbose_name="IP адреса")
-    user_agent = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="User Agent"
-    )
+    user_agent = models.TextField(blank=True, null=True, verbose_name="User Agent")
 
     class Meta:
         """Meta Class"""
