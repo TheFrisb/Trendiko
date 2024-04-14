@@ -58,3 +58,5 @@ webencodings==0.5.1
 XlsxWriter==3.1.9
 yarl==1.9.4
 zopfli==0.2.3
+
+django-admin-sortable2~=2.1.10

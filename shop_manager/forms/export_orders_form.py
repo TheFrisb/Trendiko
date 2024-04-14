@@ -112,6 +112,26 @@ class ExportOrdersForm(forms.Form):
             row += 1
 
         row += 5
+
+        worksheet.write(row, 0, "NABAVKI", centered_cell_format)
+        row += 1
+
+        for import_id, data in nabavki.items():
+            worksheet.write(row, 0, data["stock_item"].label, centered_cell_format)
+            worksheet.write(row, 1, data["quantity"], centered_cell_format)
+            worksheet.write(
+                row, 2, data["import_item"].price_no_vat, centered_cell_format
+            )
+            worksheet.write_formula(
+                row,
+                3,
+                f"=B{row + 1} * C{row + 1}",
+                centered_cell_format,
+            )
+
+            row += 1
+
+        row += 5
         worksheet.write(row, 0, "THANK YOU OFFERS", centered_cell_format)
         row += 1
         row, col = self.write_thank_you_headers(worksheet, centered_cell_format, row, 0)

@@ -53,6 +53,7 @@ class Category(models.Model):
     slug = models.SlugField(
         blank=True, unique=True, verbose_name="Slug", max_length=300, db_index=True
     )
+    display_order = models.IntegerField(default=0, db_index=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -84,6 +85,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Категорија"
         verbose_name_plural = "Категории"
+        ordering = ["display_order"]
 
 
 class Product(BaseProduct):

@@ -7,6 +7,10 @@ button[disabled] {
     @apply opacity-50;
 }
 
+.widget-visible {
+    z-index: 20 !important;
+}
+
 .shop-container {
     @apply container mx-auto p-4 break-words;
     @apply xl:max-w-[1200px];
@@ -20,7 +24,7 @@ button[disabled] {
 }
 
 .shop-container--headerContent {
-    @apply container mx-auto px-4 pb-4 pt-9;
+    @apply container mx-auto px-4 pb-4 pt-5 md:pt-9;
     @apply xl:max-w-[1142px];
 }
 

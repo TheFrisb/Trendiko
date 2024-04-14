@@ -19,6 +19,9 @@ def change_reserved_items_status_on_order_status_change(sender, instance, **kwar
 
     apply_status = None
 
+    # # get current order status
+    # if Order.objects.get(pk=instance.pk).status == Order.OrderStatus.DELETED and instance.status in [Order.OrderStatus.PENDING, Order.OrderStatus.CONFIRMED]:
+
     if instance.status == Order.OrderStatus.DELETED:
         apply_status = ReservedStockItem.Status.ARCHIVED
     elif instance.status in [Order.OrderStatus.PENDING, Order.OrderStatus.CONFIRMED]:

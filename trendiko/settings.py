@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "ckeditor",
     "ckeditor_uploader",
     "django_crontab",
+    "adminsortable2",
     # Local apps
     "common.apps.CommonConfig",
     "shop.apps.ShopConfig",
