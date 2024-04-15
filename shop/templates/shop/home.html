@@ -3,7 +3,10 @@
 
 {% block content %}
     <!-- Promoted category -->
-    <div class="rounded-lg bg-brand-secondary group hover:-translate-y-1 transition-all duration-200 ease-in-out cursor-pointer group">
+    <div class="rounded-lg bg-brand-secondary group hover:-translate-y-1 transition-all duration-200 ease-in-out cursor-pointer group"
+            {% if promotion_category.css %}
+         style="{{ promotion_category.css }}"
+            {% endif %}>
         <a href="{{ promotion_category.get_absolute_url }}" class="p-5 relative block">
             <div class="h-full flex flex-col items-start justify-between w-7/12">
                 <div class="flex flex-col justify-start items-start pb-28 gap-4">
