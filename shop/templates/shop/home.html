@@ -16,6 +16,9 @@
                             {% endif %}>{{ promotion_category.name }}</h1>
                     {% if promotion_category.promotion_text %}
                         <p class="text-sm  leading-7"
+                                {% if promotion_category.promotion_text_css %}
+                           style="{{ promotion_category.promotion_text_css }}"
+                                {% endif %}
                         >{{ promotion_category.promotion_text }}</p>
                     {% endif %}
                 </div>

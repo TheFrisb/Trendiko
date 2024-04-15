@@ -173,7 +173,12 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
             "CSS",
             {
                 "classes": ("collapse",),
-                "fields": ("banner_css", "headline_css", "discount_bar_css"),
+                "fields": (
+                    "banner_css",
+                    "headline_css",
+                    "promotion_text_css",
+                    "discount_bar_css",
+                ),
             },
         ),
     )
