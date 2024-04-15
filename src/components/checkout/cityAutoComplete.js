@@ -76,7 +76,7 @@ const cityAutocompleteJs = new autoComplete({
         const selection = event.detail.selection.value.cyrillic;
         cityAutocompleteJs.input.value = selection;
 
-        if (selection === "Skopje") {
+        if (selection === "Скопје") {
           municipalityContainer.classList.remove("hidden");
           municipalityInput.setAttribute("required", "required");
           municipalityInput.removeAttribute("disabled")
