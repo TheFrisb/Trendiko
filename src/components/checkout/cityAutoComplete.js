@@ -73,7 +73,7 @@ const cityAutocompleteJs = new autoComplete({
   events: {
     input: {
       selection: (event) => {
-        const selection = event.detail.selection.value.latin;
+        const selection = event.detail.selection.value.cyrillic;
         cityAutocompleteJs.input.value = selection;
 
         if (selection === "Skopje") {
@@ -89,7 +89,7 @@ const cityAutocompleteJs = new autoComplete({
       focus() {
         const inputValue = cityAutocompleteJs.input.value;
         if (inputValue.length) cityAutocompleteJs.start();
-         
+
       },
       blur: () => { // Adding a blur event
         const inputValue = cityAutocompleteJs.input.value;
@@ -150,7 +150,7 @@ const municipalityAutocompleteJs = new autoComplete({
   events: {
     input: {
       selection: (event) => {
-        const selection = event.detail.selection.value.latin;
+        const selection = event.detail.selection.value.cyrillic;
         municipalityAutocompleteJs.input.value = selection;
       },
       focus() {

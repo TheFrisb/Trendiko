@@ -383,7 +383,7 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
         """
         if value:
             city = value
-            if city not in [c["latin"] for c in SUPPORTED_CITIES]:
+            if city not in [c["cyrillic"] for c in SUPPORTED_CITIES]:
                 raise ValueError({"city": "Одберете го вашиот град од листата"})
             return city
         else:
@@ -399,7 +399,7 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
             return None
 
         municipality = value
-        if municipality not in [c["latin"] for c in SUPPORTED_MUNICIPALITIES]:
+        if municipality not in [c["cyrillic"] for c in SUPPORTED_MUNICIPALITIES]:
             raise ValueError({"municipality": "Одберете ја вашата општина од листата"})
         return municipality
 

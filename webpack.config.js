@@ -7,7 +7,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'static/bundles'),  // Output directory
-    filename: '[name].bundle.js',  // Output bundle name, based on the entry point key
+    filename: '[name]_v2.bundle.js',  // Output bundle name, based on the entry point key
   },
   module: {
     rules: [
