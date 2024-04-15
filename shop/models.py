@@ -45,6 +45,16 @@ class Category(models.Model):
         options={"quality": IMAGE_QUALITY},
     )
 
+    background_image = ProcessedImageField(
+        upload_to="categories/%Y/%m/%d/",
+        format="WEBP",
+        options={"quality": IMAGE_QUALITY},
+        null=True,
+        blank=True,
+        verbose_name="Позадинска слика",
+    )
+    css = models.TextField(null=True, blank=True, verbose_name="CSS")
+
     is_on_promotion = models.BooleanField(default=False, verbose_name="Промоција")
     max_discount = models.PositiveIntegerField(verbose_name="Максимален попуст")
     is_default = models.BooleanField(

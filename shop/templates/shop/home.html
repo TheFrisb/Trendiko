@@ -68,7 +68,11 @@
     <!-- Category list -->
     <div class="grid grid-cols-1 gap-y-5 md:grid-cols-2 md:gap-x-5">
         {% for category in categories %}
-            <div class="rounded-lg bg-brand-secondary group hover:-translate-y-1 transition-all duration-200 ease-in-out cursor-pointer">
+            <div class="rounded-lg bg-brand-secondary group hover:-translate-y-1 transition-all duration-200 ease-in-out cursor-pointer"
+                    {% if category.css %}
+                 style="{{ category.css }}"
+                    {% endif %}
+            >
                 <a href="{{ category.get_absolute_url }}" class="p-5 relative block">
                     <div class="h-full flex flex-col items-start justify-between w-7/12">
                         <div class="flex flex-col justify-start items-start pb-20 gap-4">
