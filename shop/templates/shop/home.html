@@ -13,7 +13,7 @@
                     <h1 class="font-bold text-[2.5rem] leading-10 group-hover:text-brand-action break-all">{{ promotion_category.name }}</h1>
                     {% if promotion_category.promotion_text %}
                         <p class="text-sm  leading-7"
-                                {% if promotion.headline_css %}
+                                {% if promotion_category.headline_css %}
                            style="{{ promotion_category.headline_css }}"
                                 {% endif %}
                         >{{ promotion_category.promotion_text }}</p>
