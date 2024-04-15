@@ -1,7 +1,9 @@
+from django.utils.timezone import now
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from cart.models import Order
 from common.exceptions import OutOfStockException
 from shop_manager.serializers import (
     ChangeOrderStatusSerializer,
@@ -17,7 +19,16 @@ class ChangeOrderStatus(APIView):
         serializer = ChangeOrderStatusSerializer(data=request.data)
         if serializer.is_valid():
             order = serializer.validated_data["order"]
-            order.status = serializer.validated_data["new_status"]
+            new_status = serializer.validated_data["new_status"]
+
+            if (
+                order.status == Order.OrderStatus.DELETED
+                and new_status != Order.OrderStatus.DELETED
+            ):
+                order.exportable_date = now()
+
+            order.status = new_status
+
             try:
                 order.save()
             except ValueError as exc:

@@ -9,6 +9,7 @@ from django.db import models
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 from weasyprint import HTML
 
@@ -237,11 +238,12 @@ class Order(TimeStampedModel, LoggableModel):
         db_index=True,
     )
     shipping_price = models.IntegerField(default=130)
-    has_free_shipping = models.BooleanField(default=False)
     subtotal_price = models.IntegerField(default=0)
     total_price = models.IntegerField(default=0)
     tracking_number = models.CharField(max_length=100, unique=True, db_index=True)
+    has_free_shipping = models.BooleanField(default=False)
     mail_is_sent = models.BooleanField(default=False)
+    exportable_date = models.DateTimeField(default=now)
 
     def get_absolute_url(self):
         """

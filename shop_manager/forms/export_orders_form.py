@@ -120,7 +120,7 @@ class ExportOrdersForm(forms.Form):
             worksheet.write(row, 0, data["stock_item"].label, centered_cell_format)
             worksheet.write(row, 1, data["quantity"], centered_cell_format)
             worksheet.write(
-                row, 2, data["import_item"].price_no_vat, centered_cell_format
+                row, 2, data["import_item"].price_vat_and_customs, centered_cell_format
             )
             worksheet.write_formula(
                 row,
@@ -166,7 +166,7 @@ class ExportOrdersForm(forms.Form):
             stock_worksheet.write(row, 3, data["stock_item"].sku, centered_cell_format)
             stock_worksheet.write(row, 4, data["quantity"], centered_cell_format)
             stock_worksheet.write(
-                row, 5, data["import_item"].price_no_vat, centered_cell_format
+                row, 5, data["import_item"].price_vat_and_customs, centered_cell_format
             )
             # write this field with formula of previous cell * this new cell
             stock_worksheet.write_formula(
