@@ -4,15 +4,19 @@
 {% block content %}
     <!-- Promoted category -->
     <div class="rounded-lg bg-brand-secondary group hover:-translate-y-1 transition-all duration-200 ease-in-out cursor-pointer group"
-            {% if promotion_category.css %}
-         style="{{ promotion_category.css }}"
+            {% if promotion_category.banner_css %}
+         style="{{ promotion_category.banner_css }}"
             {% endif %}>
         <a href="{{ promotion_category.get_absolute_url }}" class="p-5 relative block">
-            <div class="h-full flex flex-col items-start justify-between w-7/12">
+            <div class="h-full flex flex-col items-start justify-between w-10/12">
                 <div class="flex flex-col justify-start items-start pb-28 gap-4">
-                    <h1 class="font-bold text-[2.5rem] leading-10 group-hover:text-brand-action break-words">{{ promotion_category.name }}</h1>
-                    {% if promotion.promotion_text %}
-                        <p class="text-sm  leading-7">{{ promotion_category.promotion_text }}</p>
+                    <h1 class="font-bold text-[2.5rem] leading-10 group-hover:text-brand-action break-all">{{ promotion_category.name }}</h1>
+                    {% if promotion_category.promotion_text %}
+                        <p class="text-sm  leading-7"
+                                {% if promotion.headline_css %}
+                           style="{{ promotion_category.headline_css }}"
+                                {% endif %}
+                        >{{ promotion_category.promotion_text }}</p>
                     {% endif %}
                 </div>
                 <img src="{% static 'common/assets/brand/logo-trendiko-arrow.png' %}"
@@ -31,7 +35,11 @@
 
                     </div>
                 {% endif %}
-                <div class="flex flex-col items-center justify-center bg-brand-accent rounded-lg z-20 absolute -top-16 -right-2 p-1.5">
+                <div class="flex flex-col items-center justify-center bg-brand-accent rounded-lg z-20 absolute -top-16 -right-2 p-1.5"
+                        {% if promotion_category.discount_bar_css %}
+                     style="{{ promotion_category.discount_bar_css }}"
+                        {% endif %}
+                >
                     <span class="text-2xl text-center">До</span>
                     <span class="text-2xl text-center">-{{ promotion_category.max_discount }}%</span>
                 </div>
@@ -72,14 +80,18 @@
     <div class="grid grid-cols-1 gap-y-5 md:grid-cols-2 md:gap-x-5">
         {% for category in categories %}
             <div class="rounded-lg bg-brand-secondary group hover:-translate-y-1 transition-all duration-200 ease-in-out cursor-pointer"
-                    {% if category.css %}
-                 style="{{ category.css }}"
+                    {% if category.banner_css %}
+                 style="{{ category.banner_css }}"
                     {% endif %}
             >
                 <a href="{{ category.get_absolute_url }}" class="p-5 relative block">
                     <div class="h-full flex flex-col items-start justify-between w-7/12">
                         <div class="flex flex-col justify-start items-start pb-20 gap-4">
-                            <p class="font-bold text-black text-lg leading-6 group-hover:text-brand-action break-words">{{ category.name }}</p>
+                            <p class="font-bold text-black text-lg leading-6 group-hover:text-brand-action break-all"
+                                    {% if category.headline_css %}
+                               style="{{ category.headline_css }}"
+                                    {% endif %}
+                            >{{ category.name }}</p>
                         </div>
                         <div class="flex items-center justify-start gap-1">
                             <p href="{% url 'shop:category_page' slug=category.slug %}"
@@ -101,7 +113,11 @@
                                 </picture>
 
                             </div>
-                            <div class="flex flex-col items-center justify-center bg-brand-accent rounded-lg z-20 absolute -top-10 -right-11 p-1.5">
+                            <div class="flex flex-col items-center justify-center bg-brand-accent rounded-lg z-20 absolute -top-10 -right-11 p-1.5"
+                                    {% if category.discount_bar_css %}
+                                 style="{{ category.discount_bar_css }}"
+                                    {% endif %}
+                            >
                                 <span class="text-2xl text-center">До</span>
                                 <span class="text-2xl text-center">-{{ category.max_discount }}%</span>
                             </div>

@@ -53,7 +53,15 @@ class Category(models.Model):
         blank=True,
         verbose_name="Позадинска слика",
     )
-    css = models.TextField(null=True, blank=True, verbose_name="CSS (стави !important)")
+    banner_css = models.TextField(
+        null=True, blank=True, verbose_name="Banner CSS (стави !important)"
+    )
+    headline_css = models.TextField(
+        null=True, blank=True, verbose_name="Headline CSS (стави !important)"
+    )
+    discount_bar_css = models.TextField(
+        null=True, blank=True, verbose_name="Discount Bar CSS (стави !important)"
+    )
 
     is_on_promotion = models.BooleanField(default=False, verbose_name="Промоција")
     max_discount = models.PositiveIntegerField(verbose_name="Максимален попуст")

@@ -153,6 +153,31 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
     search_fields = ["name"]
     prepopulated_fields = {"slug": ("name",)}
 
+    # group parent_css, div_css
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "promotion_text",
+                    "promotion_image",
+                    "is_on_promotion",
+                    "is_default",
+                    "max_discount",
+                    "slug",
+                )
+            },
+        ),
+        (
+            "CSS",
+            {
+                "classes": ("collapse",),
+                "fields": ("banner_css", "headline_css", "discount_bar_css"),
+            },
+        ),
+    )
+
     def delete_model(self, request, obj):
         if not obj.is_default:
             obj.delete()
