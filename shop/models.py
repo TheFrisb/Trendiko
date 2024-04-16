@@ -65,6 +65,12 @@ class Category(models.Model):
     promotion_text_css = models.TextField(
         null=True, blank=True, verbose_name="Promotion Text CSS (стави !important)"
     )
+    link_css = models.TextField(
+        null=True, blank=True, verbose_name="Link CSS (стави !important)"
+    )
+    show_logo_icon = models.BooleanField(
+        default=True, verbose_name="Прикажи лого икона (на промотивна категорија)"
+    )
 
     is_on_promotion = models.BooleanField(default=False, verbose_name="Промоција")
     max_discount = models.PositiveIntegerField(verbose_name="Максимален попуст")

@@ -24,6 +24,9 @@
                 </div>
                 <img src="{% static 'common/assets/brand/logo-trendiko-arrow.png' %}"
                      alt="Trendiko's brand secondary logo"
+                        {% if not promotion_category.show_logo_icon %}
+                     style="visibility: hidden!important;"
+                        {% endif %}
                      class="w-8 h-auto">
             </div>
             <div class="absolute bottom-12 right-12">
@@ -96,11 +99,15 @@
                                     {% endif %}
                             >{{ category.name }}</p>
                         </div>
-                        <div class="flex items-center justify-start gap-1">
+                        <div class="flex items-center justify-start gap-1 text-brand-action"
+                                {% if category.link_css %}
+                             style="{{ category.link_css }}"
+                                {% endif %}
+                        >
                             <p href="{% url 'shop:category_page' slug=category.slug %}"
-                               class="text-brand-action group-hover:font-bold">Види
+                               class="group-hover:font-bold">Види
                                 производи</p>
-                            <svg class="text-white" width="26" height="26" fill="currentColor">
+                            <svg class="" width="26" height="26" fill="currentColor">
                                 <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#linkArrow"></use>
                             </svg>
                         </div>
