@@ -71,6 +71,7 @@ class ShopManagerHome(ShopManagerRequiredMixin, BaseDashboardView):
         ] = f"{dict(Order.OrderStatus.choices)[self.status]} нарачки".capitalize()
         context["export_orders_form"] = ExportOrdersForm()
         context["OrderStatuses"] = Order.OrderStatus
+        context["url_param"] = f"status={self.status}"
         return context
 
 

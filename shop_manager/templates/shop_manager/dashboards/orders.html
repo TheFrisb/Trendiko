@@ -1,6 +1,6 @@
 {% extends 'shop_manager/base.html' %}
 {% load static %}
-
+{% load tz %}
 {% block dashboard %}
     <div class="py-4 px-4 lg:px-8 flex flex-col items-start gap-4">
         <div class="p-4 w-full bg-white rounded-xl shadow-md flex flex-col gap-4 ">
@@ -20,6 +20,10 @@
                 {% for order in page_obj %}
                     <tr class="border-b-2 border-gray-200">
                         <td class="table_field">
+                            {% timezone "Europe/Berlin" %}
+                                {{ order.created_at|date:"d.m.Y H:i:s" }}
+                            {% endtimezone %}
+                            <br>
                             {{ order.shipping_details.first_name }} {{ order.shipping_details.last_name }}
                             <br>
                             {{ order.shipping_details.address }}

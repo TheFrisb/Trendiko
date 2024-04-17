@@ -1,7 +1,7 @@
 <div class="flex items-center gap-1">
-
     {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}" class="paginator-arrow">
+        <a href="?page={{ page_obj.previous_page_number }}{% if url_param %}&{{ url_param }}{% endif %}"
+           class="paginator-arrow">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                  class="lucide lucide-chevron-left-square">
@@ -11,7 +11,7 @@
         </a>
 
         {% if page_obj.number > 3 %}
-            <a href="?page=1" class="paginator-number">1</a>
+            <a href="?page=1{% if url_param %}&{{ url_param }}{% endif %}" class="paginator-number">1</a>
             {% if page_obj.number > 4 %}
                 <span>...</span>
             {% endif %}
@@ -20,23 +20,26 @@
 
     {% for num in page_obj.paginator.page_range %}
         {% if page_obj.number == num %}
-            <a href="?page={{ num }}" class="paginator-number active">{{ num }}</a>
+            <a href="?page={{ num }}{% if url_param %}&{{ url_param }}{% endif %}"
+               class="paginator-number active">{{ num }}</a>
         {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-            <a href="?page={{ num }}" class="paginator-number">{{ num }}</a>
+            <a href="?page={{ num }}{% if url_param %}&{{ url_param }}{% endif %}"
+               class="paginator-number">{{ num }}</a>
         {% endif %}
     {% endfor %}
 
     {% if page_obj.has_next %}
         {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
             <span>...</span>
-            <a href="?page={{ page_obj.paginator.num_pages }}"
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if url_param %}&{{ url_param }}{% endif %}"
                class="paginator-number">{{ page_obj.paginator.num_pages }}</a>
         {% elif page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
-            <a href="?page={{ page_obj.paginator.num_pages }}"
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if url_param %}&{{ url_param }}{% endif %}"
                class="paginator-number">{{ page_obj.paginator.num_pages }}</a>
         {% endif %}
 
-        <a href="?page={{ page_obj.next_page_number }}" class="paginator-arrow">
+        <a href="?page={{ page_obj.next_page_number }}{% if url_param %}&{{ url_param }}{% endif %}"
+           class="paginator-arrow">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                  class="lucide lucide-chevron-right-square">
