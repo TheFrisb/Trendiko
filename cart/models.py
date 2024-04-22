@@ -441,6 +441,7 @@ class OrderItem(TimeStampedModel):
     promotion_type = models.CharField(
         max_length=25, choices=PromotionType, default=None, null=True, blank=True
     )
+    rabat = models.IntegerField(default=0)
 
     @property
     def get_thumbnail_loops(self):

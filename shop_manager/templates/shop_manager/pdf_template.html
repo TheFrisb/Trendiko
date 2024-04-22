@@ -118,11 +118,7 @@
                 <td>бр</td>
                 <td>{{ item.quantity|floatformat:2 }}</td>
                 <td>
-                    {% if item.promotion_type == 'thank_you' %}
-                        10%
-                    {% else %}
-                        0%
-                    {% endif %}
+                    {{ item.rabat }}
                 </td>
                 <td>0%</td>
                 <td>{{ item.total_price|floatformat:2 }}</td>

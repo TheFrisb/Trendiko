@@ -199,6 +199,7 @@ class CheckoutService:
                 attribute=copy_order_item.attribute,
                 stock_item=copy_order_item.stock_item,
                 promotion_type=OrderItem.PromotionType.THANK_YOU,
+                rabat=10,
             )
 
         try:
