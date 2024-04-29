@@ -125,7 +125,7 @@ class ProductImageInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     form = ProductAdminForm
     autocomplete_fields = ["stock_item"]
-    list_display = ["status", "title", "sale_price", "get_stock_item_stock"]
+    list_display = ["title", "sale_price", "get_stock_item_stock"]
     list_filter = ["status", "type", "categories", "stock_item"]
     search_fields = ["title", "stock_item__sku", "stock_item__label"]
     inlines = [
