@@ -42,6 +42,7 @@ class HomeView(FetchCategoriesMixin, TemplateView):
                     "redirect_slug": "besplatna-dostava",
                 },
                 "title": "Почетна",
+                "page_description": "Загарантирана сатисфакција и квалитет",
             }
         )
         return context
@@ -88,6 +89,7 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
         }
         context["show_call_button"] = True
         context["scheduled_delivery_dates"] = self.get_scheduled_delivery_dates()
+        context["page_description"] = self.object.title
         return context
 
     def get_scheduled_delivery_dates(self):
@@ -132,6 +134,7 @@ class CategoryListView(FetchCategoriesMixin, ListView):
             "empty_message"
         ] = f"Немаме производи на залиха од оваа категорија во моментот."
         context["heading"] = self.category.name
+        context["page_description"] = self.category.name
         return context
 
 
@@ -203,6 +206,7 @@ class ThankYouDetailView(FetchCategoriesMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Ви благодариме"
         context["promotion_product"] = self.object.make_thank_you_product()
+        context["page_description"] = "Ви благодариме на порачката!"
         return context
 
 
@@ -224,4 +228,5 @@ class BrandPageDetailView(FetchCategoriesMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = self.object.title
+        context["page_description"] = "Trendiko.mk"
         return context
