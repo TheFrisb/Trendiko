@@ -21,6 +21,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 
 from common.sitemap import ProductSitemap, StaticViewSitemap, CategorySitemap
+from common.views import robots_txt
 
 sitemaps = {
     "products": ProductSitemap,
@@ -46,6 +47,7 @@ urlpatterns = [
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
     ),
+    path("robots.txt", robots_txt),
 ]
 
 if settings.DEBUG:
