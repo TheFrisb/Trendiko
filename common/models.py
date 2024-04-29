@@ -92,3 +92,14 @@ class MailSubscription(TimeStampedModel):
 
     def __str__(self):
         return self.email
+
+
+class GlobalCSS(TimeStampedModel):
+    css = models.TextField(verbose_name="CSS")
+
+    class Meta:
+        verbose_name = "CSS"
+        verbose_name_plural = "CSS"
+
+    def __str__(self):
+        return f"CSS: {self.updated_at}"

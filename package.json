@@ -23,6 +23,7 @@
     "webpack-build": "webpack --mode production"
   },
   "dependencies": {
+    "codemirror": "^6.0.1",
     "notyf": "^3.10.0"
   }
 }

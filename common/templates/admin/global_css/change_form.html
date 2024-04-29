@@ -1,0 +1,29 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/codemirror.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/theme/material.css">
+    <style>
+        .CodeMirror {
+            min-width: 720px !important;
+            border-radius: 8px;
+        }
+    </style>
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/css/css.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var cssEditor = CodeMirror.fromTextArea(document.getElementById("id_css"), {
+          lineNumbers: true,
+          mode: 'css',
+          theme: 'material',
+        });
+      });
+
+    </script>
+{% endblock %}

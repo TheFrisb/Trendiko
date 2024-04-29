@@ -28,6 +28,11 @@
         }
     </style>
 
+    {% if global_css %}
+        <style>
+            {{ global_css.css }}
+        </style>
+    {% endif %}
     <!-- Meta Pixel Code -->
     <script>
       !function (f, b, e, v, n, t, s) {
