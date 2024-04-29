@@ -125,13 +125,7 @@ class ProductImageInline(admin.TabularInline):
 class ProductAdmin(admin.ModelAdmin):
     form = ProductAdminForm
     autocomplete_fields = ["stock_item"]
-    list_display = [
-        "title",
-        "status",
-        "type",
-        "regular_price",
-        "sale_price",
-    ]
+    list_display = ["status", "title", "sale_price", "get_stock_item_stock"]
     list_filter = ["status", "type", "categories", "stock_item"]
     search_fields = ["title", "stock_item__sku", "stock_item__label"]
     inlines = [
@@ -142,8 +136,15 @@ class ProductAdmin(admin.ModelAdmin):
     ]
     readonly_fields = ["slug"]
 
-    class Meta:
-        model = Product
+    def get_stock_item_stock(self, obj):
+        return obj.stock_item.stock if obj.stock_item else None
+
+    get_stock_item_stock.short_description = "Stock"
+    get_stock_item_stock.admin_order_field = "stock_item__stock"
+
+
+class Meta:
+    model = Product
 
 
 @admin.register(Category)

@@ -22,14 +22,11 @@ Cost: 12 hours
 3. Misc
 
 * Besplatna dostava nad 1500 den na product page da pise
-* Predvidena isporaka nedela da ne go prikazuva kako den
-* Vo proizvodi admin, da pise samo sale price i momentalna zaliha, regular price da se izbrise
 
 Cost: 3 hours
 + - - - - - - - - - - - - - - - - - +
 4. CSS & SEO
 
-* CSS da moze da se pise u head
 * Search Crawler i site angliski zborovi otstraneno. Podobreno SEO deka so moze za google
 
 Cost: 3 hours

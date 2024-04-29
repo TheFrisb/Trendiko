@@ -174,7 +174,9 @@ class AbandonedCartsDashboard(AbandonedCartsManagerRequiredMixin, BaseDashboardV
 
     def get_queryset(self):
         return (
-            Cart.objects.filter(status=Cart.CartStatus.ABANDONED)
+            Cart.objects.filter(
+                status=Cart.CartStatus.ABANDONED, abandoned_cart_details__isnull=False
+            )
             .select_related("abandoned_cart_details")
             .prefetch_related("cart_items")
             .order_by("-id")

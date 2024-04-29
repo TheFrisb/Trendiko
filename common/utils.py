@@ -70,9 +70,9 @@ def calculate_delivery_dates(current_day=None):
     delivery_intervals = {
         "Monday": (2, 4),
         "Tuesday": (2, 4),
-        "Wednesday": (2, 4),
+        "Wednesday": (2, 5),
         "Thursday": (2, 4),
-        "Friday": (2, 4),
+        "Friday": (3, 4),
         "Saturday": (2, 4),
         "Sunday": (2, 4),
     }
