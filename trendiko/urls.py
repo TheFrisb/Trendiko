@@ -17,13 +17,15 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include
 
+from common.sitemap import ProductSitemap, StaticViewSitemap, CategorySitemap
 
 sitemaps = {
-    # 'products': ProductSitemap,
-    # 'categories': CategorySitemap,
-    # 'static': StaticViewSitemap,
+    "products": ProductSitemap,
+    "categories": CategorySitemap,
+    "static": StaticViewSitemap,
 }
 
 urlpatterns = [
@@ -38,6 +40,12 @@ urlpatterns = [
     path("api/facebook/", include("facebook.urls")),
     # path("facebook/", include("facebook.urls")),
     path("", include("shop.urls")),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
 ]
 
 if settings.DEBUG:

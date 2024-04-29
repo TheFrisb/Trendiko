@@ -17,7 +17,7 @@ from common.models import TimeStampedModel, BaseProduct, SimplePage
 # Create your models here.
 
 
-class Category(models.Model):
+class Category(TimeStampedModel):
     name = models.CharField(max_length=200, verbose_name="Име")
     # parent = models.ForeignKey(
     #     "self",
@@ -425,6 +425,9 @@ class FrequentlyAskedQuestion(TimeStampedModel):
 
 
 class BrandPage(SimplePage):
+    def get_absolute_url(self):
+        return reverse("shop:brand_page", kwargs={"slug": self.slug})
+
     class Meta:
         verbose_name = "Информативна страница"
         verbose_name_plural = "Информативни страници"
