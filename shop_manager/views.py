@@ -1,4 +1,5 @@
 from django.http import FileResponse, HttpResponse, Http404
+from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView
 
@@ -186,3 +187,7 @@ class AbandonedCartsDashboard(AbandonedCartsManagerRequiredMixin, BaseDashboardV
         context = super().get_context_data(**kwargs)
         context["title"] = "Abandoned Carts"
         return context
+
+
+def test_pdf(request):
+    return render(request, "shop_manager/accountant_pdf.html")

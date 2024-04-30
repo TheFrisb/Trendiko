@@ -319,11 +319,17 @@
                     <p class="">Опис на производот</p>
                     <p class="toggle-icon">-</p>
                 </div>
+                <div id="description" class="canBeToggled">
+                    {{ product.description|safe }}
+                </div>
                 {% if product.technical_specifications %}
                     <div class="toggle"
                          data-content-id="technicalSpecifications">
                         <p class="">Технички спецификации</p>
                         <p class="toggle-icon">+</p>
+                    </div>
+                    <div id="technicalSpecifications" class="canBeToggled hidden">
+                        {{ product.technical_specifications|safe }}
                     </div>
                 {% endif %}
                 <div class="toggle"
@@ -331,19 +337,6 @@
                     <p class="">Често поставувани прашања</p>
                     <p class="toggle-icon">+</p>
                 </div>
-            </div>
-            <!-- End Product Toggles section -->
-
-            <!-- Product Toggle content section-->
-            <div class="">
-                <div id="description" class="canBeToggled">
-                    {{ product.description|safe }}
-                </div>
-                {% if product.techical_specifications %}
-                    <div id="technicalSpecifications" class="canBeToggled hidden">
-                        {{ product.technical_specifications|safe }}
-                    </div>
-                {% endif %}
                 <div id="faq" class="canBeToggled hidden flex flex-col gap-4">
                     {% for faqItem in product_misc_data.faq_items %}
                         <div class="faqItem flex flex-col gap-2 justify-start items-start w-full rounded-lg ">
@@ -360,6 +353,13 @@
                         </div>
                     {% endfor %}
                 </div>
+            </div>
+            <!-- End Product Toggles section -->
+
+            <!-- Product Toggle content section-->
+            <div class="">
+
+
             </div>
             <!-- End Product Toggle content section -->
 

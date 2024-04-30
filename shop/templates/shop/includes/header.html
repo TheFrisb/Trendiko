@@ -60,17 +60,28 @@
         {% endfor %}
     </div>
 </header>
+
 {% if show_call_button %}
-    <div class="sticky top-0 left-0 z-[100] w-full bg-brand-primary">
-        <a href="tel:+38971417444"
-           class="text-center font-bold text-white flex items-center justify-center gap-2 p-3 w-full md:hidden">НАРАЧАЈ
-            ТЕЛЕФОНСКИ
-            <svg class="text-white rotate-[260deg]" width="24" height="24" fill="currentColor">
-                <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#phone"></use>
-            </svg>
-        </a>
+    <div class="sticky top-0 left-0 z-[100] w-full bg-brand-secondary stickyBannerContainer">
+        <p
+                class="text-center font-bold flex items-center justify-center gap-2 p-1 pt-2 w-full md:hidden text-xs text-brand-action stickyBannerContainer__freeDeliveryText">
+            Бесплатна
+            достава над 1500 денари
+        </p>
+
+        <div class="w-full bg-brand-primary stickyBannerContainer__orderByPhone">
+            <a href="tel:+38971417444"
+               class="text-center font-bold text-white flex items-center justify-center gap-2 p-3 w-full md:hidden">НАРАЧАЈ
+                ТЕЛЕФОНСКИ
+                <svg class="text-white rotate-[260deg]" width="24" height="24" fill="currentColor">
+                    <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#phone"></use>
+                </svg>
+            </a>
+        </div>
+
     </div>
 {% endif %}
+
 <!-- Overlay -->
 <div class="container-fluid w-full h-full overflow-hidden fixed top-0 right-0 bg-brand-primary/80 z-[100]"
      id="sideCartOverlay">

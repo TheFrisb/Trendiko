@@ -12,7 +12,7 @@ class MailJetClient:
         data = {
             "Messages": [
                 {
-                    "From": {"Email": "info@trendiko.mk"},
+                    "From": {"Email": "hello@trendiko.mk"},
                     "To": [{"Email": recipient}],
                     "Subject": subject,
                     "TextPart": text_part,

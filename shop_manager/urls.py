@@ -9,6 +9,7 @@ from .views import (
     GenerateOrderInvoice,
     ExportInvoices,
     AbandonedCartsDashboard,
+    test_pdf,
 )
 
 app_name = "shop_manager"
@@ -44,4 +45,5 @@ urlpatterns = [
         "invoices/<int:order_id>/", GenerateOrderInvoice.as_view(), name="order_invoice"
     ),
     path("invoices/export/", ExportInvoices.as_view(), name="export-invoices"),
+    path("test-pdf/", test_pdf),
 ]

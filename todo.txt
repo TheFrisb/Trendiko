@@ -1,35 +1,7 @@
-2. Kreiranje faktura za golemoprodazba
-
-* Opcija za kreiranje na klient so informacii:
-- ime na firma ili ime na klient
-- telefonski broj opcionalen
-- grad
-* Da moze da se kreire poracka za taj klient specificno, deka so moze da se birat produktite, moze da se stava custom discount(rabat) i da se bira kolicina
-* Da ima tick box, za dali da se kreira faktura, so zavise od dali kliento plaka na fiskalna ili na faktura.
-* Vo export na dnevni naracki gi dava bez razlika dali e na fiskalna ili na faktura
-* Analitika za klient, deka so ke moze da se vidat detaili za porackite na taj klient, so prihod, dati, naracani proizvodi i kolicini
-
-Cost: 12 hours
-+ - - - - - - - - - - - - - - - - - +
-3. Misc
-
-* Besplatna dostava nad 1500 den na product page da pise
-
-Cost: 3 hours
-+ - - - - - - - - - - - - - - - - - +
-
-7. Izmena na cena na proizvod da se prake kaj smetkovoditelka vo ista forma kako izvestajot
-* PDF template za izvestajo
-* vtor mail account samo za smetkovoditelkata
-* Da se detektire promena na cena, i da se prake mejl.
-
-Cost: 4 hours
-+ - - - - - - - - - - - - - - - - - +
+5. Praki mejl na smetkovoditelkata
 --------------------------------------------------------------------------------------------------------------------
 12. Sredi pdf invoices da se zacuvuvat i da se gledat so nekoj endpoint
 13. Sredi export na pdf invoices po data
-15. Sredi thank you mailo da praka poraka + pdf invoice
-16. Sredi invoice qr code render
 16. Dodadi Cart Offers
 8. Refreshiri fb access token ako treba
 9. On order save, update se so treba i od admin

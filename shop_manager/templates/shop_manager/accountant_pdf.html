@@ -1,0 +1,112 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Document</title>
+
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 5mm;
+
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .flex-center-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        h1 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            border: 1px solid red;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f8f8f8;
+        }
+
+        th[rowspan] {
+            background-color: #e0e0e0;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        th[colspan], td {
+            text-align: center;
+        }
+
+        td {
+            font-size: 12px;
+        }
+
+    </style>
+</head>
+<body style="margin: 0; padding:0">
+<div class="flex-center-between border-bottom" style="padding: 20px 0">
+    <h1>Трендико Комерц</h1>
+    <img src="{% static 'common/assets/brand/logo-dark.png' %}" alt="" style="width: 100px; height: auto">
+</div>
+<table style="width:100%; border: 1px solid red; text-align: left!important">
+
+    <tr>
+        <th rowspan="2">Вид на стоката</th>
+        <th colspan="3">Стара цена</th>
+        <th colspan="3">Нова цена</th>
+        <th colspan="2">Разлика</th>
+    </tr>
+
+    <tr>
+        <th>Количевство</th>
+        <th>Цена</th>
+        <th>Износ ден.</th>
+        <th>Количевство</th>
+        <th>Цена</th>
+        <th>Износ ден.</th>
+        <th>Да се задолжи</th>
+        <th>Да се одобри</th>
+    </tr>
+
+    <tr>
+        <td>{{ product_title }}</td>
+        <td>{{ old_stock }}</td>
+        <td>{{ old_price }}</td>
+        <td>{{ old_total }}</td>
+        <td>{{ new_stock }}</td>
+        <td>{{ new_price }}</td>
+        <td>{{ new_total }}</td>
+        <td>
+            {% if old_price > new_price %}
+                {{ price_difference }}
+            {% endif %}
+        </td>
+        <td>
+            {% if old_price < new_price %}
+                {{ price_difference }}
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+
+</body>
+</html>

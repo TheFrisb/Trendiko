@@ -16,7 +16,7 @@
             <div class="h-full flex flex-col justify-between hover:scale-105 transition-transform duration-300 ease-in-out group ">
 
                 <div class="w-full flex flex-col gap-1.5 relative">
-                    {% if forloop.counter|divisibleby:2 and not product.isVariable %}
+                    {% if not product.isVariable %}
                         <div class="flex flex-col items-center justify-center bg-brand-accent rounded-lg absolute p-1.5 top-2 right-2 z-10">
                             <span class="text-center font-bold text-sm">-{{ product.get_discount }}%</span>
                         </div>

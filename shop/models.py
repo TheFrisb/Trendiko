@@ -267,6 +267,9 @@ class Product(BaseProduct):
     def get_absolute_url(self):
         return reverse("shop:product_page", kwargs={"slug": self.slug})
 
+    def get_product_title_for_accountant_invoice(self):
+        return self.title
+
     class Meta:
         verbose_name = "Производ"
         verbose_name_plural = "Производи"
@@ -365,6 +368,9 @@ class ProductAttribute(BaseProduct):
                 (self.regular_price - self.sale_price) / self.regular_price * 100
             )
         return 0
+
+    def get_product_title_for_accountant_invoice(self):
+        return f"{self.product.get_product_title_for_accountant_invoice()} - {self.title} {self.get_attribute_display(self.type)}"
 
     class Meta:
         verbose_name = "Атрибут"
