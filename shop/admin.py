@@ -157,7 +157,7 @@ class ProductAdmin(admin.ModelAdmin):
                 )
 
                 sendgrid_client.send_mail(
-                    "thefrisb@gmail.com",
+                    "pevkjevv@gmail.com",
                     f"{obj.get_product_title_for_accountant_invoice()} - Промена на цена",
                     "<strong>Во attachment</strong>",
                     pdf,
@@ -179,7 +179,7 @@ class ProductAdmin(admin.ModelAdmin):
                         )
                     )
                     sendgrid_client.send_mail(
-                        "thefrisb@gmail.com",
+                        "pevkjevv@gmail.com",
                         f"{instance.get_product_title_for_accountant_invoice()} - Промена на цена",
                         "<strong>Во attachment</strong>",
                         pdf,
