@@ -50,6 +50,7 @@
             </nav>
         </div>
     </div>
+
     <div class="flex flex-row items-center overflow-x-auto whitespace-nowrap shop-container--horizontalPadding gap-4"
          id="headerHorizontalCategoriesList">
         {% for category in categories %}
@@ -58,6 +59,12 @@
                 {{ category.name }}
             </a>
         {% endfor %}
+    </div>
+    <div class="w-full flex items-center justify-center">
+        <p class="text-xs font-bold pt-2 pb-1 text-brand-primary">Поради државните празници нарачките направени од 1-6ти
+            Мај ќе бидат доставени
+            во тековната
+            недела после 6ти Мај</p>
     </div>
 </header>
 
