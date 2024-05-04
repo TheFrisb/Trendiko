@@ -1,22 +1,23 @@
-5. Praki mejl na smetkovoditelkata
+celery -A trendiko worker --loglevel=info
+
+1. Introduce Redis
+2. Introduce Celery
+3. Fix order pdf creation to be actual file storage
+4. Make this a celery task
+5. Popraj PDF export da gi zima site fajlovi actual stored.
 --------------------------------------------------------------------------------------------------------------------
-12. Sredi pdf invoices da se zacuvuvat i da se gledat so nekoj endpoint
-13. Sredi export na pdf invoices po data
-16. Dodadi Cart Offers
-8. Refreshiri fb access token ako treba
-9. On order save, update se so treba i od admin
+1. Sredi Order ADMIN da e 100% funkcionalen
+2. Dodaj opcija za add na klient so informacii
+3. Razmisli tava so faktuurta so sakat
+4. Nek gi vade u dnevni naracki
+5. Analitika za klient
+
 --------------------------------------------------------------------------------------------------------------------
 Analytics:
-22. Make an analytics dashboard
-23. Update rows 2 hours
---------------------------------------------------------------------------------------------------------------------
-Miscellaneous:
-1. Implement CheckoutFees
-2. Ka ke kliknas od desktop na kategorija headero, daj opcija da skrolas.
-3. Podobri default drf rest api error messages.
-4. Podobri checkout error handling, so scrolling.
-8. Optimize all d stuff, make shit fun and fast baby
-9. One last overview
+1. Make an analytics dashboard
+2. Store campaings per product
+3. Create items per campaign
+4. Create rows per product, by fetching FB API and Order Items
 --------------------------------------------------------------------------------------------------------------------
 Facebook campaigns creation: Total should be 8 hours
 1. Implement UI - 3
@@ -24,6 +25,9 @@ Facebook campaigns creation: Total should be 8 hours
 3. Verify it works - 1
 4. Implement backend db storage - 1
 5. On Product Out Of Stock turn off Campaign
+
+
+
 
 
 

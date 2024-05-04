@@ -2,9 +2,10 @@
 
 {% block object-tools-items %}
     {{ block.super }}
-    <li>
-        <a href="{% url 'shop_manager:order_invoice' original.pk %}" class="historylink"
-           style="background-color: green;">Export
-            PDF Invoice</a>
-    </li>
+    {% if original.pdf_invoice %}
+        <li>
+            <a href="{% url 'shop_manager:order_invoice' original.pk %}" class="historylink"
+               style="background-color: green;">Export PDF Invoice</a>
+        </li>
+    {% endif %}
 {% endblock %}

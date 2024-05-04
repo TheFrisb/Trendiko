@@ -5,6 +5,7 @@ from io import BytesIO
 import barcode
 from barcode.writer import ImageWriter
 from django.conf import settings
+from django.core.files.base import ContentFile
 from django.db import models
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -14,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from weasyprint import HTML
 
 from common.models import TimeStampedModel, LoggableModel
+from common.storage import InvoicesStorage
 from shop.models import Product, ProductAttribute
 
 
@@ -244,6 +246,9 @@ class Order(TimeStampedModel, LoggableModel):
     has_free_shipping = models.BooleanField(default=False)
     mail_is_sent = models.BooleanField(default=False)
     exportable_date = models.DateTimeField(default=now)
+    pdf_invoice = models.FileField(
+        upload_to="invoices/%Y/%m/%d/", storage=InvoicesStorage(), null=True, blank=True
+    )
 
     def get_absolute_url(self):
         """
@@ -343,7 +348,7 @@ class Order(TimeStampedModel, LoggableModel):
     #
     #     self.invoice.save(pdf_file.name, pdf_file)
 
-    def generate_invoice_pdf(self, base_url, write_to=None, show_details=True):
+    def generate_invoice_pdf(self, show_details=True, as_file=True):
         context = {
             "order": self,
             "order_items": self.order_items.all(),
@@ -352,12 +357,23 @@ class Order(TimeStampedModel, LoggableModel):
         }
 
         html_string = render_to_string("shop_manager/pdf_template.html", context)
+        pdf_bytes = HTML(
+            string=html_string, base_url=settings.WEBSITE_BASE_URL
+        ).write_pdf()
 
-        if write_to:
-            HTML(string=html_string, base_url=base_url).write_pdf(target=write_to)
-            return write_to
+        if not as_file:
+            return pdf_bytes
 
-        return HTML(string=html_string, base_url=base_url).write_pdf()
+        pdf_file = BytesIO(pdf_bytes)
+        pdf_file_name = f"order-invoice-{self.id}.pdf"
+
+        if self.pdf_invoice:
+            self.pdf_invoice.delete(save=False)
+
+        self.pdf_invoice.save(pdf_file_name, ContentFile(pdf_file.getvalue()))
+        self.save()
+
+        return self.pdf_invoice.path
 
     def generate_barcode(self):
         barcode_content = self.make_barcode_content()

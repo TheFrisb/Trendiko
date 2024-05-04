@@ -5,6 +5,7 @@ from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 
 from cart.models import ShippingDetails, OrderItem, Order
+from cart.tasks import generate_invoice_and_send_email_to_order
 from common.exceptions import OutOfStockException
 from common.mailer.MailJetClient import MailJetClient
 from common.utils import get_ip_addr, get_user_agent
@@ -59,6 +60,10 @@ class CheckoutService:
         shipping_details = self.create_shipping_details(shipping_details, order)
 
         self.cart.delete()
+
+        generate_invoice_and_send_email_to_order.apply_async(
+            (order.id,), countdown=360
+        )  # 360 seconds = 6 minutes
 
         return order
 

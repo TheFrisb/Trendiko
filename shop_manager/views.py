@@ -130,13 +130,13 @@ class AnalyticsDashboard(AnalyticsManagerRequiredMixin, BaseDashboardView):
 
 class GenerateOrderInvoice(ShopManagerRequiredMixin, View):
     def get(self, request, order_id, *args, **kwargs):
-        pdf_file = self.generate_pdf(request, order_id)
+        pdf_file = self.fetch_pdf(request, order_id)
         filename = f"order_{order_id}_invoice.pdf"
         response = HttpResponse(pdf_file, content_type="application/pdf")
         response["Content-Disposition"] = f"attachment; filename={filename}"
         return response
 
-    def generate_pdf(self, request, order_id):
+    def fetch_pdf(self, request, order_id):
         order = (
             Order.objects.filter(id=order_id)
             .prefetch_related(
@@ -152,15 +152,15 @@ class GenerateOrderInvoice(ShopManagerRequiredMixin, View):
         if not order:
             raise Http404("Order does not exist")
 
-        return order.generate_invoice_pdf(request.build_absolute_uri())
+        return order.pdf_invoice
 
 
 class ExportInvoices(ShopManagerRequiredMixin, View):
     def post(self, request):
-        form = ExportInvoicesForm(request.POST, request.build_absolute_uri())
+        form = ExportInvoicesForm(request.POST)
         if form.is_valid():
             return FileResponse(
-                form.export_invoices(base_url=request.build_absolute_uri()),
+                form.export_invoices(),
                 as_attachment=True,
                 filename="invoices.pdf",
             )

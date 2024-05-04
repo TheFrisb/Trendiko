@@ -165,7 +165,7 @@ LOGGING = {
     },
     "loggers": {
         "": {
-            "handlers": ["file_warn", "file_error"],
+            "handlers": ["file_warn", "file_error", "console"],
             "level": "WARNING",
             "propagate": True,
         },
@@ -250,6 +250,12 @@ CRONJOBS = [
     ("0 0 * * *", "cart.cron.make_carts_abandoned"),
     ("*/3 * * * *", "cart.cron.send_email_to_orders_older_than_5_min"),
 ]
+
+# Celery configuration
+CELERY_BROKER_URL = config("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = config("CELERY_RESULT_BACKEND")
+CELERY_ACCEPT_CONTENT = config("CELERY_ACCEPT_CONTENT", cast=Csv())
+CELERY_TASK_SERIALIZER = config("CELERY_TASK_SERIALIZER")
 
 INVOICES_DIR = BASE_DIR / "invoices"
 

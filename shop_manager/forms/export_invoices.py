@@ -1,4 +1,3 @@
-import os
 import tempfile
 
 import PyPDF2
@@ -31,20 +30,15 @@ class ExportInvoicesForm(forms.Form):
         )
     )
 
-    def export_invoices(self, base_url):
+    def export_invoices(self):
         orders = self.get_orders()
 
         pdf_files = []
         combined_pdf = tempfile.NamedTemporaryFile(delete=False)
+        for order in orders:
+            pdf_files.append(order.pdf_invoice.path)
 
-        with tempfile.TemporaryDirectory() as temp_dir:
-            for order in orders:
-                file_name = f"{order.id}.pdf"
-                path = os.path.join(temp_dir, file_name)
-                pdf_file = order.generate_invoice_pdf(base_url=base_url, write_to=path)
-                pdf_files.append(pdf_file)
-
-            self.merge_pdfs(pdf_files, combined_pdf.name)
+        self.merge_pdfs(pdf_files, combined_pdf.name)
 
         return open(combined_pdf.name, "rb")
 
@@ -76,9 +70,7 @@ class ExportInvoicesForm(forms.Form):
         for path in pdf_paths:
             with open(path, "rb") as file:
                 pdf_reader = PyPDF2.PdfReader(file)
-                for page in range(
-                    len(pdf_reader.pages)
-                ):  # Updated to use len(reader.pages)
+                for page in range(len(pdf_reader.pages)):
                     pdf_writer.add_page(pdf_reader.pages[page])
 
         with open(output_path, "wb") as output_file:
