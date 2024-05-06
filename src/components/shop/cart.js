@@ -199,7 +199,7 @@ function createSideCartItem(cartItem) {
 
   const quantityInput = sideCartItemDiv.querySelector(".cartItem__quantityInput");
   const removeButton = sideCartItemDiv.querySelector(".cartItem__removeItem");
-  const cartItemId = cartItem.id;
+  const cartItemId = parseLocaleNumber(cartItem.id);
   attachCartItemInputListeners(quantityInput);
   removeButton.addEventListener("click", function () {
     removeCartItem(cartItemId);
@@ -248,7 +248,7 @@ function createCheckoutItem(cartItem) {
 
   const quantityInput = checkoutCartItemDiv.querySelector(".cartItem__quantityInput");
   const removeButton = checkoutCartItemDiv.querySelector(".cartItem__removeItem");
-  const cartItemId = cartItem.id;
+  const cartItemId = parseLocaleNumber(cartItem.id);
   attachCartItemInputListeners(quantityInput);
   removeButton.addEventListener("click", function () {
     removeCartItem(cartItemId);

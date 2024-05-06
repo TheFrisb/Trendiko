@@ -130,7 +130,7 @@ function initializeQuantityActions() {
 
   removeCartItemButtons.forEach(function (button) {
     button.addEventListener('click', function () {
-      const pk = button.closest('.cartItem').getAttribute('data-cart-item-id');
+      const pk = parseLocaleNumber(button.closest('.cartItem').getAttribute('data-cart-item-id'));
       removeCartItem(pk);
     });
   });
