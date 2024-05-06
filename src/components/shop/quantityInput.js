@@ -19,7 +19,7 @@ function updateQuantity(actionType, quantity) {
 }
 
 function updateCartItemQuantity(quantity, pk) {
-  HTTP.put(URLS.UPDATE_CART_ITEM_QUANTITY + `${parseLocaleNumber(pk)}/`, {quantity: parseLocaleNumber(quantity)}).then(response => {
+  HTTP.put(URLS.UPDATE_CART_ITEM_QUANTITY + `${pk}/`, {quantity: quantity}).then(response => {
     const data = response.data;
     if (response.success) {
       updateCart(data);
@@ -35,7 +35,7 @@ function updateCartItemQuantity(quantity, pk) {
 }
 
 function removeCartItem(pk) {
-  HTTP.delete(`${URLS.REMOVE_CART_ITEM}${parseLocaleNumber(pk)}`).then(response => {
+  HTTP.delete(`${URLS.REMOVE_CART_ITEM}${pk}`).then(response => {
     if (response) {
       removeCartItemElement(pk, response.data.has_free_shipping);
     }
@@ -75,7 +75,7 @@ function attachProductInputListeners(inputEl) {
 
 
 function attachCartItemInputListeners(inputEl) {
-  const pk = inputEl.closest('.cartItem').getAttribute('data-cart-item-id');
+  const pk = parseLocaleNumber(inputEl.closest('.cartItem').getAttribute('data-cart-item-id'));
   let incrementButton = inputEl.nextElementSibling;
   let decrementButton = inputEl.previousElementSibling;
   incrementButton.addEventListener('click', function () {

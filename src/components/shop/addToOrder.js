@@ -10,11 +10,11 @@ const orderShippingMethodContainer = document.getElementById('order__selectedShi
 
 function addToOrder(orderId, orderItemId, quantity, trackingCode, promotionPrice) {
   const data = {
-    order_id: parseLocaleNumber(orderId),
-    order_item_id: parseLocaleNumber(orderItemId),
-    quantity: parseLocaleNumber(quantity),
+    order_id: orderId,
+    order_item_id: orderItemId,
+    quantity: quantity,
     tracking_code: trackingCode,
-    promotion_price: parseLocaleNumber(promotionPrice)
+    promotion_price: promotionPrice
   }
 
   return HTTP.post(URLS.ADD_TO_ORDER, data)
@@ -66,9 +66,9 @@ function initializeAddToOrderButtons() {
   const addToOrderButtons = document.querySelectorAll('.addToOrderButton');
   addToOrderButtons.forEach(function (button) {
     button.addEventListener('click', function () {
-      const orderItemId = button.getAttribute('data-order-item-id');
-      const quantity = button.getAttribute('data-quantity');
-      const orderId = button.getAttribute('data-order-id');
+      const orderItemId = parseLocaleNumber(button.getAttribute('data-order-item-id'));
+      const quantity = parseLocaleNumber(button.getAttribute('data-quantity'));
+      const orderId = parseLocaleNumber(button.getAttribute('data-order-id'));
       const trackingCode = window.location.pathname.split('/')[2];
       const promotionPrice = parseLocaleNumber(button.getAttribute('data-promotion-price'));
 
