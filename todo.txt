@@ -11,7 +11,6 @@ celery -A trendiko worker --loglevel=info
 3. Razmisli tava so faktuurta so sakat
 4. Nek gi vade u dnevni naracki
 5. Analitika za klient
-
 --------------------------------------------------------------------------------------------------------------------
 Analytics:
 1. Make an analytics dashboard

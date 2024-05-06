@@ -10,11 +10,11 @@ const orderShippingMethodContainer = document.getElementById('order__selectedShi
 
 function addToOrder(orderId, orderItemId, quantity, trackingCode, promotionPrice) {
   const data = {
-    order_id: orderId,
-    order_item_id: orderItemId,
-    quantity: quantity,
+    order_id: parseLocaleNumber(orderId),
+    order_item_id: parseLocaleNumber(orderItemId),
+    quantity: parseLocaleNumber(quantity),
     tracking_code: trackingCode,
-    promotion_price: promotionPrice
+    promotion_price: parseLocaleNumber(promotionPrice)
   }
 
   return HTTP.post(URLS.ADD_TO_ORDER, data)

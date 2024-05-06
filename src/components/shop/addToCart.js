@@ -1,14 +1,15 @@
 import {HTTP, URLS} from "../../http/client";
 import {isSideCartActive, toggleCheckout, toggleSideCart, updateCart} from "./cart";
 import {notyf__short} from "../../utils/error";
+import {parseLocaleNumber} from "../../utils/numberFormatter";
 
 function addToCart(product_id, product_type, quantity, attributeId, isBuyNow) {
   if (attributeId === 'undefined' || attributeId === '') {
     attributeId = null;
   }
   const data = {
-    product_id: product_id,
-    attribute_id: attributeId,
+    product_id: parseLocaleNumber(product_id),
+    attribute_id: parseLocaleNumber(attributeId),
     product_type: product_type,
     quantity: quantity,
   }

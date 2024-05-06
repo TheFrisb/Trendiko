@@ -40,7 +40,7 @@ function updateUI(el, attributesContainer, chosenVariationText) {
 }
 
 function chooseAttribute(el, attributesContainer, addToCartButtons) {
-  const attributeId = el.getAttribute('data-attribute-id');
+  const attributeId = parseLocaleNumber(el.getAttribute('data-attribute-id'));
   const price = parseLocaleNumber(el.getAttribute('data-attribute-sale-price'));
   const chosenVariationText = el.getAttribute('data-attribute-name');
   addToCartButtons.forEach(function (button) {
