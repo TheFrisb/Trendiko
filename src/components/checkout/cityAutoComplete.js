@@ -73,10 +73,10 @@ const cityAutocompleteJs = new autoComplete({
   events: {
     input: {
       selection: (event) => {
-        const selection = event.detail.selection.value.cyrillic;
+        const selection = event.detail.selection.value.latin;
         cityAutocompleteJs.input.value = selection;
 
-        if (selection === "Скопје") {
+        if (selection === "Skopje") {
           municipalityContainer.classList.remove("hidden");
           municipalityInput.setAttribute("required", "required");
           municipalityInput.removeAttribute("disabled")
@@ -99,6 +99,7 @@ const cityAutocompleteJs = new autoComplete({
         for (let option of options) {
           if (inputValue === option.latin || inputValue === option.cyrillic) {
             isValidOption = true;
+            cityAutocompleteJs.close();
             break;
           }
         }
@@ -150,7 +151,7 @@ const municipalityAutocompleteJs = new autoComplete({
   events: {
     input: {
       selection: (event) => {
-        const selection = event.detail.selection.value.cyrillic;
+        const selection = event.detail.selection.value.latin;
         municipalityAutocompleteJs.input.value = selection;
       },
       focus() {
@@ -165,6 +166,7 @@ const municipalityAutocompleteJs = new autoComplete({
         for (let option of options) {
           if (inputValue === option.latin || inputValue === option.cyrillic) {
             isValidOption = true;
+            municipalityAutocompleteJs.close();
             break;
           }
         }

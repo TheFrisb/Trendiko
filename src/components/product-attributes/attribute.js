@@ -1,5 +1,5 @@
 import {updateStickyAddToCartBtnIfExists} from "../shop/stickyAddToCart";
-import {formatNumberToLocale, parseLocaleNumber} from "../../utils/numberFormatter";
+import {formatNumberToLocale} from "../../utils/numberFormatter";
 
 const mainProduct = document.querySelector('.mainProduct');
 const chosenVariationTextContainer = document.querySelector('#chosenVariationTextContainer');
@@ -11,8 +11,8 @@ let regularPriceEl = document.querySelector('#productMisc__regularPrice');
 // let chooseVariationBanner = document.querySelector('#chooseVariationBanner');
 
 function updatePrices(el) {
-  let currentSalePrice = parseLocaleNumber(el.getAttribute('data-attribute-sale-price'));
-  let currentRegularPrice = parseLocaleNumber(el.getAttribute('data-attribute-regular-price'));
+  let currentSalePrice = parseInt(el.getAttribute('data-attribute-sale-price'));
+  let currentRegularPrice = parseInt(el.getAttribute('data-attribute-regular-price'));
   let currentMoneySaved = currentRegularPrice - currentSalePrice;
   let currentPercentageSaved = Math.round((currentMoneySaved / currentRegularPrice) * 100);
 
@@ -40,8 +40,8 @@ function updateUI(el, attributesContainer, chosenVariationText) {
 }
 
 function chooseAttribute(el, attributesContainer, addToCartButtons) {
-  const attributeId = parseLocaleNumber(el.getAttribute('data-attribute-id'));
-  const price = parseLocaleNumber(el.getAttribute('data-attribute-sale-price'));
+  const attributeId = parseInt(el.getAttribute('data-attribute-id'));
+  const price = parseInt(el.getAttribute('data-attribute-sale-price'));
   const chosenVariationText = el.getAttribute('data-attribute-name');
   addToCartButtons.forEach(function (button) {
     button.setAttribute('data-attribute-id', attributeId);

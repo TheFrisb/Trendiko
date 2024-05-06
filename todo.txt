@@ -1,22 +1,23 @@
 celery -A trendiko worker --loglevel=info
 
-1. Introduce Redis
-2. Introduce Celery
-3. Fix order pdf creation to be actual file storage
-4. Make this a celery task
-5. Popraj PDF export da gi zima site fajlovi actual stored.
+
 --------------------------------------------------------------------------------------------------------------------
-1. Sredi Order ADMIN da e 100% funkcionalen
-2. Dodaj opcija za add na klient so informacii
-3. Razmisli tava so faktuurta so sakat
-4. Nek gi vade u dnevni naracki
-5. Analitika za klient
---------------------------------------------------------------------------------------------------------------------
-Analytics:
-1. Make an analytics dashboard
-2. Store campaings per product
-3. Create items per campaign
-4. Create rows per product, by fetching FB API and Order Items
+1. Sredi formatting problemo
+2. Vnesi narackite
+3. Sredi Order Admin da podrzuva custom orders so logika
+4. Dodaj opcija za add na klient so informacii
+5. Staj opcija za generacija na faktura boolean
+6. Nek gi vade u dnevni naracki
+7. Analitika za klient
+
+8. Make an analytics dashboard
+9. Store campaings per product
+10. Create items per campaign
+11. Create rows per product, by fetching FB API and Order Items
+
+12. Napraj management commands
+13. Iscisti celery workers
+14. Optimiziri google page speed
 --------------------------------------------------------------------------------------------------------------------
 Facebook campaigns creation: Total should be 8 hours
 1. Implement UI - 3

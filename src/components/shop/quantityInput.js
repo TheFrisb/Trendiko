@@ -1,7 +1,6 @@
 import {HTTP, URLS} from "../../http/client";
 import {removeCartItemElement, updateCart} from "./cart";
 import {notyf__short} from "../../utils/error";
-import {parseLocaleNumber} from "../../utils/numberFormatter";
 
 const ACTION_TYPES = {
   INCREMENT: 'INCREMENT',
@@ -60,13 +59,13 @@ function attachProductInputListeners(inputEl) {
 
 
   incrementButton.addEventListener('click', function () {
-    let quantity = parseLocaleNumber(inputEl.value)
+    let quantity = parseInt(inputEl.value)
     quantity = updateQuantity(ACTION_TYPES.INCREMENT, quantity);
     inputEl.value = quantity;
     updateAddToCartButtons(quantity);
   });
   decrementButton.addEventListener('click', function () {
-    let quantity = parseLocaleNumber(inputEl.value)
+    let quantity = parseInt(inputEl.value)
     quantity = updateQuantity(ACTION_TYPES.DECREMENT, quantity);
     inputEl.value = quantity;
     updateAddToCartButtons(quantity);
@@ -75,7 +74,7 @@ function attachProductInputListeners(inputEl) {
 
 
 function attachCartItemInputListeners(inputEl) {
-  const pk = parseLocaleNumber(inputEl.closest('.cartItem').getAttribute('data-cart-item-id'));
+  const pk = parseInt(inputEl.closest('.cartItem').getAttribute('data-cart-item-id'));
   let incrementButton = inputEl.nextElementSibling;
   let decrementButton = inputEl.previousElementSibling;
   incrementButton.addEventListener('click', function () {
@@ -130,7 +129,7 @@ function initializeQuantityActions() {
 
   removeCartItemButtons.forEach(function (button) {
     button.addEventListener('click', function () {
-      const pk = parseLocaleNumber(button.closest('.cartItem').getAttribute('data-cart-item-id'));
+      const pk = parseInt(button.closest('.cartItem').getAttribute('data-cart-item-id'));
       removeCartItem(pk);
     });
   });

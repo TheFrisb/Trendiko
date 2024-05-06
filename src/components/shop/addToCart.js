@@ -1,7 +1,6 @@
 import {HTTP, URLS} from "../../http/client";
 import {isSideCartActive, toggleCheckout, toggleSideCart, updateCart} from "./cart";
 import {notyf__short} from "../../utils/error";
-import {parseLocaleNumber} from "../../utils/numberFormatter";
 
 function addToCart(product_id, product_type, quantity, attributeId, isBuyNow) {
 
@@ -45,9 +44,9 @@ function initializeAddToCartButtons() {
   const addToCartButtons = document.querySelectorAll('.addToCartButton');
   addToCartButtons.forEach(function (button) {
     button.addEventListener('click', function () {
-      const product_id = parseLocaleNumber(button.getAttribute('data-product-id'));
+      const product_id = parseInt(button.getAttribute('data-product-id'));
       const product_type = button.getAttribute('data-product-type');
-      const quantity = parseLocaleNumber(button.getAttribute('data-quantity'));
+      const quantity = parseInt(button.getAttribute('data-quantity'));
       const attributeId = button.getAttribute('data-attribute-id');
       const isBuyNow = button.classList.contains('buyNowButton');
 

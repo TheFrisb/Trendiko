@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <header class="bg-brand-secondary overflow-x-hidden">
     <div class="flex flex-col items-center justify-center w-full bg-brand-primary">
         <div class="flex items-center justify-between shop-container--headerContent  rounded-b-lg">
@@ -142,7 +143,7 @@
                                     <p class="text-sm text-black/60">{{ cart_item.attribute.title }}</p>
                                 {% endif %}
                                 <p class="font-semibold text-brand-action my-2 leading-5"><span
-                                        class="cartItem__salePrice">{{ cart_item.sale_price }}</span>
+                                        class="cartItem__salePrice">{{ cart_item.sale_price|intcomma }}</span>
                                     ден</p>
                                 <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                     <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
@@ -231,7 +232,7 @@
                                 <p class="text-sm text-black/60">{{ cart_item.attribute.title }}</p>
                             {% endif %}
                             <p class="font-semibold text-brand-action my-2 leading-5"><span
-                                    class="cartItem__salePrice">{{ cart_item.sale_price }}</span>
+                                    class="cartItem__salePrice">{{ cart_item.sale_price|intcomma }}</span>
                                 ден</p>
                             <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
                                 <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
@@ -278,7 +279,7 @@
                     <div class="flex justify-between items-center">
                         <p class="text-sm text-left">Цена</p>
                         <p class="font-bold text-right"><span
-                                id="checkout__subtotalPrice">{{ cart.get_items_total }}</span> ден
+                                id="checkout__subtotalPrice">{{ cart.get_items_total|intcomma }}</span> ден
                         </p>
                     </div>
                     <div class="flex justify-between items-center">
@@ -298,7 +299,7 @@
                     <div class="flex justify-between items-center border-t border-black/40 py-2">
                         <p class="text-left">Вкупно за плаќање на курирот</p>
                         <p class="font-bold text-lg text-right min-w-[90px]"><span
-                                id="checkout__totalPrice">{{ cart.get_total_price }}</span>
+                                id="checkout__totalPrice">{{ cart.get_total_price|intcomma }}</span>
                             ден</p>
                     </div>
                 </div>

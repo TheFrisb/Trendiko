@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "django.contrib.humanize",
     #  Third party apps
     "rest_framework",
     "imagekit",
@@ -260,4 +261,4 @@ CELERY_TASK_SERIALIZER = config("CELERY_TASK_SERIALIZER")
 
 INVOICES_DIR = BASE_DIR / "invoices"
 
-USE_THOUSAND_SEPARATOR = True
+# USE_THOUSAND_SEPARATOR = True

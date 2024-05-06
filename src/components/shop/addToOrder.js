@@ -1,6 +1,6 @@
 import {HTTP, URLS} from "../../http/client";
 import {notyf__long, notyf__short} from "../../utils/error";
-import {formatNumberToLocale, parseLocaleNumber} from "../../utils/numberFormatter";
+import {formatNumberToLocale} from "../../utils/numberFormatter";
 
 const ordersTable = document.getElementById('ordersTable');
 const orderItemsContainer = document.getElementById('orderItemsContainer');
@@ -66,11 +66,11 @@ function initializeAddToOrderButtons() {
   const addToOrderButtons = document.querySelectorAll('.addToOrderButton');
   addToOrderButtons.forEach(function (button) {
     button.addEventListener('click', function () {
-      const orderItemId = parseLocaleNumber(button.getAttribute('data-order-item-id'));
-      const quantity = parseLocaleNumber(button.getAttribute('data-quantity'));
-      const orderId = parseLocaleNumber(button.getAttribute('data-order-id'));
+      const orderItemId = parseInt(button.getAttribute('data-order-item-id'));
+      const quantity = parseInt(button.getAttribute('data-quantity'));
+      const orderId = parseInt(button.getAttribute('data-order-id'));
       const trackingCode = window.location.pathname.split('/')[2];
-      const promotionPrice = parseLocaleNumber(button.getAttribute('data-promotion-price'));
+      const promotionPrice = parseInt(button.getAttribute('data-promotion-price'));
 
       const buttonText = button.querySelector('.buttonText');
       const buttonSpinner = button.querySelector('.buttonSpinner');

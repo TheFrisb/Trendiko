@@ -378,16 +378,21 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
     def validate_supported_city(self, value):
         """
         Validate the city
-        :param value: the city to be validated
-        :return: the validated city
+        :param value: the city in Latin to be validated
+        :return: the validated city in Cyrillic
         """
-        if value:
-            city = value
-            if city not in [c["cyrillic"] for c in SUPPORTED_CITIES]:
-                raise ValueError({"city": "Одберете го вашиот град од листата"})
-            return city
-        else:
+        if not value or value == "":
             raise ValueError({"city": "Полето град е задолжително поле"})
+
+        # Create a dictionary to map Latin names to Cyrillic names for cities
+        latin_to_cyrillic = {c["latin"]: c["cyrillic"] for c in SUPPORTED_CITIES}
+
+        # Retrieve the Cyrillic name using the provided Latin name
+        city_cyrillic = latin_to_cyrillic.get(value)
+        if not city_cyrillic:
+            raise ValueError({"city": "Одберете го вашиот град од листата"})
+
+        return city_cyrillic
 
     def validate_and_set_municipality(self, value):
         """
@@ -398,10 +403,17 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
         if not value or value == "":
             return None
 
-        municipality = value
-        if municipality not in [c["cyrillic"] for c in SUPPORTED_MUNICIPALITIES]:
+        # Create a dictionary to map Latin names to Cyrillic names
+        latin_to_cyrillic = {
+            m["latin"]: m["cyrillic"] for m in SUPPORTED_MUNICIPALITIES
+        }
+
+        # Check if the provided Latin name is in the dictionary
+        municipality_cyrillic = latin_to_cyrillic.get(value)
+        if not municipality_cyrillic:
             raise ValueError({"municipality": "Одберете ја вашата општина од листата"})
-        return municipality
+
+        return municipality_cyrillic
 
     def validate_and_set_email(self, value):
         """

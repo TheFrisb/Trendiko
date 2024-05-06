@@ -1,5 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load static %}
+{% load humanize %}
 {% block content %}
     <div>
         <a href="{% url 'shop:home' %}" class="text-sm font-bold hover:text-brand-action">Почетна ></a>
@@ -88,9 +89,10 @@
 
                     <div class="flex gap-2 justify-start items-baseline">
                         <p class="font-bold text-2xl text-brand-action"><span
-                                id="productMisc__salePrice">{{ product.attributes.first.sale_price }}</span> ден.</p>
+                                id="productMisc__salePrice">{{ product.attributes.first.sale_price|intcomma }}</span>
+                            ден.</p>
                         <p class="font-bold text-lg text-brand-gray line-through"><span
-                                id="productMisc__regularPrice">{{ product.attributes.first.regular_price }}</span>
+                                id="productMisc__regularPrice">{{ product.attributes.first.regular_price|intcomma }}</span>
                             ден</p>
                         <p class="ml-1 px-1.5 py-0.5 rounded-lg bg-brand-accent font-bold">
                             -<span
@@ -105,9 +107,9 @@
 
                     <div class="flex gap-2 justify-start items-baseline">
                         <p class="font-bold text-2xl text-brand-action"><span
-                                id="productMisc__salePrice">{{ product.sale_price }}</span> ден.</p>
+                                id="productMisc__salePrice">{{ product.sale_price|intcomma }}</span> ден.</p>
                         <p class="font-bold text-lg text-brand-gray line-through"><span
-                                id="productMisc__regularPrice">{{ product.regular_price }}</span>
+                                id="productMisc__regularPrice">{{ product.regular_price|intcomma }}</span>
                             ден</p>
                         <p class="ml-1 px-1.5 py-0.5 rounded-lg bg-brand-accent font-bold">
                             -<span id="productMisc__percentageSaved">{{ product_misc_data.money_saved_percent }}</span>%
@@ -143,8 +145,8 @@
                                         <p class="text-center highlight text-brand-action">{{ attribute.title }}</p>
                                         <p class="text-center">{{ attribute.value }}</p>
                                         <div class="flex items-center justify-center gap-2">
-                                            <p class="text-center highlight text-brand-action text-lg">{{ attribute.sale_price }}</p>
-                                            <p class="text-center line-through text-brand-gray">{{ attribute.regular_price }}</p>
+                                            <p class="text-center highlight text-brand-action text-lg">{{ attribute.sale_price|intcomma }}</p>
+                                            <p class="text-center line-through text-brand-gray">{{ attribute.regular_price|intcomma }}</p>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -500,9 +502,9 @@
                             <span
                                     id="stickyAddToCartContainer__currentPrice">
                                 {% if product.isVariable %}
-                                    {{ product.attributes.first.sale_price }}
+                                    {{ product.attributes.first.sale_price|intcomma }}
                                 {% else %}
-                                    {{ product.sale_price }}
+                                    {{ product.sale_price|intcomma }}
                                 {% endif %}
                             </span>
                             ден.</p>
