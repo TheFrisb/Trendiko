@@ -162,10 +162,11 @@ function removeCartItemElement(cartItemId, hasFreeShipping) {
 
 function createSideCartItem(cartItem) {
   const thumbnails = cartItem.thumbnails;
+  let formatted_id = formatNumberToLocale(cartItem.id);
   const sideCartItemDiv = document.createElement("div");
   const attributeTitleParagraph = cartItem.attribute_title ? `<p class="text-sm text-black/60">${cartItem.attribute_title}</p>` : "";
   sideCartItemDiv.classList.add("flex", "gap-2", "items-start", "py-4", "border-b-2", "p-5", "cartItem");
-  sideCartItemDiv.setAttribute("data-cart-item-id", formatNumberToLocale(cartItem.id));
+  sideCartItemDiv.setAttribute("data-cart-item-id", formatted_id);
   sideCartItemDiv.innerHTML = `
                                 <picture class="">
                                   <source srcset="${thumbnails.webp}" type="image/webp">
@@ -199,7 +200,7 @@ function createSideCartItem(cartItem) {
 
   const quantityInput = sideCartItemDiv.querySelector(".cartItem__quantityInput");
   const removeButton = sideCartItemDiv.querySelector(".cartItem__removeItem");
-  const cartItemId = parseLocaleNumber(cartItem.id);
+  const cartItemId = formatNumberToLocale(cartItem.id);
   attachCartItemInputListeners(quantityInput);
   removeButton.addEventListener("click", function () {
     removeCartItem(cartItemId);
@@ -210,10 +211,11 @@ function createSideCartItem(cartItem) {
 
 function createCheckoutItem(cartItem) {
   const thumbnails = cartItem.thumbnails;
+  let formatted_id = formatNumberToLocale(cartItem.id);
   const checkoutCartItemDiv = document.createElement("div");
   const attributeTitleParagraph = cartItem.attribute_title ? `<p class="text-sm text-black/60">${cartItem.attribute_title}</p>` : "";
   checkoutCartItemDiv.classList.add("flex", "gap-2", "items-start", "py-4", "border-b", "cartItem", "first-of-type:pt-0");
-  checkoutCartItemDiv.setAttribute("data-cart-item-id", formatNumberToLocale(cartItem.id));
+  checkoutCartItemDiv.setAttribute("data-cart-item-id", formatted_id);
   checkoutCartItemDiv.innerHTML = `
                                 <picture class="">
                                   <source srcset="${thumbnails.webp}" type="image/webp">
@@ -248,7 +250,7 @@ function createCheckoutItem(cartItem) {
 
   const quantityInput = checkoutCartItemDiv.querySelector(".cartItem__quantityInput");
   const removeButton = checkoutCartItemDiv.querySelector(".cartItem__removeItem");
-  const cartItemId = parseLocaleNumber(cartItem.id);
+  const cartItemId = formatNumberToLocale(cartItem.id);
   attachCartItemInputListeners(quantityInput);
   removeButton.addEventListener("click", function () {
     removeCartItem(cartItemId);
@@ -258,8 +260,9 @@ function createCheckoutItem(cartItem) {
 }
 
 function updateCart(response) {
-  const cartItem = cartBody.querySelector(`[data-cart-item-id="${formatNumberToLocale(response.id)}"]`);
-  const checkoutItem = checkoutBody.querySelector(`[data-cart-item-id="${formatNumberToLocale(response.id)}"]`);
+  let formatted_id = formatNumberToLocale(response.id)
+  const cartItem = cartBody.querySelector(`[data-cart-item-id="${formatted_id}"]`);
+  const checkoutItem = checkoutBody.querySelector(`[data-cart-item-id="${formatted_id}"]`);
   if (cartItem) {
     const cartItemQuantityInput = cartItem.querySelector(".cartItem__quantityInput");
     const checkoutItemQuantityInput = checkoutItem.querySelector(".cartItem__quantityInput");

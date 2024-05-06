@@ -4,6 +4,7 @@ import {notyf__short} from "../../utils/error";
 import {parseLocaleNumber} from "../../utils/numberFormatter";
 
 function addToCart(product_id, product_type, quantity, attributeId, isBuyNow) {
+
   if (attributeId === 'undefined' || attributeId === '') {
     attributeId = null;
   }
@@ -47,7 +48,7 @@ function initializeAddToCartButtons() {
       const product_id = parseLocaleNumber(button.getAttribute('data-product-id'));
       const product_type = button.getAttribute('data-product-type');
       const quantity = parseLocaleNumber(button.getAttribute('data-quantity'));
-      const attributeId = parseLocaleNumber(button.getAttribute('data-attribute-id'));
+      const attributeId = button.getAttribute('data-attribute-id');
       const isBuyNow = button.classList.contains('buyNowButton');
 
       const buttonText = button.querySelector('.buttonText');
