@@ -8,8 +8,8 @@ function addToCart(product_id, product_type, quantity, attributeId, isBuyNow) {
     attributeId = null;
   }
   const data = {
-    product_id: parseLocaleNumber(product_id),
-    attribute_id: parseLocaleNumber(attributeId),
+    product_id: product_id,
+    attribute_id: attributeId,
     product_type: product_type,
     quantity: quantity,
   }
@@ -44,10 +44,10 @@ function initializeAddToCartButtons() {
   const addToCartButtons = document.querySelectorAll('.addToCartButton');
   addToCartButtons.forEach(function (button) {
     button.addEventListener('click', function () {
-      const product_id = button.getAttribute('data-product-id');
+      const product_id = parseLocaleNumber(button.getAttribute('data-product-id'));
       const product_type = button.getAttribute('data-product-type');
-      const quantity = button.getAttribute('data-quantity');
-      const attributeId = button.getAttribute('data-attribute-id');
+      const quantity = parseLocaleNumber(button.getAttribute('data-quantity'));
+      const attributeId = parseLocaleNumber(button.getAttribute('data-attribute-id'));
       const isBuyNow = button.classList.contains('buyNowButton');
 
       const buttonText = button.querySelector('.buttonText');
