@@ -153,8 +153,8 @@ function updateCartQuantityAndTotal(hasFreeShipping) {
 }
 
 function removeCartItemElement(cartItemId, hasFreeShipping) {
-  const cartItem = cartBody.querySelector(`[data-cart-item-id="${formatNumberToLocale(cartItemId)}"]`);
-  const checkoutItem = checkoutBody.querySelector(`[data-cart-item-id="${formatNumberToLocale(cartItemId)}"]`);
+  const cartItem = cartBody.querySelector(`[data-cart-item-id="${cartItemId}"]`);
+  const checkoutItem = checkoutBody.querySelector(`[data-cart-item-id="${cartItemId}"]`);
   cartItem.remove();
   checkoutItem.remove();
   updateCartQuantityAndTotal(hasFreeShipping);
@@ -265,8 +265,8 @@ function updateCart(response) {
   if (cartItem) {
     const cartItemQuantityInput = cartItem.querySelector(".cartItem__quantityInput");
     const checkoutItemQuantityInput = checkoutItem.querySelector(".cartItem__quantityInput");
-    cartItemQuantityInput.value = formatNumberToLocale(response.quantity);
-    checkoutItemQuantityInput.value = formatNumberToLocale(response.quantity);
+    cartItemQuantityInput.value = parseInt(response.quantity);
+    checkoutItemQuantityInput.value = parseInt(response.quantity);
   } else {
     createSideCartItem(response);
     createCheckoutItem(response);
@@ -274,7 +274,7 @@ function updateCart(response) {
 
   updateCartQuantityAndTotal(response.has_free_shipping);
 }
- 
+
 
 export {
   initializeCart,
