@@ -153,8 +153,8 @@ function updateCartQuantityAndTotal(hasFreeShipping) {
 }
 
 function removeCartItemElement(cartItemId, hasFreeShipping) {
-  const cartItem = cartBody.querySelector(`[data-cart-item-id="${cartItemId}"]`);
-  const checkoutItem = checkoutBody.querySelector(`[data-cart-item-id="${cartItemId}"]`);
+  const cartItem = cartBody.querySelector(`[data-cart-item-id="${formatNumberToLocale(cartItemId)}"]`);
+  const checkoutItem = checkoutBody.querySelector(`[data-cart-item-id="${formatNumberToLocale(cartItemId)}"]`);
   cartItem.remove();
   checkoutItem.remove();
   updateCartQuantityAndTotal(hasFreeShipping);
@@ -165,7 +165,7 @@ function createSideCartItem(cartItem) {
   const sideCartItemDiv = document.createElement("div");
   const attributeTitleParagraph = cartItem.attribute_title ? `<p class="text-sm text-black/60">${cartItem.attribute_title}</p>` : "";
   sideCartItemDiv.classList.add("flex", "gap-2", "items-start", "py-4", "border-b-2", "p-5", "cartItem");
-  sideCartItemDiv.setAttribute("data-cart-item-id", cartItem.id);
+  sideCartItemDiv.setAttribute("data-cart-item-id", formatNumberToLocale(cartItem.id));
   sideCartItemDiv.innerHTML = `
                                 <picture class="">
                                   <source srcset="${thumbnails.webp}" type="image/webp">
@@ -213,7 +213,7 @@ function createCheckoutItem(cartItem) {
   const checkoutCartItemDiv = document.createElement("div");
   const attributeTitleParagraph = cartItem.attribute_title ? `<p class="text-sm text-black/60">${cartItem.attribute_title}</p>` : "";
   checkoutCartItemDiv.classList.add("flex", "gap-2", "items-start", "py-4", "border-b", "cartItem", "first-of-type:pt-0");
-  checkoutCartItemDiv.setAttribute("data-cart-item-id", cartItem.id);
+  checkoutCartItemDiv.setAttribute("data-cart-item-id", formatNumberToLocale(cartItem.id));
   checkoutCartItemDiv.innerHTML = `
                                 <picture class="">
                                   <source srcset="${thumbnails.webp}" type="image/webp">
@@ -258,8 +258,8 @@ function createCheckoutItem(cartItem) {
 }
 
 function updateCart(response) {
-  const cartItem = cartBody.querySelector(`[data-cart-item-id="${response.id}"]`);
-  const checkoutItem = checkoutBody.querySelector(`[data-cart-item-id="${response.id}"]`);
+  const cartItem = cartBody.querySelector(`[data-cart-item-id="${formatNumberToLocale(response.id)}"]`);
+  const checkoutItem = checkoutBody.querySelector(`[data-cart-item-id="${formatNumberToLocale(response.id)}"]`);
   if (cartItem) {
     const cartItemQuantityInput = cartItem.querySelector(".cartItem__quantityInput");
     const checkoutItemQuantityInput = checkoutItem.querySelector(".cartItem__quantityInput");
