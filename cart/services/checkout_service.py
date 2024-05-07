@@ -1,5 +1,3 @@
-import uuid
-
 from django.db import transaction
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
@@ -122,19 +120,11 @@ class CheckoutService:
             subtotal_price=self.cart.get_items_total,
             total_price=self.cart.get_total_price,
             has_free_shipping=self.cart.has_free_shipping,
-            tracking_number=self.generate_tracking_number(),
             ip=get_ip_addr(self.request),
             user_agent=get_user_agent(self.request),
         )
 
         return order
-
-    def generate_tracking_number(self):
-        """
-        Generate a tracking number for an order.
-        :return: str: The generated tracking number.
-        """
-        return str(uuid.uuid4())
 
     @transaction.atomic
     def create_order_item(self, cart_item, order):
@@ -159,8 +149,7 @@ class CheckoutService:
         )
 
         try:
-            reserved_stock_items = self.reserve_stock_for_order_item(order_item)
-            order_item.reserved_stock_items.set(reserved_stock_items)
+            self.reserve_stock_for_order_item(order_item)
         except OutOfStockException as e:
             available_quantity = e.available_quantity
             requested_quantity = e.requested_quantity
@@ -208,8 +197,7 @@ class CheckoutService:
             )
 
         try:
-            reserved_stock_items = self.reserve_stock_for_order_item(order_item)
-            order_item.reserved_stock_items.set(reserved_stock_items)
+            self.reserve_stock_for_order_item(order_item)
         except OutOfStockException as e:
             available_quantity = e.available_quantity
             requested_quantity = e.requested_quantity

@@ -14,6 +14,7 @@ from .utils import (
     StockManagerRequiredMixin,
     AnalyticsManagerRequiredMixin,
     AbandonedCartsManagerRequiredMixin,
+    ShopClientManagerRequiredMixin,
 )
 
 # Create your views here.
@@ -56,7 +57,7 @@ class ShopManagerHome(ShopManagerRequiredMixin, BaseDashboardView):
 
     def get_queryset(self):
         return (
-            Order.objects.filter(status=self.status)
+            Order.objects.filter(status=self.status, user__isnull=True)
             .order_by("-id")
             .prefetch_related(
                 "order_items", "order_items__product", "order_items__attribute"
@@ -187,6 +188,29 @@ class AbandonedCartsDashboard(AbandonedCartsManagerRequiredMixin, BaseDashboardV
         context = super().get_context_data(**kwargs)
         context["title"] = "Abandoned Carts"
         return context
+
+
+class ClientDashboard(ShopClientManagerRequiredMixin, BaseDashboardView):
+    model = Order
+    template_name = f"{dashboards_dir}/shop_client.html"
+    context_object_name = "orders"
+    paginate_by = 50
+
+    def get_queryset(self, queryset=None):
+        pk = self.kwargs.get("pk")
+
+        test = (
+            Order.objects.filter(user_id=pk)
+            .prefetch_related(
+                "order_items__product",
+                "order_items__attribute",
+                "order_items__reserved_stock_items",
+                "order_items__reserved_stock_items__import_item",
+            )
+            .order_by("created_at")
+        )
+        print(test.count())
+        return test
 
 
 def test_pdf(request):

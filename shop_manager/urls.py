@@ -10,6 +10,7 @@ from .views import (
     ExportInvoices,
     AbandonedCartsDashboard,
     test_pdf,
+    ClientDashboard,
 )
 
 app_name = "shop_manager"
@@ -30,6 +31,11 @@ urlpatterns = [
         "dashboard/abandoned-carts/",
         AbandonedCartsDashboard.as_view(),
         name="abandoned_carts_dashboard",
+    ),
+    path(
+        "dashboard/clients/<int:pk>/",
+        ClientDashboard.as_view(),
+        name="client_dashboard",
     ),
     path(
         "api/change-order-status/",

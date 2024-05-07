@@ -76,10 +76,16 @@
         <p>071/417-444</p>
     </div>
     <div class="font-bold text-right text-lg">
-        <p>{{ shipping_details.full_name }}</p>
-        <p>{{ shipping_details.address }}</p>
-        <p>{{ shipping_details.city }}</p>
-        <p>{{ shipping_details.phone }}</p>
+        {% if user %}
+            <p>{{ user.name }}</p>
+            <p>{{ user.city }}</p>
+            <p>{{ user.phone }}</p>
+        {% else %}
+            <p>{{ shipping_details.full_name }}</p>
+            <p>{{ shipping_details.address }}</p>
+            <p>{{ shipping_details.city }}</p>
+            <p>{{ shipping_details.phone }}</p>
+        {% endif %}
     </div>
 </div>
 
@@ -148,7 +154,11 @@
         </div>
         <div style="display:flex; justify-content: space-between; width: 100%">
             <p style="">Провизија за готовинско работење:</p>
-            <p class="font-bold">20.00</p>
+            {% if user %}
+                <p class="font-bold">0.00</p>
+            {% else %}
+                <p class="font-bold">20.00</p>
+            {% endif %}
         </div>
         <div style="display:flex; justify-content: space-between; margin-top: 12px; font-size:14px; width: 100%">
             <p style="">За наплата:</p>

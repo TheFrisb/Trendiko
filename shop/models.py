@@ -376,6 +376,9 @@ class ProductAttribute(BaseProduct):
         verbose_name = "Атрибут"
         verbose_name_plural = "Атрибути"
 
+    def __str__(self):
+        return self.get_product_title_for_accountant_invoice()
+
 
 class Review(TimeStampedModel):
     product = models.ForeignKey(
@@ -437,3 +440,22 @@ class BrandPage(SimplePage):
     class Meta:
         verbose_name = "Информативна страница"
         verbose_name_plural = "Информативни страници"
+
+
+class ShopClient(TimeStampedModel):
+    name = models.CharField(max_length=255, verbose_name="Име на фирма/клиент")
+    phone = models.CharField(
+        max_length=255, verbose_name="Телефонски број", blank=True, null=True
+    )
+    city = models.CharField(max_length=255, verbose_name="Град", blank=True, null=True)
+    total_revenue = models.IntegerField(default=0)
+    total_profit = models.IntegerField(default=0)
+    display_order = models.IntegerField(default=0, db_index=True)
+
+    class Meta:
+        verbose_name = "Клиент"
+        verbose_name_plural = "Клиенти"
+        ordering = ["display_order"]
+
+    def __str__(self):
+        return f"{self.name}"

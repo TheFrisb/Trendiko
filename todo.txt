@@ -1,15 +1,5 @@
 celery -A trendiko worker --loglevel=info
-
-
---------------------------------------------------------------------------------------------------------------------
-1. Sredi formatting problemo
-2. Vnesi narackite
-3. Sredi Order Admin da podrzuva custom orders so logika
-4. Dodaj opcija za add na klient so informacii
-5. Staj opcija za generacija na faktura boolean
-6. Nek gi vade u dnevni naracki
-7. Analitika za klient
-
++
 8. Make an analytics dashboard
 9. Store campaings per product
 10. Create items per campaign

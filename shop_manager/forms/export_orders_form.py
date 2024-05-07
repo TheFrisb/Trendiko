@@ -48,17 +48,27 @@ class ExportOrdersForm(forms.Form):
                 row, 0, order.created_at.strftime("%d-%m-%Y"), centered_cell_format
             )
             worksheet.write(row, 1, order.make_barcode_content(), centered_cell_format)
-            worksheet.write(
-                row, 2, order.shipping_details.full_name, centered_cell_format
-            )
-            worksheet.write(
-                row, 3, order.shipping_details.address, centered_cell_format
-            )
-            worksheet.write(row, 4, order.shipping_details.city, centered_cell_format)
-            worksheet.write(
-                row, 5, order.shipping_details.municipality, centered_cell_format
-            )
-            worksheet.write(row, 6, order.shipping_details.phone, centered_cell_format)
+            try:
+                worksheet.write(
+                    row, 2, order.shipping_details.full_name, centered_cell_format
+                )
+                worksheet.write(
+                    row, 3, order.shipping_details.address, centered_cell_format
+                )
+                worksheet.write(
+                    row, 4, order.shipping_details.city, centered_cell_format
+                )
+                worksheet.write(
+                    row, 5, order.shipping_details.municipality, centered_cell_format
+                )
+                worksheet.write(
+                    row, 6, order.shipping_details.phone, centered_cell_format
+                )
+            except order._meta.model.shipping_details.RelatedObjectDoesNotExist:
+                worksheet.write(row, 2, order.user.name, centered_cell_format)
+                worksheet.write(row, 4, order.user.city, centered_cell_format)
+                worksheet.write(row, 6, order.user.phone, centered_cell_format)
+
             worksheet.write(row, 7, "ORDER FEES", centered_cell_format)
             worksheet.write(row, 8, order.total_price, centered_cell_format)
             worksheet.write(row, 9, order.get_shipping_method, centered_cell_format)
@@ -105,9 +115,7 @@ class ExportOrdersForm(forms.Form):
             worksheet.write(row, 11, product_skus, centered_cell_format)
             worksheet.write(row, 12, f"X {quantity}", centered_cell_format)
             worksheet.write(row, 13, quantity, centered_cell_format)
-            worksheet.write(
-                row, 14, order.shipping_details.comment, centered_cell_format
-            )
+            worksheet.write(row, 14, "None")
 
             row += 1
 

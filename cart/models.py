@@ -1,4 +1,5 @@
 import base64
+import uuid
 from datetime import datetime
 from io import BytesIO
 
@@ -14,6 +15,7 @@ from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 from weasyprint import HTML
 
+from cart.tasks import calculate_revenue_and_profit_for_client
 from common.models import TimeStampedModel, LoggableModel
 from common.storage import InvoicesStorage
 from shop.models import Product, ProductAttribute
@@ -225,11 +227,13 @@ class Order(TimeStampedModel, LoggableModel):
         DELETED = "deleted", _("избришени")
 
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
+        "shop.ShopClient",
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
         default=None,
+        verbose_name="Клиент",
+        related_name="orders",
     )
 
     session_key = models.CharField(max_length=40)
@@ -246,9 +250,23 @@ class Order(TimeStampedModel, LoggableModel):
     has_free_shipping = models.BooleanField(default=False)
     mail_is_sent = models.BooleanField(default=False)
     exportable_date = models.DateTimeField(default=now)
+    generate_pdf_invoice = models.BooleanField(
+        default=True, verbose_name="Генерири фактура"
+    )
     pdf_invoice = models.FileField(
         upload_to="invoices/%Y/%m/%d/", storage=InvoicesStorage(), null=True, blank=True
     )
+    profit = models.IntegerField(default=0)
+
+    def generate_tracking_number(self):
+        """Generate a unique tracking number if one isn't already set."""
+        if not self.tracking_number:
+            self.tracking_number = str(uuid.uuid4())
+        return self.tracking_number
+
+    def save(self, *args, **kwargs):
+        self.generate_tracking_number()
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         """
@@ -307,9 +325,10 @@ class Order(TimeStampedModel, LoggableModel):
             return 0
         return 130
 
-    def recalculate_order(self):
+    def recalculate_order(self, add_provision=True):
         """
         Recalculate the prices of the order.
+
         """
         self.subtotal_price = sum(item.total_price for item in self.order_items.all())
         if self.subtotal_price >= 1500 or any(
@@ -318,42 +337,42 @@ class Order(TimeStampedModel, LoggableModel):
             self.has_free_shipping = True
 
         if self.has_free_shipping:
-            self.total_price = self.subtotal_price + 20
+            self.total_price = self.subtotal_price
+            self.shipping_price = 0
         else:
             self.total_price = self.subtotal_price + 130
 
+        if add_provision:
+            self.total_price += 20
+
+        total_profit = 0
+
+        for order_item in self.order_items.all():
+            reserved_items = order_item.reserved_stock_items.all()
+            total_cost = sum(
+                reserved_item.import_item.price_vat_and_customs
+                * reserved_item.initial_quantity
+                for reserved_item in reserved_items
+            )
+            total_profit += order_item.total_price - total_cost
+        self.profit = total_profit
         self.save()
 
-    # def generate_invoice(self):
-    #     """
-    #     Generate an invoice for the order.
-    #     """
-    #     if self.invoice.name:
-    #         self.invoice.delete()
-    #
-    #     context = {
-    #         "order": self,
-    #         "order_items": self.order_items.all(),
-    #         "shipping_details": self.shipping_details,
-    #     }
-    #
-    #     html_string = render_to_string("shop_manager/pdf_template.html", context)
-    #
-    #     pdf_bytes = HTML(
-    #         string=html_string, base_url=settings.WEBSITE_BASE_URL
-    #     ).write_pdf()
-    #
-    #     pdf_file = BytesIO(pdf_bytes)
-    #     pdf_file.name = f"order_{self.id}_invoice.pdf"
-    #
-    #     self.invoice.save(pdf_file.name, pdf_file)
+        if self.user:
+            calculate_revenue_and_profit_for_client.delay(self.user.id)
 
     def generate_invoice_pdf(self, show_details=True, as_file=True):
+        try:
+            shipping_details = self.shipping_details
+        except self._meta.model.shipping_details.RelatedObjectDoesNotExist:
+            shipping_details = None
+
         context = {
             "order": self,
             "order_items": self.order_items.all(),
-            "shipping_details": self.shipping_details,
+            "shipping_details": shipping_details,
             "show_details": show_details,
+            "user": self.user,
         }
 
         html_string = render_to_string("shop_manager/pdf_template.html", context)
@@ -408,6 +427,15 @@ class Order(TimeStampedModel, LoggableModel):
         """
         return sum(item.quantity for item in self.order_items.all())
 
+    def generate_client_sale(self):
+        self.session_key = "CLIENT SALE"
+        self.status = self.OrderStatus.CONFIRMED
+        self.tracking_number = str(uuid.uuid4())
+        self.recalculate_order(add_provision=False)
+
+        if self.generate_pdf_invoice:
+            self.generate_invoice_pdf()
+
     def make_barcode_content(self):
         id_str = str(self.id).zfill(5)
         return f"TR{id_str}"
@@ -441,9 +469,9 @@ class OrderItem(TimeStampedModel):
         related_name="order_items",
         null=True,
     )
-    reserved_stock_items = models.ManyToManyField(
-        "stock.ReservedStockItem", related_name="order_items"
-    )
+    # reserved_stock_items = models.ManyToManyField(
+    #     "stock.ReservedStockItem", related_name="order_items"
+    # )
     quantity = models.IntegerField(default=1)
     price = models.IntegerField(default=0)
     type = models.CharField(

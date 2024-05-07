@@ -2,6 +2,7 @@ from io import BytesIO
 
 import qrcode
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 from django.core.files import File
 from django.db import models
 
@@ -65,7 +66,7 @@ class StockItem(BaseProduct):
         verbose_name_plural = "Stock Items"
 
     def __str__(self):
-        return f"[{self.sku}] {self.title}, {self.stock} items in stock"
+        return f"[{self.sku}] {self.title}, {self.available_stock} items in stock"
 
 
 class Import(TimeStampedModel):
@@ -99,7 +100,7 @@ class ImportItem(TimeStampedModel):
     )
 
     def __str__(self):
-        return f"{self.stock_item.title} - {self.quantity}"
+        return f"[{self.parentImport.title}] {self.stock_item.sku} {self.stock_item.title} - {self.calculate_max_available_reservation()} in stock"
 
     def save(self, *args, **kwargs):
         self.stock_item.stock = self.calculate_parent_stock()
@@ -135,7 +136,11 @@ class ReservedStockItem(TimeStampedModel):
     status = models.CharField(
         max_length=20, choices=Status.choices, default=Status.PENDING
     )
-    order_item = models.ForeignKey("cart.OrderItem", on_delete=models.CASCADE)
+    order_item = models.ForeignKey(
+        "cart.OrderItem",
+        on_delete=models.CASCADE,
+        related_name="reserved_stock_items",
+    )
     import_item = models.ForeignKey(ImportItem, on_delete=models.PROTECT, null=True)
     initial_quantity = models.PositiveIntegerField(
         default=0, verbose_name="Почетна количина"
@@ -154,7 +159,7 @@ class ReservedStockItem(TimeStampedModel):
 
         self.import_item.reserved_stock = self.calculate_reserved_stock()
         if self.import_item.reserved_stock > self.import_item.quantity:
-            raise ValueError(
+            raise ValidationError(
                 {
                     "error": "The reserved stock cannot be greater than the import item quantity",
                     "order_item": self.order_item,

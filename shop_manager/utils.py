@@ -75,6 +75,20 @@ class AbandonedCartsManagerRequiredMixin(AccessMixin):
         return f"{resolve_url('admin:login')}?next={next_url}"
 
 
+class ShopClientManagerRequiredMixin(AccessMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.groups.filter(name="shop_client_manager").exists():
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
+
+    def handle_no_permission(self):
+        return HttpResponseRedirect(self.get_login_url())
+
+    def get_login_url(self):
+        next_url = self.request.get_full_path()
+        return f"{resolve_url('admin:login')}?next={next_url}"
+
+
 # Permission class for DRF views
 class IsShopManagerPermission(ShopManagerBaseMixin, BasePermission):
     def has_permission(self, request, view):

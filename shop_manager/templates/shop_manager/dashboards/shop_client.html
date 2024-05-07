@@ -1,0 +1,54 @@
+{% extends 'shop_manager/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load tz %}
+{% block dashboard %}
+    <div class="py-4 px-4 lg:px-8 flex flex-col items-start gap-4">
+        <div class="p-4 w-full bg-white rounded-xl shadow-md flex flex-col gap-4 ">
+            <div class="flex items-center justify-between">
+                <h4 class="text-xl font-bold">Порачки</h4>
+                {% include 'shop_manager/includes/dashboard_paginator.html' %}
+            </div>
+            <table class="table-auto w-full text-left">
+                <thead class="border-b border-gray-200">
+                <tr>
+                    <th class="font-normal">Customer</th>
+                    <th class="font-normal">Date</th>
+                    <th class="font-normal">Products</th>
+                    <th class="font-normal">Revenue</th>
+                    <th class="font-normal">Profit</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for order in page_obj %}
+                    <tr class="border-b-2 border-gray-200 py-2">
+                        <td class="table_field">
+                            {{ order.user.name }}
+                        </td>
+                        <td class="table_field">
+                            {% timezone "Europe/Berlin" %}
+                                {{ order.created_at|date:"d.m.Y H:i:s" }}
+                            {% endtimezone %}
+                        </td>
+                        <td>
+                            {% for item in order.order_items.all %}
+                                <span class="font-bold">{{ item.get_readable_name }} x {{ item.quantity }}</span>
+                                <span> - {{ item.total_price|intcomma }} ден</span>
+                                <br>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {{ order.total_price|intcomma }} ден
+                        </td>
+                        <td>
+                            {{ order.profit|intcomma }} ден
+                        </td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock dashboard %}

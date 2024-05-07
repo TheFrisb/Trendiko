@@ -5,7 +5,6 @@ from celery import shared_task
 from django.db import transaction
 
 from common.mailer.MailJetClient import MailJetClient
-from .models import Order
 
 # Configure a logger for the task
 logger = logging.getLogger(__name__)
@@ -13,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 @shared_task
 def generate_invoice_and_send_email_to_order(order_id):
+    from .models import Order
+
     order = (
         Order.objects.filter(id=order_id)
         .prefetch_related(
@@ -54,3 +55,24 @@ def generate_invoice_and_send_email_to_order(order_id):
             logger.info("Email sent successfully for order ID: %s", order_id)
         except Exception as e:
             logger.error("Failed to process order ID %s: %s", order_id, e)
+
+
+@shared_task()
+def calculate_revenue_and_profit_for_client(client_id):
+    from shop.models import ShopClient
+    from .models import Order
+
+    client = ShopClient.objects.get(id=client_id)
+
+    orders = Order.objects.filter(user=client)
+    total_revenue = 0
+    total_profit = 0
+
+    for order in orders:
+        total_revenue += order.total_price
+        total_profit += order.profit
+
+    client.total_revenue = total_revenue
+    client.total_profit = total_profit
+
+    client.save()

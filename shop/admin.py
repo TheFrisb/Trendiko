@@ -4,6 +4,8 @@ from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
+from django.urls import reverse
+from django.utils.html import format_html
 
 from common.mailer.SendGridClient import SendGridClient
 from facebook.admin import FacebookCampaignsInline
@@ -16,6 +18,7 @@ from .models import (
     ProductImage,
     BrandPage,
     FrequentlyAskedQuestion,
+    ShopClient,
 )
 
 
@@ -248,6 +251,11 @@ class ReviewAdmin(admin.ModelAdmin):
         model = Review
 
 
+@admin.register(ProductAttribute)
+class ProductAttribute(admin.ModelAdmin):
+    search_fields = ["title", "product__title"]
+
+
 @admin.register(FrequentlyAskedQuestion)
 class FrequentlyAskedQuestionAdmin(admin.ModelAdmin):
     list_display = ["question", "answer"]
@@ -258,6 +266,42 @@ class FrequentlyAskedQuestionAdmin(admin.ModelAdmin):
 
     class Meta:
         model = FrequentlyAskedQuestion
+
+
+@admin.register(ShopClient)
+class ShopClient(SortableAdminMixin, admin.ModelAdmin):
+    list_display = [
+        "name",
+        "phone",
+        "city",
+        "total_orders_count",
+        "total_revenue",
+        "total_profit",
+        "dashboard_link",
+    ]
+
+    search_fields = ["name", "phone", "city"]
+
+    def total_orders_count(self, obj):
+        return obj.orders.count()
+
+    def dashboard_link(self, obj):
+        """
+        Method that returns a link to the client's dashboard in the admin list view.
+        """
+        # Construct URL with reverse using the view's name and client's primary key
+        url = reverse("shop_manager:client_dashboard", kwargs={"pk": obj.pk})
+        # Create an HTML anchor tag
+        return format_html(
+            '<a href="{}" style="color: #ff9800; background-color: #333; padding: 2px 10px; border-radius: 5px; text-decoration: none;" target="_blank">View Dashboard</a>',
+            url,
+        )
+
+    dashboard_link.short_description = "Dashboard link"
+    dashboard_link.admin_order_field = "name"
+
+    class Meta:
+        model = ShopClient
 
 
 admin.site.register(BrandPage)

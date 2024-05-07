@@ -55,6 +55,11 @@ class ImportItemInline(admin.StackedInline):
     form = ImportItemForm
 
 
+@admin.register(ImportItem)
+class ImportItemAdmin(admin.ModelAdmin):
+    search_fields = ["stock_item__title"]
+
+
 @admin.register(Import)
 class ImportAdmin(admin.ModelAdmin):
     list_display = ["title", "description"]
