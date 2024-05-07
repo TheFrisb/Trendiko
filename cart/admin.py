@@ -79,7 +79,7 @@ class ReservedStockItemFormSet(BaseInlineFormSet):
 
                 if form.cleaned_data["import_item"].stock_item != order_item.stock_item:
                     raise forms.ValidationError(
-                        f"The import item set for one of the reserved stock items '{form.cleaned_data["import_item"]}"
+                        f"The import item set for one of the reserved stock items '{form.cleaned_data['import_item']}'"
                         f" is not the same as the order item's '{order_item.stock_item}'"
                     )
         if reserved_quantity_sum != order_item.quantity:
@@ -96,9 +96,7 @@ class ReservedStockItemFormSet(BaseInlineFormSet):
                     f"'{max_reservation}' for import item '{import_item}'."
                 )
 
-
         self.quantity = reserved_quantity_sum
-
 
 
 class OrderItemFormSet(BaseInlineFormSet):
@@ -131,12 +129,10 @@ class OrderItemFormSet(BaseInlineFormSet):
                         f"The stock item you have selected is not correct for the product '{product.title}'"
                     )
 
-                if stock_item.available_stock < form.cleaned_data['quantity']:
+                if stock_item.available_stock < form.cleaned_data["quantity"]:
                     raise forms.ValidationError(
                         f"Not enough ({form.cleaned_data['quantity']} stock for '{stock_item}'."
                     )
-
-
 
 
 class ReservedStockItemInline(nested_admin.NestedTabularInline):
@@ -164,25 +160,41 @@ class OrderItemInline(nested_admin.NestedTabularInline):
 class OrderAdmin(nested_admin.NestedModelAdmin):
     inlines = [OrderItemInline, ShippingDetailsInline]
     fieldsets = (
-        ('Basic Information', {
-            'fields': ('user', 'session_key', 'status', 'tracking_number')
-        }),
-        ('Pricing Details', {
-            'fields': ('shipping_price', 'subtotal_price', 'total_price', 'has_free_shipping')
-        }),
-        ('Shipping & Invoicing', {
-            'fields': ('exportable_date', 'pdf_invoice', 'mail_is_sent')
-        }),
-        ('Additional Info', {
-            'fields': ('ip', 'user_agent')
-        }),
+        (
+            "Basic Information",
+            {"fields": ("user", "session_key", "status", "tracking_number")},
+        ),
+        (
+            "Pricing Details",
+            {
+                "fields": (
+                    "shipping_price",
+                    "subtotal_price",
+                    "total_price",
+                    "has_free_shipping",
+                )
+            },
+        ),
+        (
+            "Shipping & Invoicing",
+            {"fields": ("exportable_date", "pdf_invoice", "mail_is_sent")},
+        ),
+        ("Additional Info", {"fields": ("ip", "user_agent")}),
     )
-    readonly_fields = ['ip', 'user_agent', 'mail_is_sent', 'session_key',
-                       'tracking_number', 'pdf_invoice', 'exportable_date']
+    readonly_fields = [
+        "ip",
+        "user_agent",
+        "mail_is_sent",
+        "session_key",
+        "tracking_number",
+        "pdf_invoice",
+        "exportable_date",
+    ]
 
     autocomplete_fields = ["user"]
 
     change_form_template = "admin/order/change_form.html"
+
     def save_related(self, request, form, formsets, change):
         """
         After saving the related formsets, call the recalculate_totals method.
