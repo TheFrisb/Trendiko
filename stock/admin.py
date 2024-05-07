@@ -76,4 +76,4 @@ class StockItemAdmin(admin.ModelAdmin):
 
 @admin.register(ReservedStockItem)
 class ReservedStockItemAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ["import_item__stock_item__title", "order_item__stock_item_title"]

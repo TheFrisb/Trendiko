@@ -253,7 +253,10 @@ class ReviewAdmin(admin.ModelAdmin):
 
 @admin.register(ProductAttribute)
 class ProductAttribute(admin.ModelAdmin):
-    search_fields = ["title", "product__title"]
+    search_fields = ["title", "product__title", "stock_item__title"]
+
+    class Meta:
+        model = ProductAttribute
 
 
 @admin.register(FrequentlyAskedQuestion)
