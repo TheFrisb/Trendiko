@@ -177,7 +177,14 @@ class OrderAdmin(nested_admin.NestedModelAdmin):
         ),
         (
             "Shipping & Invoicing",
-            {"fields": ("exportable_date", "pdf_invoice", "mail_is_sent")},
+            {
+                "fields": (
+                    "generate_pdf_invoice",
+                    "exportable_date",
+                    "pdf_invoice",
+                    "mail_is_sent",
+                )
+            },
         ),
         ("Additional Info", {"fields": ("ip", "user_agent")}),
     )
