@@ -281,6 +281,7 @@ class ShopClient(SortableAdminMixin, admin.ModelAdmin):
     ]
 
     search_fields = ["name", "phone", "city"]
+    readonly_fields = ["total_revenue", "total_profit"]
 
     def total_orders_count(self, obj):
         return obj.orders.count()
