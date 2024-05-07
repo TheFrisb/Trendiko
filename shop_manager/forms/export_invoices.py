@@ -36,7 +36,8 @@ class ExportInvoicesForm(forms.Form):
         pdf_files = []
         combined_pdf = tempfile.NamedTemporaryFile(delete=False)
         for order in orders:
-            pdf_files.append(order.pdf_invoice.path)
+            if bool(order.pdf_invoice):
+                pdf_files.append(order.pdf_invoice.path)
 
         self.merge_pdfs(pdf_files, combined_pdf.name)
 
