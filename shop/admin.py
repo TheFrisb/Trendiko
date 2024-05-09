@@ -160,7 +160,7 @@ class ProductAdmin(admin.ModelAdmin):
                 )
 
                 sendgrid_client.send_mail(
-                    "bedzovski@yahoo.com",
+                    "lilanikolova@yahoo.com",
                     f"{obj.get_product_title_for_accountant_invoice()} - Промена на цена",
                     "<strong>Во attachment</strong>",
                     pdf,
@@ -176,13 +176,14 @@ class ProductAdmin(admin.ModelAdmin):
                 if old_instance.sale_price != instance.sale_price:
                     accountant_invoicer = AccountantInvoicer()
                     sendgrid_client = SendGridClient()
+
                     pdf = (
                         accountant_invoicer.generate_product_price_change_notification(
                             old_instance, instance, request.build_absolute_uri()
                         )
                     )
                     sendgrid_client.send_mail(
-                        "bedzovski@yahoo.com",
+                        "lilanikolova@yahoo.com",
                         f"{instance.get_product_title_for_accountant_invoice()} - Промена на цена",
                         "<strong>Во attachment</strong>",
                         pdf,
@@ -252,7 +253,7 @@ class ReviewAdmin(admin.ModelAdmin):
 
 
 @admin.register(ProductAttribute)
-class ProductAttribute(admin.ModelAdmin):
+class ProductAttributeAdmin(admin.ModelAdmin):
     search_fields = ["title", "product__title", "stock_item__title"]
 
     class Meta:
