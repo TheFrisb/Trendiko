@@ -111,19 +111,19 @@ function initializeQRScanner() {
   const html5QrcodeScanner = new Html5QrcodeScanner(
     'qrCodeReader',
     {
-      fps: 10,
-      aspectRatio: 1.0,
+      fps: 30,
+      aspectRatio: 2.0,
       disableFlip: false,
       disableAutoScan: false,
       formatsToSupport: ['QR_CODE'],
-      rememberLastUsedCamera: false,
+      rememberLastUsedCamera: true,
       supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
       showTorchButtonIfSupported: true,
       showZoomSliderIfSupported: true,
       defaultZoomValueIfSupported: 2,
-      qrbox: 250,
+      qrbox: 150,
       facingMode: {exact: "environment"},
-      focusMode: "continuous"
+      focusMode: "continuous",
     },
     /* verbose= */ false);
 
