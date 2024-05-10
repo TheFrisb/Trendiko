@@ -1,14 +1,14 @@
 {% extends 'shop_manager/base.html' %}
 {% load static %}
 {% block dashboard %}
-    <div class="pt-4 pb-[250px] lg:pb-16 px-4 lg:px-8 flex flex-col items-start gap-4">
+    <div class="py-4 px-4 lg:px-8 flex flex-col items-start gap-4 min-h-screen">
         {% with button_classes="p-4 rounded-lg text-sm font-bold w-full text-white transition-all hover:bg-black/80" %}
             <button class="{{ button_classes }} bg-green-600" id="stockManagerActions__addStockButton">ДОДАЈ ЗАЛИХА
             </button>
             <button class="{{ button_classes }} bg-red-400" id="stockManagerActions__removeStockButton">МИНУСИРИ ЗАЛИХА
             </button>
         {% endwith %}
-        <div class="w-full relative">
+        <div class="w-full relative pb-[250px]">
             <div id="qrCodeReader"></div>
             <div class="absolute w-full h-full top-0 flex justify-between items-center bg-black/70 z-50 rounded isDoingNothing"
                  id="scanner__overlay">
