@@ -119,6 +119,7 @@ function initializeQRScanner() {
       rememberLastUsedCamera: true,
       supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
       showTorchButtonIfSupported: true,
+      showZoomSliderIfSupported: true,
     },
     /* verbose= */ false);
 
