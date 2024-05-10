@@ -116,12 +116,14 @@ function initializeQRScanner() {
       disableFlip: false,
       disableAutoScan: false,
       formatsToSupport: ['QR_CODE'],
-      rememberLastUsedCamera: true,
+      rememberLastUsedCamera: false,
       supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
       showTorchButtonIfSupported: true,
       showZoomSliderIfSupported: true,
       defaultZoomValueIfSupported: 2,
       qrbox: 250,
+      facingMode: {exact: "environment"},
+      focusMode: "continuous"
     },
     /* verbose= */ false);
 
