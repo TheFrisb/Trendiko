@@ -120,6 +120,8 @@ function initializeQRScanner() {
       supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
       showTorchButtonIfSupported: true,
       showZoomSliderIfSupported: true,
+      defaultZoomValueIfSupported: 2,
+      qrbox: 250,
     },
     /* verbose= */ false);
 
