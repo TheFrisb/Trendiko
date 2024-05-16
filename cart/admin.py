@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 
 from common.exceptions import OutOfStockException
+from shop.models import Product
 from .models import (
     Cart,
     CartItem,
@@ -57,53 +58,55 @@ class CartAdmin(admin.ModelAdmin):
 
 
 class OrderItemFormSet(BaseInlineFormSet):
-    # def clean(self):
-    #     super().clean()
-    #     for form in self.forms:
-    #         if (
-    #             form.cleaned_data
-    #             and not form.cleaned_data.get("DELETE", False)
-    #             and not form.cleaned_data["id"]
-    #         ):
-    #             product = form.cleaned_data.get("product", None)
-    #             attribute = form.cleaned_data.get("attribute", None)
-    #
-    #             if not product and not attribute:
-    #                 raise ValidationError("You must select a product or an attribute")
-    #
-    #             if product and attribute:
-    #                 raise ValidationError(
-    #                     "You can't select both a product and a variable product"
-    #                 )
-    #
-    #             if product:
-    #                 form.cleaned_data["stock_item"] = product.stock_item
-    #             elif attribute:
-    #                 form.cleaned_data["stock_item"] = attribute.stock_item
-    #                 form.cleaned_data["product"] = attribute.product
-    #                 form.cleaned_data["type"] = Product.ProductType.VARIABLE
-    #
-    #             if (
-    #                 form.cleaned_data["stock_item"].available_stock
-    #                 < form.cleaned_data["quantity"]
-    #             ):
-    #                 raise ValidationError(
-    #                     f"Only {form.cleaned_data['stock_item'].available_stock} items are available for {form.cleaned_data['stock_item']}"
-    #                 )
+    def clean(self):
+        super().clean()
+        for form in self.forms:
+            if (
+                form.cleaned_data
+                and not form.cleaned_data.get("DELETE", False)
+                and not form.cleaned_data["id"]
+            ):
+                product = form.cleaned_data.get("product", None)
+                attribute = form.cleaned_data.get("attribute", None)
+
+                if not product and not attribute:
+                    raise ValidationError("You must select a product or an attribute")
+
+                if product and attribute:
+                    raise ValidationError(
+                        "You can't select both a product and a variable product"
+                    )
+                if product:
+                    form.cleaned_data["stock_item"] = product.stock_item
+                elif attribute:
+                    form.cleaned_data["stock_item"] = attribute.stock_item
+                    form.cleaned_data["product"] = attribute.product
+                    form.cleaned_data["type"] = Product.ProductType.VARIABLE
+
+                if (
+                    form.cleaned_data["stock_item"].available_stock
+                    < form.cleaned_data["quantity"]
+                ):
+                    raise ValidationError(
+                        f"Only {form.cleaned_data['stock_item'].available_stock} items are available for {form.cleaned_data['stock_item']}"
+                    )
 
     # if creating new orderItems, use .reserve_stock_for_order_item() to reserve the stock with transaction.atomic
 
     def save_new(self, form, commit=True):
         order_item = super().save_new(form, commit=False)
-        try:
-            order_item.reserve_stock_for_order_item()
-        except OutOfStockException as e:
-            message = f"Имаме само {e.available_quantity} на залиха"
+        order_item.stock_item = form.cleaned_data["stock_item"]
+        order_item.product = form.cleaned_data["product"]
 
-            raise ValidationError(message)
+        order_item.type = form.cleaned_data.get("type", Product.ProductType.SIMPLE)
 
         if commit:
             order_item.save()
+            try:
+                order_item.reserve_stock_for_order_item()
+            except OutOfStockException as e:
+                message = f"Имаме само {e.available_quantity} на залиха"
+                raise ValidationError(message)
         return order_item
 
 
