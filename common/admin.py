@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from common.models import MailSubscription, GlobalCSS
+from common.models import MailSubscription, GlobalCSS, StoredCounter
 
 
 @admin.register(MailSubscription)
@@ -14,3 +14,8 @@ class MailSubscriptionAdmin(admin.ModelAdmin):
 class GlobalCSSAdmin(admin.ModelAdmin):
     change_form_template = "admin/global_css/change_form.html"
     # pass
+
+
+@admin.register(StoredCounter)
+class StoredCounter(admin.ModelAdmin):
+    pass
