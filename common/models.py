@@ -2,6 +2,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from imagekit.models import ProcessedImageField, ImageSpecField
 from imagekit.processors import ResizeToFill
+from transliterate.utils import _
 
 IMAGE_DIMENSIONS = (550, 550)
 THUMBNAIL_DIMENSIONS = (250, 250)
@@ -103,3 +104,20 @@ class GlobalCSS(TimeStampedModel):
 
     def __str__(self):
         return f"CSS: {self.updated_at}"
+
+
+class StoredCounter(TimeStampedModel):
+    class CounterType(models.TextChoices):
+        PRODUCT_PRICE_CHANGE = "price_change", _("Price change")
+
+    type = models.CharField(max_length=20, choices=CounterType.choices, db_index=True)
+    value = models.IntegerField(default=0)
+
+    def get_formatted_counter(self):
+        if self.value < 10:
+            return f"0{self.value}"
+        return self.value
+
+    def increment_counter(self, amount_to_increment=1):
+        self.value += amount_to_increment
+        self.save()
