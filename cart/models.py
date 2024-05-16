@@ -463,7 +463,11 @@ class OrderItem(TimeStampedModel):
         Order, on_delete=models.CASCADE, related_name="order_items"
     )
     product = models.ForeignKey(
-        Product, on_delete=models.SET_NULL, related_name="order_items", null=True
+        Product,
+        on_delete=models.SET_NULL,
+        related_name="order_items",
+        null=True,
+        blank=True,
     )
     stock_item = models.ForeignKey(
         "stock.StockItem",
