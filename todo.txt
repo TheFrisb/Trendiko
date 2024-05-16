@@ -1,12 +1,26 @@
 celery -A trendiko worker --loglevel=info
-+
-8. Make an analytics dashboard
-9. Store campaings per product
-10. Create items per campaign
-11. Create rows per product, by fetching FB API and Order Items
+
+1. Prakji mejlovi i do info@trendiko.mk
+2. Re-isprati gi mejlovite so counter
+3. Popravi odobri zadolzi poleto
+
+5. Vnesuvane na produkt (simple ili variable) avtomatski da dodava stock item
+7. Rabat da se vnesuva racno i da pokazuva na cenata, t.e da ga namaluva
+8. Avtomatski da rezervira zaliha kak so e saa od najstar sprema najnov uvoz
+
+9. Napraj profitabilnost po uvoz shop_manager table
+10. Smeti profitabilnost so:
+  [prodazna vrednost na prodadeni pcs]
+- [nabavna vrednost na prodadeni pcs]
+- [reklama(site kampanji bez catalogue vkupno+10%)]
+- [10% na prodazna vrednost na prodadeni pcs]
+
+9. Make an analytics dashboard
+10. Store campaings per product
+11. Create items per campaign
+12. Create rows per product, by fetching FB API and Order Items
 
 12. Napraj management commands
-13. Iscisti celery workers
 14. Optimiziri google page speed
 --------------------------------------------------------------------------------------------------------------------
 Facebook campaigns creation: Total should be 8 hours
