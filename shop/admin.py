@@ -145,49 +145,57 @@ class ProductAdmin(admin.ModelAdmin):
     get_stock_item_stock.short_description = "Stock"
     get_stock_item_stock.admin_order_field = "stock_item__stock"
 
-    # def save_model(self, request, obj, form, change):
-    #     if change and not obj.isVariable():
-    #         old_obj = Product.objects.get(id=obj.id)
-    #
-    #         if old_obj.sale_price != obj.sale_price:
-    #             accountant_invoicer = AccountantInvoicer()
-    #             sendgrid_client = SendGridClient()
-    #
-    #             pdf = accountant_invoicer.generate_product_price_change_notification(
-    #                 old_obj, obj, request.build_absolute_uri()
-    #             )
-    #
-    #             sendgrid_client.send_mail(
-    #                 ["lilanikolova@yahoo.com", "info@trendiko.mk", "thefrisb@gmail.com"],
-    #                 f"{obj.get_product_title_for_accountant_invoice()} - Промена на цена",
-    #                 "<strong>Во attachment</strong>",
-    #                 pdf,
-    #             )
-    #
-    #     super().save_model(request, obj, form, change)
-    #
-    # def save_formset(self, request, form, formset, change):
-    #     instances = formset.save(commit=False)
-    #     for instance in instances:
-    #         if isinstance(instance, ProductAttribute):
-    #             old_instance = ProductAttribute.objects.get(id=instance.id)
-    #             if old_instance.sale_price != instance.sale_price:
-    #                 accountant_invoicer = AccountantInvoicer()
-    #                 sendgrid_client = SendGridClient()
-    #
-    #                 pdf = (
-    #                     accountant_invoicer.generate_product_price_change_notification(
-    #                         old_instance, instance, request.build_absolute_uri()
-    #                     )
-    #                 )
-    #                 sendgrid_client.send_mail(
-    #                     ["lilanikolova@yahoo.com", "info@trendiko.mk", "thefrisb@gmail.com"],
-    #                     f"{instance.get_product_title_for_accountant_invoice()} - Промена на цена",
-    #                     "<strong>Во attachment</strong>",
-    #                     pdf,
-    #                 )
-    #         instance.save()
-    #     formset.save_m2m()
+    def save_model(self, request, obj, form, change):
+        if change and not obj.isVariable():
+            old_obj = Product.objects.get(id=obj.id)
+
+            if old_obj.sale_price != obj.sale_price:
+                accountant_invoicer = AccountantInvoicer()
+                sendgrid_client = SendGridClient()
+
+                pdf = accountant_invoicer.generate_product_price_change_notification(
+                    old_obj, obj, request.build_absolute_uri()
+                )
+
+                sendgrid_client.send_mail(
+                    [
+                        "lilanikolova@yahoo.com",
+                        "info@trendiko.mk",
+                        "thefrisb@gmail.com",
+                    ],
+                    f"{obj.get_product_title_for_accountant_invoice()} - Промена на цена",
+                    "<strong>Во attachment</strong>",
+                    pdf,
+                )
+
+        super().save_model(request, obj, form, change)
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for instance in instances:
+            if isinstance(instance, ProductAttribute):
+                old_instance = ProductAttribute.objects.get(id=instance.id)
+                if old_instance.sale_price != instance.sale_price:
+                    accountant_invoicer = AccountantInvoicer()
+                    sendgrid_client = SendGridClient()
+
+                    pdf = (
+                        accountant_invoicer.generate_product_price_change_notification(
+                            old_instance, instance, request.build_absolute_uri()
+                        )
+                    )
+                    sendgrid_client.send_mail(
+                        [
+                            "lilanikolova@yahoo.com",
+                            "info@trendiko.mk",
+                            "thefrisb@gmail.com",
+                        ],
+                        f"{instance.get_product_title_for_accountant_invoice()} - Промена на цена",
+                        "<strong>Во attachment</strong>",
+                        pdf,
+                    )
+            instance.save()
+        formset.save_m2m()
 
 
 @admin.register(Category)
