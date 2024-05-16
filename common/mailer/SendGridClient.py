@@ -1,4 +1,5 @@
 import base64
+import logging
 
 from decouple import config
 from sendgrid import SendGridAPIClient, Mail
@@ -35,8 +36,8 @@ class SendGridClient:
 
         try:
             response = self.client.send(message)
-            print(f"Status Code: {response.status_code}")
-            print(f"Body: {response.body}")
-            print(f"Headers: {response.headers}")
+            logging.info(
+                f"Sending mail status: {response.status_code}, {response.body}, {response.headers}"
+            )
         except Exception as e:
-            print(e.message)
+            logging.error(f"Error sending mail: {e}")
