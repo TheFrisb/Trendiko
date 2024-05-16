@@ -97,12 +97,12 @@
         <td>{{ new_price }}</td>
         <td>{{ new_total }}</td>
         <td>
-            {% if old_price > new_price %}
+            {% if old_price < new_price %}
                 {{ price_difference }}
             {% endif %}
         </td>
         <td>
-            {% if old_price < new_price %}
+            {% if old_price > new_price %}
                 {{ price_difference }}
             {% endif %}
         </td>
