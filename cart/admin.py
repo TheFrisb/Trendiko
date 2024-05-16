@@ -1,9 +1,8 @@
-import nested_admin
-from django import forms
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 
-from stock.models import ReservedStockItem
+from common.exceptions import OutOfStockException
 from .models import (
     Cart,
     CartItem,
@@ -57,112 +56,77 @@ class CartAdmin(admin.ModelAdmin):
 #     change_form_template = "admin/order/change_form.html"
 
 
-class ReservedStockItemFormSet(BaseInlineFormSet):
-    def clean(self):
-        super().clean()
-        order_item = self.forms[0].cleaned_data["order_item"]
-        reserved_quantity_sum = 0
-        is_same_stock_item = True
-        stock_check = {}
-
-        for form in self.forms:
-            if form.cleaned_data and not form.cleaned_data.get("DELETE", False):
-                import_item = form.cleaned_data["import_item"]
-                initial_quantity = form.cleaned_data["initial_quantity"]
-
-                reserved_quantity_sum += initial_quantity
-
-                if import_item in stock_check:
-                    stock_check[import_item] += initial_quantity
-                else:
-                    stock_check[import_item] = initial_quantity
-
-                if form.cleaned_data["import_item"].stock_item != order_item.stock_item:
-                    raise forms.ValidationError(
-                        f"The import item set for one of the reserved stock items '{form.cleaned_data['import_item']}'"
-                        f" is not the same as the order item's '{order_item.stock_item}'"
-                    )
-        if reserved_quantity_sum != order_item.quantity:
-            raise forms.ValidationError(
-                f"The sum of reserved stock quantities '{reserved_quantity_sum}' does not match the order item quantity"
-                f" '{order_item.quantity}'."
-            )
-
-        for import_item, reserved_quantity in stock_check.items():
-            max_reservation = import_item.calculate_max_available_reservation()
-            if reserved_quantity > max_reservation:
-                raise forms.ValidationError(
-                    f"The quantity '{reserved_quantity}' exceeds the maximum available reservation "
-                    f"'{max_reservation}' for import item '{import_item}'."
-                )
-
-        self.quantity = reserved_quantity_sum
-
-
 class OrderItemFormSet(BaseInlineFormSet):
-    def clean(self):
-        super().clean()
-        for form in self.forms:
-            if form.cleaned_data and not form.cleaned_data.get("DELETE", False):
-                product = form.cleaned_data["product"]
-                stock_item = form.cleaned_data["stock_item"]
-                attribute = form.cleaned_data["attribute"]
+    # def clean(self):
+    #     super().clean()
+    #     for form in self.forms:
+    #         if (
+    #             form.cleaned_data
+    #             and not form.cleaned_data.get("DELETE", False)
+    #             and not form.cleaned_data["id"]
+    #         ):
+    #             product = form.cleaned_data.get("product", None)
+    #             attribute = form.cleaned_data.get("attribute", None)
+    #
+    #             if not product and not attribute:
+    #                 raise ValidationError("You must select a product or an attribute")
+    #
+    #             if product and attribute:
+    #                 raise ValidationError(
+    #                     "You can't select both a product and a variable product"
+    #                 )
+    #
+    #             if product:
+    #                 form.cleaned_data["stock_item"] = product.stock_item
+    #             elif attribute:
+    #                 form.cleaned_data["stock_item"] = attribute.stock_item
+    #                 form.cleaned_data["product"] = attribute.product
+    #                 form.cleaned_data["type"] = Product.ProductType.VARIABLE
+    #
+    #             if (
+    #                 form.cleaned_data["stock_item"].available_stock
+    #                 < form.cleaned_data["quantity"]
+    #             ):
+    #                 raise ValidationError(
+    #                     f"Only {form.cleaned_data['stock_item'].available_stock} items are available for {form.cleaned_data['stock_item']}"
+    #                 )
 
-                if product.isVariable() and not attribute:
-                    raise forms.ValidationError(
-                        f"The field attribute must be populated for the variable product '{product.title}'"
-                    )
+    # if creating new orderItems, use .reserve_stock_for_order_item() to reserve the stock with transaction.atomic
 
-                if product.isVariable() and attribute is not None:
-                    if attribute.stock_item != stock_item:
-                        raise forms.ValidationError(
-                            f"The stock item you have selected is not correct for the attribute '{attribute.title}'"
-                        )
+    def save_new(self, form, commit=True):
+        order_item = super().save_new(form, commit=False)
+        try:
+            order_item.reserve_stock_for_order_item()
+        except OutOfStockException as e:
+            message = f"Имаме само {e.available_quantity} на залиха"
 
-                    if attribute.product.id != product.id:
-                        raise forms.ValidationError(
-                            f"The attribute '{attribute.title}' does not belong to the product {product.title}"
-                        )
+            raise ValidationError(message)
 
-                if not product.isVariable() and stock_item != product.stock_item:
-                    raise forms.ValidationError(
-                        f"The stock item you have selected is not correct for the product '{product.title}'"
-                    )
-
-                if stock_item.available_stock < form.cleaned_data["quantity"]:
-                    raise forms.ValidationError(
-                        f"Not enough ({form.cleaned_data['quantity']} stock for '{stock_item}'."
-                    )
+        if commit:
+            order_item.save()
+        return order_item
 
 
-class ReservedStockItemInline(nested_admin.NestedTabularInline):
-    model = ReservedStockItem
-    extra = 1
-    autocomplete_fields = ["import_item"]
-    readonly_fields = ["quantity"]
-    formset = ReservedStockItemFormSet
-
-
-class ShippingDetailsInline(nested_admin.NestedStackedInline):  # Updated inheritance
+class ShippingDetailsInline(admin.StackedInline):  # Updated inheritance
     model = ShippingDetails
     extra = 0
 
 
-class OrderItemInline(nested_admin.NestedTabularInline):
+class OrderItemInline(admin.TabularInline):
     model = OrderItem
     extra = 0
-    inlines = [ReservedStockItemInline]
     formset = OrderItemFormSet
     autocomplete_fields = ["product", "stock_item", "attribute"]
+    fields = ["product", "attribute", "quantity", "price", "rabat"]
 
 
 @admin.register(Order)
-class OrderAdmin(nested_admin.NestedModelAdmin):
+class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline, ShippingDetailsInline]
     fieldsets = (
         (
             "Basic Information",
-            {"fields": ("user", "session_key", "status", "tracking_number")},
+            {"fields": ("user", "status", "tracking_number")},
         ),
         (
             "Pricing Details",
@@ -172,21 +136,10 @@ class OrderAdmin(nested_admin.NestedModelAdmin):
                     "subtotal_price",
                     "total_price",
                     "has_free_shipping",
-                )
-            },
-        ),
-        (
-            "Shipping & Invoicing",
-            {
-                "fields": (
                     "generate_pdf_invoice",
-                    "exportable_date",
-                    "pdf_invoice",
-                    "mail_is_sent",
                 )
             },
         ),
-        ("Additional Info", {"fields": ("ip", "user_agent")}),
     )
     readonly_fields = [
         "ip",
@@ -207,5 +160,5 @@ class OrderAdmin(nested_admin.NestedModelAdmin):
         After saving the related formsets, call the recalculate_totals method.
         """
         super().save_related(request, form, formsets, change)
-        print(form.instance.tracking_number)
+
         form.instance.generate_client_sale()

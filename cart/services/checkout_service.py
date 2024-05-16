@@ -8,7 +8,6 @@ from common.exceptions import OutOfStockException
 from common.mailer.MailJetClient import MailJetClient
 from common.utils import get_ip_addr, get_user_agent
 from shop.models import Product
-from stock.models import ImportItem, ReservedStockItem
 
 
 class CheckoutService:
@@ -149,7 +148,7 @@ class CheckoutService:
         )
 
         try:
-            self.reserve_stock_for_order_item(order_item)
+            order_item.reserve_stock_for_order_item()
         except OutOfStockException as e:
             available_quantity = e.available_quantity
             requested_quantity = e.requested_quantity
@@ -197,7 +196,7 @@ class CheckoutService:
             )
 
         try:
-            self.reserve_stock_for_order_item(order_item)
+            order_item.reserve_stock_for_order_item()
         except OutOfStockException as e:
             available_quantity = e.available_quantity
             requested_quantity = e.requested_quantity
@@ -277,47 +276,3 @@ class CheckoutService:
             raise ValidationError({"message": "The promotion price is invalid."})
 
         return check_promotion["order_item"]
-
-    @transaction.atomic
-    def reserve_stock_for_order_item(self, order_item):
-        """
-        Reserve stock for an order item.
-
-        Args:
-            order_item (OrderItem): The order item for which stock should be reserved.
-        """
-        quantity_to_be_reserved = order_item.quantity
-        import_items = ImportItem.objects.filter(
-            stock_item=order_item.stock_item, quantity__gt=0
-        ).order_by("created_at")
-        reserved_stock_items = []
-
-        for import_item in import_items:
-            if quantity_to_be_reserved == 0:
-                break
-            if (
-                import_item.calculate_max_available_reservation()
-                >= quantity_to_be_reserved
-            ):
-                reserved_stock_item = ReservedStockItem.objects.create(
-                    order_item=order_item,
-                    import_item=import_item,
-                    initial_quantity=quantity_to_be_reserved,
-                )
-                quantity_to_be_reserved = 0
-            else:
-                removeable_quantity = import_item.calculate_max_available_reservation()
-                reserved_stock_item = ReservedStockItem.objects.create(
-                    order_item=order_item,
-                    import_item=import_item,
-                    initial_quantity=removeable_quantity,
-                )
-                quantity_to_be_reserved -= removeable_quantity
-
-            reserved_stock_items.append(reserved_stock_item)
-
-        if quantity_to_be_reserved > 0:
-            available_quantity = order_item.quantity - quantity_to_be_reserved
-            raise OutOfStockException(order_item.quantity, available_quantity)
-
-        return reserved_stock_items

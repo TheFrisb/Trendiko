@@ -7,7 +7,7 @@ import barcode
 from barcode.writer import ImageWriter
 from django.conf import settings
 from django.core.files.base import ContentFile
-from django.db import models
+from django.db import models, transaction
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
@@ -16,9 +16,11 @@ from django.utils.translation import gettext_lazy as _
 from weasyprint import HTML
 
 from cart.tasks import calculate_revenue_and_profit_for_client
+from common.exceptions import OutOfStockException
 from common.models import TimeStampedModel, LoggableModel
 from common.storage import InvoicesStorage
 from shop.models import Product, ProductAttribute
+from stock.models import ImportItem, ReservedStockItem
 
 
 # Create your models here.
@@ -526,6 +528,50 @@ class OrderItem(TimeStampedModel):
             int: The total sale_price of the order item.
         """
         return self.price * self.quantity
+
+    @transaction.atomic
+    def reserve_stock_for_order_item(self):
+        """
+        Reserve stock for an order item.
+
+        Args:
+            order_item (OrderItem): The order item for which stock should be reserved.
+        """
+        quantity_to_be_reserved = self.quantity
+        import_items = ImportItem.objects.filter(
+            stock_item=self.stock_item, quantity__gt=0
+        ).order_by("created_at")
+        reserved_stock_items = []
+
+        for import_item in import_items:
+            if quantity_to_be_reserved == 0:
+                break
+            if (
+                import_item.calculate_max_available_reservation()
+                >= quantity_to_be_reserved
+            ):
+                reserved_stock_item = ReservedStockItem.objects.create(
+                    order_item=self,
+                    import_item=import_item,
+                    initial_quantity=quantity_to_be_reserved,
+                )
+                quantity_to_be_reserved = 0
+            else:
+                removeable_quantity = import_item.calculate_max_available_reservation()
+                reserved_stock_item = ReservedStockItem.objects.create(
+                    order_item=self,
+                    import_item=import_item,
+                    initial_quantity=removeable_quantity,
+                )
+                quantity_to_be_reserved -= removeable_quantity
+
+            reserved_stock_items.append(reserved_stock_item)
+
+        if quantity_to_be_reserved > 0:
+            available_quantity = self.quantity - quantity_to_be_reserved
+            raise OutOfStockException(self.quantity, available_quantity)
+
+        return reserved_stock_items
 
     @property
     def get_readable_name(self):

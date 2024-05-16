@@ -163,7 +163,6 @@ class ProductAdmin(admin.ModelAdmin):
                     [
                         "lilanikolova@yahoo.com",
                         "info@trendiko.mk",
-                        "thefrisb@gmail.com",
                     ],
                     f"{obj.get_product_title_for_accountant_invoice()} - Промена на цена",
                     "<strong>Во attachment</strong>",
@@ -190,7 +189,6 @@ class ProductAdmin(admin.ModelAdmin):
                         [
                             "lilanikolova@yahoo.com",
                             "info@trendiko.mk",
-                            "thefrisb@gmail.com",
                         ],
                         f"{instance.get_product_title_for_accountant_invoice()} - Промена на цена",
                         "<strong>Во attachment</strong>",

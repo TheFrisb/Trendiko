@@ -147,11 +147,11 @@ class ReservedStockItem(TimeStampedModel):
     )
     quantity = models.PositiveIntegerField(default=0, verbose_name="Количина")
 
-    def __str__(self):
-        return (
-            f"Резервација за {self.order_item.product.title} - {self.initial_quantity}"
-            f" од {self.import_item.stock_item.title}"
-        )
+    # def __str__(self):
+    #     return (
+    #         f"Резервација за {self.order_item.product.title} - {self.initial_quantity}"
+    #         f" од {self.import_item.stock_item.title}"
+    #     )
 
     def save(self, *args, **kwargs):
         if not self.pk:
