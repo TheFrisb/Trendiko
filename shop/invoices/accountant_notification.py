@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import transaction
 from django.template.loader import render_to_string
 from weasyprint import HTML
@@ -31,6 +33,7 @@ class AccountantInvoicer:
             "price_difference": abs(old_total - new_total),
             "product_title": new_item.get_product_title_for_accountant_invoice(),
             "counter": stored_counter.get_formatted_counter(),
+            "current_date": datetime.now().strftime("%d.%m.%Y"),
         }
         stored_counter.increment_counter()
         html_string = render_to_string("shop_manager/accountant_pdf.html", context)

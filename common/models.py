@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from imagekit.models import ProcessedImageField, ImageSpecField
@@ -114,9 +116,8 @@ class StoredCounter(TimeStampedModel):
     value = models.IntegerField(default=0)
 
     def get_formatted_counter(self):
-        if self.value < 10:
-            return f"0{self.value}"
-        return self.value
+        date = datetime.now().strftime("%y")
+        return f"{self.value}/{date}"
 
     def increment_counter(self, amount_to_increment=1):
         self.value += amount_to_increment

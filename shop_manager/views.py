@@ -214,4 +214,8 @@ class ClientDashboard(ShopClientManagerRequiredMixin, BaseDashboardView):
 
 
 def test_pdf(request):
-    return render(request, "shop_manager/accountant_pdf.html", context={"counter": 0})
+    return render(
+        request,
+        "shop_manager/accountant_pdf.html",
+        context={"counter": 0, "current_date": "03.03.2001"},
+    )
