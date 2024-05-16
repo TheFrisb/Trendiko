@@ -1,8 +1,8 @@
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
-from shop.models import Product
 from stock.models import StockItem, ReservedStockItem
+from stock.tasks import update_product_status_on_stock_item_update
 
 
 @receiver(post_save, sender=StockItem)
@@ -10,10 +10,8 @@ def archive_products_if_stock_item_is_out_of_stock(sender, instance, created, **
     """
     If stock item is out of stock, archive the product
     """
-    if instance.available_stock == 0:
-        Product.objects.filter(stock_item=instance).update(
-            status=Product.ProductStatus.OUT_OF_STOCK
-        )
+    if not created:
+        update_product_status_on_stock_item_update.delay(instance.id)
 
 
 @receiver(pre_delete, sender=ReservedStockItem)
