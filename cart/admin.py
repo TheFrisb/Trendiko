@@ -122,6 +122,9 @@ class OrderItemInline(admin.TabularInline):
     autocomplete_fields = ["product", "stock_item", "attribute"]
     fields = ["product", "attribute", "quantity", "price", "rabat"]
 
+    class Media:
+        js = ("admin/js/order_item_inline.js",)
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
