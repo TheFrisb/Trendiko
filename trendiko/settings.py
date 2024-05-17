@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "cart.apps.CartConfig",
     "stock.apps.StockConfig",
     "facebook.apps.FacebookConfig",
+    "analytics.apps.AnalyticsConfig",
 ]
 
 MIDDLEWARE = [
@@ -177,7 +178,6 @@ LOGGING = {
 if DEBUG:
     LOGGING["loggers"][""]["handlers"].append("console")
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -252,7 +252,6 @@ CRONJOBS = [
     ("0 0 * * *", "cart.cron.make_carts_abandoned"),
     # ("*/3 * * * *", "cart.cron.send_email_to_orders_older_than_5_min"),
 ]
-
 
 # Celery configuration
 CELERY_BROKER_URL = config("CELERY_BROKER_URL")
