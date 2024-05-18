@@ -5,7 +5,8 @@ from .views import (
     ShopManagerHome,
     StockManagerHome,
     ScanStock,
-    AnalyticsDashboard,
+    FacebookAnalyticsDashboard,
+    FacebookAnalyticsDetailDashboard,
     GenerateOrderInvoice,
     ExportInvoices,
     AbandonedCartsDashboard,
@@ -14,6 +15,8 @@ from .views import (
 )
 
 app_name = "shop_manager"
+
+
 urlpatterns = [
     path("dashboard/", ShopManagerHome.as_view(), name="order_dashboard"),
     path(
@@ -23,9 +26,14 @@ urlpatterns = [
     ),
     path("dashboard/scan-stock-items/", ScanStock.as_view(), name="scan_stock"),
     path(
-        "dashboard/analytics-dashboard/",
-        AnalyticsDashboard.as_view(),
+        "dashboard/analytics/facebook-campaigns/",
+        FacebookAnalyticsDashboard.as_view(),
         name="analytics_dashboard",
+    ),
+    path(
+        "dashboard/analytics/facebook-campaigns/<str:slug>/",
+        FacebookAnalyticsDetailDashboard.as_view(),
+        name="facebook_campaign_detail_view",
     ),
     path(
         "dashboard/abandoned-carts/",

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 from transliterate import translit
 
@@ -27,6 +28,11 @@ class CampaignSummary(TimeStampedModel):
         entry = CampaignEntry(parent=self)
         entry.populate_data(order_items)
         return entry
+
+    def get_absolute_url(self):
+        return reverse(
+            "shop_manager:facebook_campaign_detail_view", kwargs={"slug": self.slug}
+        )
 
     class Meta:
         verbose_name = "Campaign Summary"

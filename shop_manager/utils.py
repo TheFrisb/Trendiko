@@ -206,7 +206,7 @@ class SidebarItemsMixin:
             "icon": "scatter-chart",
             "items": [
                 {
-                    "name": "Daily rows",
+                    "name": "Facebook Campaigns",
                     "url": analytics_dashboard_url,
                     "icon": "line-chart",
                 },

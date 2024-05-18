@@ -1,27 +1,23 @@
 celery -A trendiko worker --loglevel=info
 
-1. Prakji mejlovi i do info@trendiko.mk
-2. Re-isprati gi mejlovite so counter
-3. Popravi odobri zadolzi poleto
+1. Make an analytics list dashboard
+2. Make an analytics detail dashboard
+3. Show campaign summairies per product
+4. Initialize Facebook Connection
+5. Make a form to retrieve ad spend with dates
+6. Retrieve adspend per campaign
+7. Create campaignEntry per campaign
 
-5. Vnesuvane na produkt (simple ili variable) avtomatski da dodava stock item
-7. Rabat da se vnesuva racno i da pokazuva na cenata, t.e da ga namaluva
-8. Avtomatski da rezervira zaliha kak so e saa od najstar sprema najnov uvoz
+8. Napraj Import analytics dashboard
+9. Napraj Import detail analytics dashboard
+10. Izmisli logika za import analytics
+11. Smeti profitabilnost so:
+    [prodazna vrednost na prodadeni pcs]
+-   [nabavna vrednost na prodadeni pcs]
+-   [reklama(site kampanji bez catalogue vkupno+10%)]
+-   [10% na prodazna vrednost na prodadeni pcs]
 
-9. Napraj profitabilnost po uvoz shop_manager table
-10. Smeti profitabilnost so:
-  [prodazna vrednost na prodadeni pcs]
-- [nabavna vrednost na prodadeni pcs]
-- [reklama(site kampanji bez catalogue vkupno+10%)]
-- [10% na prodazna vrednost na prodadeni pcs]
 
-9. Make an analytics dashboard
-10. Store campaings per product
-11. Create items per campaign
-12. Create rows per product, by fetching FB API and Order Items
-
-12. Napraj management commands
-14. Optimiziri google page speed
 --------------------------------------------------------------------------------------------------------------------
 Facebook campaigns creation: Total should be 8 hours
 1. Implement UI - 3
@@ -29,6 +25,13 @@ Facebook campaigns creation: Total should be 8 hours
 3. Verify it works - 1
 4. Implement backend db storage - 1
 5. On Product Out Of Stock turn off Campaign
+--------------------------------------------------------------------------------------------------------------------
+Optimization:
+1. Optimize Google Page Speed
+2. Use Caching more effectively
+--------------------------------------------------------------------------------------------------------------------
+Refactoring:
+1. Refactor bad code
 
 
 

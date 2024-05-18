@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView
 
+from analytics.models import CampaignSummary, CampaignEntry
 from cart.models import Order, Cart
 from stock.models import StockItem
 from .forms.export_invoices import ExportInvoicesForm
@@ -115,20 +116,6 @@ class ScanStock(StockManagerRequiredMixin, BaseDashboardView):
         return context
 
 
-class AnalyticsDashboard(AnalyticsManagerRequiredMixin, BaseDashboardView):
-    model = None
-    template_name = f"{dashboards_dir}/analytics.html"
-
-    def get_queryset(self):
-        # Fix
-        return None
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Аналитика"
-        return context
-
-
 class GenerateOrderInvoice(ShopManagerRequiredMixin, View):
     def get(self, request, order_id, *args, **kwargs):
         pdf_file = self.fetch_pdf(request, order_id)
@@ -209,7 +196,7 @@ class ClientDashboard(ShopClientManagerRequiredMixin, BaseDashboardView):
             )
             .order_by("created_at")
         )
-        print(test.count())
+
         return test
 
 
@@ -219,3 +206,23 @@ def test_pdf(request):
         "shop_manager/accountant_pdf.html",
         context={"counter": 0, "current_date": "03.03.2001"},
     )
+
+
+class FacebookAnalyticsDashboard(AnalyticsManagerRequiredMixin, BaseDashboardView):
+    model = CampaignSummary
+    context_object_name = "campaign_summaries"
+    template_name = f"{dashboards_dir}/analytics/facebook_analytics_list.html"
+
+    def get_queryset(self):
+        return CampaignSummary.objects.all().order_by("-created_at")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Facebook Analytics"
+        context["listable_items"] = self.object_list
+
+        return context
+
+
+class FacebookAnalyticsDetailDashboard:
+    model = CampaignEntry
