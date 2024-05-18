@@ -40,7 +40,9 @@ class CampaignSummary(TimeStampedModel):
 
 
 class CampaignEntry(TimeStampedModel):
-    parent = models.ForeignKey(CampaignSummary, on_delete=models.CASCADE)
+    parent = models.ForeignKey(
+        CampaignSummary, on_delete=models.CASCADE, related_name="entries"
+    )
     quantity_ordered = models.IntegerField(
         verbose_name="Quantity of OrderItems Ordered", default=0
     )
