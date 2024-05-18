@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView, DetailView
 
-from analytics.cron import create_campaign_summaries
 from analytics.models import CampaignSummary
 from cart.models import Order, Cart
 from stock.models import StockItem
@@ -247,7 +246,5 @@ class FacebookAnalyticsDetailDashboard(
         )
         context["current_entry"] = self.object
         context["dashboard_fullscreen"] = True
-
-        create_campaign_summaries()
 
         return context
