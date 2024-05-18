@@ -34,6 +34,7 @@ class FacebookApi:
             "fields": ["spend"],
             "level": "account",
         }
+
         return self.ad_account.get_insights(params=params)
 
     def get_adspend_per_campaigns(self, start_date: datetime, end_date: datetime):

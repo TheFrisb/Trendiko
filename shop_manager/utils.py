@@ -9,6 +9,7 @@ from cart.models import Order
 from shop_manager.forms.export_invoices import ExportInvoicesForm
 from shop_manager.forms.export_orders_form import ExportOrdersForm
 from shop_manager.forms.export_stock_information_form import ExportStockInformationForm
+from shop_manager.forms.retrieve_adspend import RetrieveAdspendForm
 
 
 class ShopManagerBaseMixin:
@@ -203,13 +204,22 @@ class SidebarItemsMixin:
         analytics_dashboard_url = reverse("shop_manager:analytics_dashboard")
         return {
             "title": "Analytics",
-            "icon": "scatter-chart",
+            "icon": "line-chart",
             "items": [
                 {
                     "name": "Facebook Campaigns",
                     "url": analytics_dashboard_url,
-                    "icon": "line-chart",
+                    "icon": "scatter-chart",
                 },
+            ],
+            "forms": [
+                {
+                    "title": "Fetch ad spend",
+                    "form": RetrieveAdspendForm(),
+                    "action": reverse("facebook:retrieve_total_ad_spend"),
+                    "method": "GET",
+                    "button_text": "Fetch ad spend",
+                }
             ],
         }
 

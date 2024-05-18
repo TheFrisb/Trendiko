@@ -250,7 +250,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CRONJOBS = [
     ("10 23 * * *", "facebook.cron.update_facebook_catalogue_feed"),
     ("0 0 * * *", "cart.cron.make_carts_abandoned"),
-    # ("*/3 * * * *", "cart.cron.send_email_to_orders_older_than_5_min"),
+    ("0 2 * * *", "analytics.cron.create_campaign_summaries"),
 ]
 
 # Celery configuration

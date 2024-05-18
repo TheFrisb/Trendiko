@@ -1,12 +1,7 @@
 celery -A trendiko worker --loglevel=info
 
-1. Make an analytics list dashboard
-2. Make an analytics detail dashboard
-3. Show campaign summairies per product
-4. Initialize Facebook Connection
-5. Make a form to retrieve ad spend with dates
-6. Retrieve adspend per campaign
-7. Create campaignEntry per campaign
+5. Proveri kodo
+6. Napraj cron job
 
 8. Napraj Import analytics dashboard
 9. Napraj Import detail analytics dashboard

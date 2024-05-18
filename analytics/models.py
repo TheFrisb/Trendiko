@@ -24,9 +24,9 @@ class CampaignSummary(TimeStampedModel):
     def __str__(self):
         return f"{self.name} - {self.campaign_id}"
 
-    def populate_entry(self, order_items):
+    def populate_entry(self, order_items: models.QuerySet, ad_spend_data: dict):
         entry = CampaignEntry(parent=self)
-        entry.populate_data(order_items)
+        entry.populate_data(order_items, ad_spend_data["spend_mkd"])
         return entry
 
     def get_absolute_url(self):
@@ -122,20 +122,21 @@ class CampaignEntry(TimeStampedModel):
     def __str__(self):
         return f"CampaignEntry for {self.parent.name} - {self.created_at}"
 
-    def populate_data(self, order_items):
+    def populate_data(self, order_items: models.QuerySet, ad_spend_data: float):
         import_item_data = {}
-        self.populate_static_data()
+        self.populate_static_data(ad_spend_data)
         self.populate_dynamic_data(order_items)
 
         # save the entry
         self.save()
 
-    def populate_static_data(self):
+    def populate_static_data(self, ad_spend_data: float) -> None:
         self.product_stock_left = self.parent.product.stock_item.available_stock
         self.product_sale_price = self.parent.product.sale_price
         self.product_cost_price = self.calculate_product_cost_price()
+        self.advertisement_cost = ad_spend_data
 
-    def calculate_product_cost_price(self):
+    def calculate_product_cost_price(self) -> int:
         # Refaktoriri ka ke se trgne rezervirana zaliha
         import_items = ImportItem.objects.filter(
             stock_item=self.parent.product.stock_item
@@ -149,7 +150,7 @@ class CampaignEntry(TimeStampedModel):
 
         return cost_prices[0]
 
-    def populate_dynamic_data(self, order_items):
+    def populate_dynamic_data(self, order_items: models.QuerySet) -> None:
         import_item_data = {}
         for order_item in order_items:
             self.quantity_ordered += order_item.quantity

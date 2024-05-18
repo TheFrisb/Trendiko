@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta
 
 import pytz
@@ -120,8 +121,15 @@ def get_user_agent(request):
 
 def get_dollar_value_in_mkd(exchange_rate=None, value=1):
     if exchange_rate is None:
-        response = requests.get("https://api.exchangerate-api.com/v6/latest/USD")
-        data = response.json()
-        exchange_rate = data["rates"]["MKD"]
+        response = requests.get(
+            f"https://api.exchangerate-api.com/v6/{settings.EXCHANGE_RATE_API_KEY}/latest/USD"
+        )
+
+        try:
+            data = response.json()
+            exchange_rate = data["rates"]["MKD"]
+        except Exception as e:
+            logging.error("Error fetching exchange rate data: %s", e)
+            exchange_rate = 56.8
 
     return float(value * exchange_rate)
