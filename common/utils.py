@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 import pytz
+import requests
 from django.conf import settings
 from django.utils import timezone
 
@@ -115,3 +116,12 @@ def get_ip_addr(request):
 
 def get_user_agent(request):
     return request.META.get("HTTP_USER_AGENT", "None")
+
+
+def get_dollar_value_in_mkd(exchange_rate=None, value=1):
+    if exchange_rate is None:
+        response = requests.get("https://api.exchangerate-api.com/v6/latest/USD")
+        data = response.json()
+        exchange_rate = data["rates"]["MKD"]
+
+    return float(value * exchange_rate)

@@ -13,22 +13,36 @@ def create_campaign_summaries():
 
     start_time, end_time = get_yesterday_time_ranges()
 
+    logging.info(
+        "Fetching ad spend per campaign for dates %s - %s", start_time, end_time
+    )
+
     fb_api = FacebookApi()
-    total_ad_spend = fb_api.get_adspend_per_campaigns(start_time, end_time)
     ad_spend_per_campaign = {
-        campaign["campaign_id"]: campaign["spend"]
+        campaign["campaign_id"]: float(campaign["spend"])
         for campaign in fb_api.get_adspend_per_campaigns(start_time, end_time)
     }
-    print(ad_spend_per_campaign)
-    return
-    summaries = CampaignSummary.objects.filter(campaign_id__isnull=False)
+    logging.info("Fetched ad spend per campaign: %s", ad_spend_per_campaign)
+
+    summaries = CampaignSummary.objects.filter(
+        campaign_id__in=ad_spend_per_campaign.keys()
+    )
+    logging.info("Found %s summaries", summaries.count())
 
     for summary in summaries:
-        start_time, end_time = get_yesterday_time_ranges()
+        logging.info("Processing summary for campaign %s", summary.campaign_id)
+
         order_items = OrderItem.objects.filter(
             created_at__range=(start_time, end_time),
             product__facebook_campaigns__campaign_id=summary.campaign_id,
-        ).prefetch_related("reserved_stock_items", "reserved_stock_items__import_item")
+        ).prefetch_related(
+            "reserved_stock_items",
+            "reserved_stock_items__import_item",
+            "stock_item",
+            "product",
+        )
+        logging.info("Found %s order items", order_items.count())
+
         summary.populate_entry(order_items)
 
 
