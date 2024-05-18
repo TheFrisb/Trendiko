@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView, DetailView
 
+from analytics.cron import create_campaign_summaries
 from analytics.models import CampaignSummary
 from cart.models import Order, Cart
 from stock.models import StockItem
@@ -230,12 +231,12 @@ class FacebookAnalyticsDetailDashboard(
     model = CampaignSummary
     context_object_name = "campaign_summary"
     template_name = f"{dashboards_dir}/analytics/facebook_analytics_detail.html"
+    slug_field = "slug"
 
-    def get_object(self, queryset=None):
-        return (
-            CampaignSummary.objects.filter(slug="placeholder")
-            .prefetch_related("entries")
-            .first()
+    # Fetch the campaign by slug and also prefetch its entries ordered by date
+    def get_queryset(self):
+        return CampaignSummary.objects.prefetch_related("entries").order_by(
+            "created_at"
         )
 
     def get_context_data(self, **kwargs):
@@ -244,5 +245,9 @@ class FacebookAnalyticsDetailDashboard(
         context["listable_items"] = CampaignSummary.objects.all().order_by(
             "-created_at"
         )
+        context["current_entry"] = self.object
+        context["dashboard_fullscreen"] = True
+
+        create_campaign_summaries()
 
         return context

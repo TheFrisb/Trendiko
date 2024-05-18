@@ -7,17 +7,21 @@
                 <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#box"></use>
             </svg>
             <h4 class="font-bold">Dashboard</h4>
-            <svg class="ml-auto lg:hidden" width="32" height="32" fill="currentColor" id="dashboard__menuIcon">
+            <svg class="ml-auto {% if not dashboard_fullscreen %}lg:hidden{% endif %} cursor-pointer hover:bg-black/60 rounded-lg"
+                 width="32" height="32"
+                 fill="currentColor" id="dashboard__menuIcon">
                 <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#menu"></use>
             </svg>
 
-            <svg class="ml-auto hidden lg:hidden" width="32" height="32" fill="currentColor"
+            <svg class="ml-auto hidden {% if not dashboard_fullscreen %}lg:hidden{% endif %} cursor-pointer hover:bg-black/60 rounded-lg"
+                 width="32" height="32"
+                 fill="currentColor"
                  id="dashboard__closeMenuIcon">
                 <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#close"></use>
             </svg>
         </div>
 
-        <div class="hidden lg:flex flex-col gap-6" id="dashboard__menu">
+        <div class="hidden {% if not dashboard_fullscreen %}lg:flex{% endif %} flex-col gap-6" id="dashboard__menu">
             {% for item in sidebar_items %}
                 <div>
                     <div class="sidebar-item active">

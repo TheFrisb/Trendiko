@@ -15,7 +15,7 @@ module.exports = {
     './shop_manager/templates/**/*.html',
     './shop_manager/templates/**/**/*.html',
     './shop_manager/templates/**/**/**/*.html',
-    './static/bundles/shop_manager.bundle.js',
+    // './static/bundles/shop_manager.bundle.js',
 
   ],
   theme: {

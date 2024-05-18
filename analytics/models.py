@@ -52,9 +52,6 @@ class CampaignEntry(TimeStampedModel):
     total_cost_price = models.IntegerField(
         verbose_name="Total Cost Price of all OrderItems", default=0
     )
-    total_profit = models.IntegerField(
-        verbose_name="Total Profit of all OrderItems", default=0
-    )
     advertisement_cost = models.IntegerField(
         verbose_name="Total Advertisement Cost", default=0
     )
@@ -64,12 +61,19 @@ class CampaignEntry(TimeStampedModel):
     product_cost_price = models.IntegerField(
         verbose_name="Product Cost Price", default=0
     )
-    product_profit = models.IntegerField(verbose_name="Product Profit", default=0)
     product_stock_left = models.IntegerField(
         verbose_name="Product Stock Left After Campaign", default=0
     )
 
     import_item_data = models.JSONField()
+
+    @property
+    def total_profit(self):
+        return self.total_sales_price - self.total_cost_price
+
+    @property
+    def product_profit(self):
+        return self.product_sale_price - self.product_cost_price
 
     @property
     def cost_per_purchase(self):
@@ -95,7 +99,7 @@ class CampaignEntry(TimeStampedModel):
     @property
     def break_even_return_on_ad_spend(self):
         # BE-ROAS
-        return self.product_sale_price / self.product_neto
+        return self.product_sale_price / self.product_profit
 
     @property
     def total_tax(self):
@@ -110,6 +114,10 @@ class CampaignEntry(TimeStampedModel):
     @property
     def tax_to_pay(self):
         return self.total_tax - self.total_tax_neto
+
+    @property
+    def total_neto_profit(self):
+        return self.total_profit - self.total_cost_price
 
     def __str__(self):
         return f"CampaignEntry for {self.parent.name} - {self.created_at}"
@@ -126,7 +134,6 @@ class CampaignEntry(TimeStampedModel):
         self.product_stock_left = self.parent.product.stock_item.available_stock
         self.product_sale_price = self.parent.product.sale_price
         self.product_cost_price = self.calculate_product_cost_price()
-        self.product_profit = self.product_sale_price - self.product_cost_price
 
     def calculate_product_cost_price(self):
         # Refaktoriri ka ke se trgne rezervirana zaliha
@@ -155,10 +162,6 @@ class CampaignEntry(TimeStampedModel):
                     reserved_import_item.price_vat_and_customs
                     * reserved_item.initial_quantity
                 )
-
-                self.total_profit += (
-                    reserved_item.initial_quantity * order_item.price
-                ) - self.total_cost_price
 
                 if reserved_import_item.id in import_item_data:
                     import_item_data[reserved_import_item.id][

@@ -1,0 +1,58 @@
+{% extends 'shop_manager/base.html' %}
+{% load static %}
+{% load tz %}
+{% block dashboard %}
+    <div class="py-4 px-4 lg:px-8 flex flex-col items-start gap-4">
+        <div class="p-4 w-full bg-white rounded-xl shadow-md flex flex-col gap-4 ">
+            <div class="flex items-center justify-between">
+                <h4 class="text-xl font-bold">{{ campaign_summary.name }} <span
+                        class="text-xs font-normal ">{{ campaign_summary.created_at|date:"d.m.Y H:i:s" }}</span>
+                </h4>
+            </div>
+            <table class="table-auto w-full text-left">
+                <thead class="border-b border-gray-200">
+                <tr>
+                    <th class="font-normal">Дата</th>
+                    <th class="font-normal">Количина</th>
+                    <th class="font-normal">Цена (AOB)</th>
+                    <th class="font-normal">Набавна цена</th>
+                    <th class="font-normal">ДДВ вкупно</th>
+                    <th class="font-normal">ДДВ набавна</th>
+                    <th class="font-normal">ДДВ за плаќање</th>
+                    <th class="font-normal">Реклама</th>
+                    <th class="font-normal">Нето профит</th>
+                    <th class="font-normal">BE ROAS</th>
+                    <th class="font-normal">ROAS</th>
+                    <th class="font-normal">ROI</th>
+                    <th class="font-normal">Залиха магацин</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for entry in campaign_summary.entries.all %}
+                    <tr class="border-b-2 border-gray-200 {% if entry.total_neto_profit < 0 %}bg-red-600 text-white{% endif %} rounded">
+                        <td class="table_field">
+                            {% timezone "Europe/Berlin" %}
+                                {{ entry.created_at|date:"d.m.Y" }}
+                            {% endtimezone %}
+                        </td>
+                        <td class="table_field">{{ entry.quantity_ordered }}</td>
+                        <td class="table_field">{{ entry.product_sale_price }}</td>
+                        <td class="table_field">{{ entry.product_cost_price }}</td>
+                        <td class="table_field">{{ entry.total_tax_neto|floatformat:2 }}</td>
+                        <td class="table_field">{{ entry.total_tax|floatformat:2 }}</td>
+                        <td class="table_field">{{ entry.tax_to_pay|floatformat:2 }}</td>
+                        <td class="table_field">{{ entry.advertisement_cost }}</td>
+                        <td class="table_field">{{ entry.total_neto_profit }}</td>
+                        <td class="table_field">{{ entry.break_even_return_on_ad_spend|floatformat:2 }}</td>
+                        <td class="table_field">{{ entry.return_on_ad_spend|floatformat:2 }}</td>
+                        <td class="table_field">{{ entry.return_on_investment|floatformat:2 }}</td>
+                        <td class="table_field">{{ entry.product_stock_left }}</td>
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock dashboard %}
