@@ -64,12 +64,14 @@ class ImportItemAdmin(admin.ModelAdmin):
 class ImportAdmin(admin.ModelAdmin):
     list_display = ["title", "description"]
     inlines = [ImportItemInline]
+    readonly_fields = ["ad_spend"]
 
 
 @admin.register(StockItem)
 class StockItemAdmin(admin.ModelAdmin):
     search_fields = ["label", "sku", "title"]
     readonly_fields = ["stock", "available_stock", "reserved_stock", "qr_code"]
+    list_display = ["title", "sku", "label", "available_stock"]
 
     form = StockItemForm
 

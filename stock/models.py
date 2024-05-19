@@ -5,9 +5,10 @@ from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.core.files import File
 from django.db import models
+from django.db.models import Sum, IntegerField, F
 
 from common.models import BaseProduct, TimeStampedModel
-from shop.models import Product
+from shop.models import Product, ProductAttribute
 
 
 # Create your models here.
@@ -52,8 +53,8 @@ class StockItem(BaseProduct):
     @admin.display(description="Вкупна резервирана залиха")
     def reserved_stock(self):
         # for items in import items sum the reserved stock and return
-        if self.importitem_set.exists():
-            return sum([item.reserved_stock for item in self.importitem_set.all()])
+        if self.import_items.exists():
+            return sum([item.reserved_stock for item in self.import_items.all()])
         return 0
 
     @property
@@ -72,6 +73,147 @@ class StockItem(BaseProduct):
 class Import(TimeStampedModel):
     title = models.CharField(max_length=255, verbose_name="Име на увоз")
     description = models.TextField(blank=True, null=True, verbose_name="Опис")
+    ad_spend = models.IntegerField(default=0, verbose_name="Ad Spend")
+
+    def get_sales_data(self):
+        stock_item_ids = self.import_items.values_list(
+            "stock_item_id", flat=True
+        ).distinct()
+
+        analytics_data = {
+            "total_sale_price_for_all_items": 0,
+            "total_sale_price_for_all_sold_items": 0,
+            "total_sale_price_for_all_available_stock": 0,
+            "profit": 0,
+        }
+
+        products = (
+            Product.objects.filter(
+                stock_item__id__in=stock_item_ids, type=Product.ProductType.SIMPLE
+            )
+            .annotate(
+                total_sale_price_for_all_items=Sum(
+                    F("sale_price") * F("stock_item__import_items__initial_quantity"),
+                    output_field=IntegerField(),
+                ),
+                total_sale_price_for_all_available_stock=Sum(
+                    F("sale_price")
+                    * (
+                        F("stock_item__import_items__quantity")
+                        - F("stock_item__import_items__reserved_stock")
+                    ),
+                    output_field=IntegerField(),
+                ),
+            )
+            .distinct()
+            .values(
+                "total_sale_price_for_all_items",
+                "total_sale_price_for_all_available_stock",
+            )
+        )
+
+        attributes = (
+            ProductAttribute.objects.filter(product__stock_item__id__in=stock_item_ids)
+            .annotate(
+                total_sale_price_for_all_items=Sum(
+                    F("sale_price") * F("stock_item__import_items__initial_quantity"),
+                    output_field=IntegerField(),
+                ),
+                total_sale_price_for_all_available_stock=Sum(
+                    F("sale_price")
+                    * (
+                        F("stock_item__import_items__quantity")
+                        - F("stock_item__import_items__reserved_stock")
+                    ),
+                    output_field=IntegerField(),
+                ),
+            )
+            .distinct()
+            .values(
+                "total_sale_price_for_all_items",
+                "total_sale_price_for_all_available_stock",
+            )
+        )
+
+        reserved_stock_items = (
+            ReservedStockItem.objects.filter(
+                import_item__stock_item__id__in=stock_item_ids
+            )
+            .annotate(
+                total_sale_price_for_all_sold_items=Sum(
+                    models.F("order_item__price") * models.F("quantity")
+                ),
+                total_stock_price_for_all_sold_items=Sum(
+                    models.F("import_item__price_vat_and_customs")
+                    * models.F("quantity")
+                ),
+            )
+            .values(
+                "total_sale_price_for_all_sold_items",
+                "total_stock_price_for_all_sold_items",
+            )
+        )
+
+        total_all_items = sum(
+            [
+                product["total_sale_price_for_all_items"]
+                for product in products
+                if product["total_sale_price_for_all_items"]
+            ]
+        )
+        total_all_items += sum(
+            [
+                attribute["total_sale_price_for_all_items"]
+                for attribute in attributes
+                if attribute["total_sale_price_for_all_items"]
+            ]
+        )
+
+        total_all_sold_items = sum(
+            [
+                reserved_stock_item["total_sale_price_for_all_sold_items"]
+                for reserved_stock_item in reserved_stock_items
+                if reserved_stock_item["total_sale_price_for_all_sold_items"]
+            ]
+        )
+
+        total_all_available_stock = sum(
+            [
+                product["total_sale_price_for_all_available_stock"]
+                for product in products
+                if product["total_sale_price_for_all_available_stock"]
+            ]
+        )
+
+        total_all_available_stock += sum(
+            [
+                attribute["total_sale_price_for_all_available_stock"]
+                for attribute in attributes
+                if attribute["total_sale_price_for_all_available_stock"]
+            ]
+        )
+
+        total_all_sold_stock_price = sum(
+            [
+                reserved_stock_item["total_stock_price_for_all_sold_items"]
+                for reserved_stock_item in reserved_stock_items
+                if reserved_stock_item["total_stock_price_for_all_sold_items"]
+            ]
+        )
+
+        analytics_data["total_sale_price_for_all_items"] = total_all_items
+        analytics_data["total_sale_price_for_all_sold_items"] = total_all_sold_items
+        analytics_data[
+            "total_sale_price_for_all_available_stock"
+        ] = total_all_available_stock
+
+        analytics_data["profit"] = (
+            analytics_data["total_sale_price_for_all_sold_items"]
+            - total_all_sold_stock_price
+            - (self.ad_spend + (self.ad_spend * 0.1))
+            - (analytics_data["total_sale_price_for_all_sold_items"] * 0.1)
+        )
+        return analytics_data
 
     def __str__(self):
         return self.title
@@ -82,8 +224,12 @@ class Import(TimeStampedModel):
 
 
 class ImportItem(TimeStampedModel):
-    parentImport = models.ForeignKey(Import, on_delete=models.CASCADE)
-    stock_item = models.ForeignKey(StockItem, on_delete=models.CASCADE)
+    parentImport = models.ForeignKey(
+        Import, on_delete=models.CASCADE, related_name="import_items"
+    )
+    stock_item = models.ForeignKey(
+        StockItem, on_delete=models.CASCADE, related_name="import_items"
+    )
     initial_quantity = models.PositiveIntegerField(
         default=0, verbose_name="Увезена количина"
     )

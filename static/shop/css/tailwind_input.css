@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 button[disabled] {
     @apply cursor-not-allowed;
     @apply opacity-50;

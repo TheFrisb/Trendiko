@@ -12,6 +12,7 @@ from .views import (
     AbandonedCartsDashboard,
     test_pdf,
     ClientDashboard,
+    ImportAnalytics,
 )
 
 app_name = "shop_manager"
@@ -34,6 +35,11 @@ urlpatterns = [
         "dashboard/analytics/facebook-campaigns/<str:slug>/",
         FacebookAnalyticsDetailDashboard.as_view(),
         name="facebook_campaign_detail_view",
+    ),
+    path(
+        "dashboard/analytics/imports/",
+        ImportAnalytics.as_view(),
+        name="import_analytics_dashboard",
     ),
     path(
         "dashboard/abandoned-carts/",

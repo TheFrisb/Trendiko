@@ -1,0 +1,42 @@
+
+DONE:
+1. Abandoned carts
+- Optimizacija na prikazo, proverka na dali gi zapisuva dobro
+
+Cost: Free
++ - - - - - - - - - - - - - - - - - +
+2. Kreiranje faktura za golemoprodazba
+
+* Opcija za kreiranje na klient so informacii:
+- ime na firma ili ime na klient
+- telefonski broj opcionalen
+- grad
+* Da moze da se kreire poracka za taj klient specificno, deka so moze da se birat produktite, moze da se stava custom discount(rabat) i da se bira kolicina
+* Da ima tick box, za dali da se kreira faktura, so zavise od dali kliento plaka na fiskalna ili na faktura.
+* Vo export na dnevni naracki gi dava bez razlika dali e na fiskalna ili na faktura
+* Analitika za klient, deka so ke moze da se vidat detaili za porackite na taj klient, so prihod, dati, naracani proizvodi i kolicini
+
+Cost: 12 hours
++ - - - - - - - - - - - - - - - - - +
+3. Misc
+
+* Besplatna dostava nad 1500 den na product page da pise
+* Predvidena isporaka nedela da ne go prikazuva kako den
+* Vo proizvodi admin, da pise samo sale price i momentalna zaliha, regular price da se izbrise
+
+Cost: 3 hours --> free
++ - - - - - - - - - - - - - - - - - +
+4. CSS & SEO
+
+* CSS da moze da se pise u head
+* Search Crawler i site angliski zborovi otstraneno. Podobreno SEO deka so moze za google
+
+Cost: 3 hours
++ - - - - - - - - - - - - - - - - - +
+7. Izmena na cena na proizvod da se prake kaj smetkovoditelka vo ista forma kako izvestajot
+* PDF template za izvestajo
+* vtor mail account samo za smetkovoditelkata
+* Da se detektire promena na cena, i da se prake mejl.
+
+Cost: 4 hours
++ - - - - - - - - - - - - - - - - - +

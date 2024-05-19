@@ -142,7 +142,14 @@ class ProductAdmin(admin.ModelAdmin):
     readonly_fields = ["slug"]
 
     def get_stock_item_stock(self, obj):
-        return obj.stock_item.stock if obj.stock_item else None
+        # get object stock item if not get the sum of attributes stock items
+        if obj.isVariable():
+            stock = sum(
+                [attribute.stock_item.stock for attribute in obj.attributes.all()]
+            )
+        else:
+            stock = obj.stock_item.stock
+        return stock
 
     get_stock_item_stock.short_description = "Stock"
     get_stock_item_stock.admin_order_field = "stock_item__stock"

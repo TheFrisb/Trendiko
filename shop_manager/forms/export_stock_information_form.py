@@ -23,7 +23,7 @@ class ExportStockInformationForm(forms.Form):
 
             row += 1
 
-            for import_item in stock_import.importitem_set.all():
+            for import_item in stock_import.import_items.all():
                 worksheet.write(row, 0, import_item.stock_item.title)
                 worksheet.write(row, 1, import_item.stock_item.label)
                 worksheet.write(row, 2, import_item.stock_item.sku)
@@ -43,7 +43,7 @@ class ExportStockInformationForm(forms.Form):
 
     def get_imports(self):
         return Import.objects.all().prefetch_related(
-            "importitem_set", "importitem_set__stock_item"
+            "import_items", "import_items__stock_item"
         )
 
     def write_headers(self, worksheet, format, row, col):

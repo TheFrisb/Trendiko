@@ -1,0 +1,57 @@
+{% extends 'shop_manager/base.html' %}
+{% load static %}
+{% load tz %}
+{% block dashboard %}
+    <div class="py-4 px-4 lg:px-8 flex flex-col items-start gap-4">
+        <div class="p-4 w-full bg-white rounded-xl shadow-md flex flex-col gap-4 ">
+            <div class="flex items-center justify-between">
+                <h4 class="text-xl font-bold">Import analytics</h4>
+            </div>
+            <table class="table-auto w-full text-left">
+                <thead class="border-b border-gray-200">
+                <tr>
+                    <th class="font-normal align-top text-center">Дата на увоз</th>
+                    <th class="font-normal align-top text-center">Увозена количина</th>
+                    <th class="font-normal align-top text-center">Достапни на залиха</th>
+                    <th class="font-normal align-top text-center">Продадено</th>
+
+                    <th class="font-normal align-top text-center">Набавна вредност </br>вкупно</th>
+                    <th class="font-normal align-top text-center">Достапни на залиха</br>набавна вредност вкупно</th>
+                    <th class="font-normal align-top text-center">Продадени</br>набавна вредност вкупно</th>
+
+                    <th class="font-normal align-top text-center">Продажна вредност</br> вкупно</th>
+                    <th class="font-normal align-top text-center">Продадени </br>продажна вредност</th>
+                    <th class="font-normal align-top text-center">Достапни на залиха </br>продажна вредност</th>
+                    <th class="font-normal align-top text-center">Профит</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for import in imports %}
+                    <tr class="border-b-2 border-gray-200 rounded">
+                        <td class="table_field text-center">
+                            {% timezone "Europe/Berlin" %}
+                                {{ import.created_at|date:"d.m.Y" }}
+                            {% endtimezone %}
+                        </td>
+                        <td class="font-normal text-center">{{ import.total_number_of_items_imported }}</td>
+                        <td class="font-normal text-center">{{ import.total_number_of_items_on_stock }}</td>
+                        <td class="font-normal text-center">{{ import.total_number_of_items_sold }}</td>
+
+                        <td class="font-normal text-center">{{ import.total_import_price }}</td>
+                        <td class="font-normal text-center">{{ import.total_import_price_for_all_available_stock }}</td>
+                        <td class="font-normal text-center">{{ import.total_import_price_for_all_sold_items }}</td>
+
+                        {% with import_sale_data=import.get_sales_data %}
+                            <td class="font-normal text-center">{{ import_sale_data.total_sale_price_for_all_items }}</td>
+                            <td class="font-normal text-center">{{ import_sale_data.total_sale_price_for_all_sold_items }}</td>
+                            <td class="font-normal text-center">{{ import_sale_data.total_sale_price_for_all_available_stock }}</td>
+                            <td class="font-normal text-center">{{ import_sale_data.profit }}</td>
+                        {% endwith %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock dashboard %}

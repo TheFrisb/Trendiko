@@ -201,14 +201,18 @@ class SidebarItemsMixin:
         return context
 
     def get_analytics_manager_items(self):
-        analytics_dashboard_url = reverse("shop_manager:analytics_dashboard")
         return {
             "title": "Analytics",
             "icon": "line-chart",
             "items": [
                 {
                     "name": "Facebook Campaigns",
-                    "url": analytics_dashboard_url,
+                    "url": reverse("shop_manager:analytics_dashboard"),
+                    "icon": "scatter-chart",
+                },
+                {
+                    "name": "Imports",
+                    "url": reverse("shop_manager:import_analytics_dashboard"),
                     "icon": "scatter-chart",
                 },
             ],

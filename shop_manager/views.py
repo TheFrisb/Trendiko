@@ -1,3 +1,10 @@
+from django.db.models import (
+    Sum,
+    DecimalField,
+    F,
+    ExpressionWrapper,
+    IntegerField,
+)
 from django.http import FileResponse, HttpResponse, Http404
 from django.shortcuts import render
 from django.views import View
@@ -5,7 +12,7 @@ from django.views.generic import ListView, DetailView
 
 from analytics.models import CampaignSummary
 from cart.models import Order, Cart
-from stock.models import StockItem
+from stock.models import StockItem, Import
 from .forms.export_invoices import ExportInvoicesForm
 from .forms.export_orders_form import ExportOrdersForm
 from .forms.export_stock_information_form import ExportStockInformationForm
@@ -93,7 +100,7 @@ class StockManagerHome(StockManagerRequiredMixin, BaseDashboardView):
         )
 
     def get_queryset(self):
-        return StockItem.objects.filter().prefetch_related("importitem_set")
+        return StockItem.objects.filter().prefetch_related("import_items")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -247,4 +254,57 @@ class FacebookAnalyticsDetailDashboard(
         context["current_entry"] = self.object
         context["dashboard_fullscreen"] = True
 
+        return context
+
+
+class ImportAnalytics(AnalyticsManagerRequiredMixin, BaseDashboardView):
+    model = Import
+    context_object_name = "imports"
+    template_name = f"{dashboards_dir}/analytics/import_analytics_list.html"
+
+    def get_queryset(self):
+        # Annotating Import objects with aggregated data using the correct related_name 'import_items'
+        queryset = Import.objects.annotate(
+            total_number_of_items_imported=Sum("import_items__initial_quantity"),
+            total_number_of_items_sold=Sum("import_items__initial_quantity")
+            - (Sum("import_items__quantity") - Sum(F("import_items__reserved_stock"))),
+            total_number_of_items_on_stock=Sum(
+                ExpressionWrapper(
+                    F("import_items__quantity") - F("import_items__reserved_stock"),
+                    output_field=IntegerField(),
+                )
+            ),
+            total_import_price=Sum(
+                F("import_items__initial_quantity")
+                * F("import_items__price_vat_and_customs"),
+                output_field=IntegerField(),
+            ),
+            total_import_price_for_all_available_stock=Sum(
+                ExpressionWrapper(
+                    F("import_items__quantity") - F("import_items__reserved_stock"),
+                    output_field=IntegerField(),
+                )
+                * F("import_items__price_vat_and_customs"),
+                output_field=IntegerField(),
+            ),
+            total_import_price_for_all_sold_items=Sum(
+                (
+                    F("import_items__initial_quantity")
+                    - ExpressionWrapper(
+                        F("import_items__quantity") - F("import_items__reserved_stock"),
+                        output_field=IntegerField(),
+                    )
+                )
+                * F("import_items__price_vat_and_customs"),
+                output_field=DecimalField(max_digits=10, decimal_places=2),
+            ),
+        ).order_by("created_at")
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Import Analytics"
+        context["dashboard_fullscreen"] = True
+        self.object_list.first().get_sales_data()
         return context
