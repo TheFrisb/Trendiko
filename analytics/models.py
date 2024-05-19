@@ -131,7 +131,15 @@ class CampaignEntry(TimeStampedModel):
         self.save()
 
     def populate_static_data(self, ad_spend_data: float) -> None:
-        self.product_stock_left = self.parent.product.stock_item.stock
+        if self.parent.product.stock_item:
+            self.product_stock_left = self.parent.product.stock_item.stock
+        else:
+            self.product_stock_left = sum(
+                [
+                    attribute.stock_item.stock
+                    for attribute in self.parent.product.attributes.all()
+                ]
+            )
         self.product_sale_price = self.parent.product.sale_price
         self.product_cost_price = self.calculate_product_cost_price()
         self.advertisement_cost = ad_spend_data
