@@ -160,19 +160,6 @@ function initializeQRScanner() {
 
   // on click remove stock button
 
-  removeStockButton.addEventListener('click', function () {
-    stockManagerCurrentActionBannerText.innerText = BANNER_TEXT.REMOVE_STOCK;
-
-    stockManagerCurrentActionBanner.classList.remove('isDoingNothing');
-    stockManagerCurrentActionBanner.classList.remove('isAddingStock');
-
-    stockManagerCurrentActionBanner.classList.add('isRemovingStock');
-    stockManagerState.isAddingStock = false;
-
-    if (!html5QrcodeScanner.isScanning) {
-      initReader();
-    }
-  });
 
   // on click confirm button
   scannedProductModalConfirmButton.addEventListener('click', function () {
