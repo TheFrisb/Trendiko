@@ -147,6 +147,13 @@ class CampaignEntry(TimeStampedModel):
         import_items = ImportItem.objects.filter(
             stock_item=self.parent.product.stock_item
         ).order_by("created_at")
+
+        if not import_items.exists():
+            stock_item = self.parent.product.attributes.first().stock_item
+            import_items = ImportItem.objects.filter(stock_item=stock_item).order_by(
+                "created_at"
+            )
+
         cost_prices = []
         for import_item in import_items:
             if import_item.calculate_max_available_reservation() > 0:
