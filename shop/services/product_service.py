@@ -78,7 +78,7 @@ class ProductService:
             if not self.stock_validator.check_stock_item_stock(
                 attribute.stock_item, data.get("quantity")
             ):
-                calculated_available_stock = attribute.stock_item.available_stock
+                calculated_available_stock = attribute.stock_item.stock
                 if calculated_available_stock <= 0:
                     message = f'Производот "{product.title} - {attribute.title}" е распродаден.'
                 else:
@@ -103,7 +103,7 @@ class ProductService:
         if not self.stock_validator.check_stock_item_stock(
             product.stock_item, data.get("quantity")
         ):
-            calculated_available_stock = product.stock_item.available_stock
+            calculated_available_stock = product.stock_item.stock
             if calculated_available_stock <= 0:
                 message = f'Производот "{product.title}" е распродаден.'
             else:

@@ -10,9 +10,8 @@ from facebook.models import FacebookCampaign
 @receiver(post_save, sender=FacebookCampaign)
 def create_campaign_summary(sender, instance, created, **kwargs):
     if created:
-        print("Creating Campaign Summary")
         CampaignSummary.objects.create(
-            name="PLACEHOLDER",
+            name=instance.product.title,
             product=instance.product,
             campaign_id=instance.campaign_id,
         )

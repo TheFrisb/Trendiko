@@ -84,11 +84,11 @@ class OrderItemFormSet(BaseInlineFormSet):
                     form.cleaned_data["type"] = Product.ProductType.VARIABLE
 
                 if (
-                    form.cleaned_data["stock_item"].available_stock
+                    form.cleaned_data["stock_item"].stock
                     < form.cleaned_data["quantity"]
                 ):
                     raise ValidationError(
-                        f"Only {form.cleaned_data['stock_item'].available_stock} items are available for {form.cleaned_data['stock_item']}"
+                        f"Only {form.cleaned_data['stock_item'].stock} items are available for {form.cleaned_data['stock_item']}"
                     )
 
     # if creating new orderItems, use .reserve_stock_for_order_item() to reserve the stock with transaction.atomic

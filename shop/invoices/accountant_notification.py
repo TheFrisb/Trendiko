@@ -19,9 +19,9 @@ class AccountantInvoicer:
         stored_counter = StoredCounter.objects.get(
             type=StoredCounter.CounterType.PRODUCT_PRICE_CHANGE
         )
-        old_stock = old_item.stock_item.available_stock
+        old_stock = old_item.stock_item.stock
         old_total = old_item.sale_price * old_stock
-        new_stock = new_item.stock_item.available_stock
+        new_stock = new_item.stock_item.stock
         new_total = new_item.sale_price * new_stock
         context = {
             "old_price": old_item.sale_price,

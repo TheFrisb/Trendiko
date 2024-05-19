@@ -14,7 +14,7 @@ def update_product_status_on_stock_item_update(stock_item_id):
     from stock.models import StockItem
 
     stock_item = StockItem.objects.get(id=stock_item_id)
-    if stock_item.available_stock == 0:
+    if stock_item.stock == 0:
         Product.objects.filter(
             stock_item=stock_item, status=Product.ProductStatus.PUBLISHED
         ).update(status=Product.ProductStatus.OUT_OF_STOCK)

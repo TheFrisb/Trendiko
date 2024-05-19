@@ -247,8 +247,8 @@ class Product(BaseProduct):
         }
 
     def get_sellable_stock_to_show(self):
-        if self.stock_item and self.stock_item.available_stock < 10:
-            return self.stock_item.available_stock
+        if self.stock_item and self.stock_item.stock < 10:
+            return self.stock_item.stock
         return random.randint(5, 10)
 
     def save(self, *args, **kwargs):

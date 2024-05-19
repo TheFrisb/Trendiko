@@ -1,20 +1,9 @@
 celery -A trendiko worker --loglevel=info
 + - - - - - - - - - - - - - - - - - +
-1. Implementiri logika za presmetuvane na prodazna vrednost
-3. Implementiri logika za smetane na profitabilnost
-
-Cost: 15 hours
-+ - - - - - - - - - - - - - - - - - +
-6. Stock item
-* Slika od proizvodot pred imeto na stock item
-* Momentalna zaliha vonka kolona u admin list, so filter najnogo zaliha, najmalku zaliha
-* Nabavna cena da ima kolona u admin list
-* Golemoprodazna cena da ima u admin list i u detail view so e ednakva na nabavna * 2
-* Malo prodzazna cena so e ednakva na product page sale price, kolona u admin list, i vo detail view
-* Da se izbrishat "vistinska zaliha bez rezervirana" i "vkupna rezervirana zaliha" i "reserved stock items"
-* Da se izbrise kopce "otstrani" od qr skenerot
-* Dodadi zaliha so scan si ostanuva i dodava na "dostapna kolicina za prodazba"
-+ - - - - - - - - - - - - - - - - - +
+1. Majni reserved items.
+2. Napraj cron job da e podesabilna po date
+3. Proveri cron job code
+4. Push && run cron job on server
 
 --------------------------------------------------------------------------------------------------------------------
 Facebook campaigns creation: Total should be 8 hours

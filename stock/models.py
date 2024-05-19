@@ -1,7 +1,6 @@
 from io import BytesIO
 
 import qrcode
-from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.core.files import File
 from django.db import models
@@ -20,9 +19,7 @@ class StockItem(BaseProduct):
         max_length=255, unique=True, verbose_name="SKU", db_index=True
     )
     label = models.CharField(max_length=255, verbose_name="Label")
-    stock = models.PositiveIntegerField(
-        default=0, verbose_name="Вистинска залиха, без резервирана"
-    )
+    stock = models.PositiveIntegerField(default=0, verbose_name="Вистинска залиха")
 
     def save(self, *args, **kwargs):
         if not self.qr_code:
@@ -49,25 +46,12 @@ class StockItem(BaseProduct):
 
         return file
 
-    @property
-    @admin.display(description="Вкупна резервирана залиха")
-    def reserved_stock(self):
-        # for items in import items sum the reserved stock and return
-        if self.import_items.exists():
-            return sum([item.reserved_stock for item in self.import_items.all()])
-        return 0
-
-    @property
-    @admin.display(description="Достапна залиха за продажба")
-    def available_stock(self):
-        return self.stock - self.reserved_stock
-
     class Meta:
         verbose_name = "Stock Item"
         verbose_name_plural = "Stock Items"
 
     def __str__(self):
-        return f"[{self.sku}] {self.title}, {self.available_stock} items in stock"
+        return f"[{self.sku}] {self.title}, {self.stock} items in stock"
 
 
 class Import(TimeStampedModel):
@@ -97,11 +81,7 @@ class Import(TimeStampedModel):
                     output_field=IntegerField(),
                 ),
                 total_sale_price_for_all_available_stock=Sum(
-                    F("sale_price")
-                    * (
-                        F("stock_item__import_items__quantity")
-                        - F("stock_item__import_items__reserved_stock")
-                    ),
+                    F("sale_price") * F("stock_item__import_items__quantity"),
                     output_field=IntegerField(),
                 ),
             )
@@ -120,11 +100,7 @@ class Import(TimeStampedModel):
                     output_field=IntegerField(),
                 ),
                 total_sale_price_for_all_available_stock=Sum(
-                    F("sale_price")
-                    * (
-                        F("stock_item__import_items__quantity")
-                        - F("stock_item__import_items__reserved_stock")
-                    ),
+                    F("sale_price") * F("stock_item__import_items__quantity"),
                     output_field=IntegerField(),
                 ),
             )
@@ -241,9 +217,6 @@ class ImportItem(TimeStampedModel):
     price_vat_and_customs = models.PositiveIntegerField(
         default=0, verbose_name="Цена со ДДВ и царина"
     )
-    reserved_stock = models.PositiveIntegerField(
-        default=0, verbose_name="Резервирана залиха"
-    )
 
     def __str__(self):
         return f"[{self.parentImport.title}] {self.stock_item.sku} {self.stock_item.title} - {self.calculate_max_available_reservation()} in stock"
@@ -261,10 +234,10 @@ class ImportItem(TimeStampedModel):
         return stock + self.quantity
 
     def vat_price(self):
-        return self.price * 0.18
+        return self.price_no_vat * 0.18
 
     def calculate_max_available_reservation(self):
-        return self.quantity - self.reserved_stock
+        return self.quantity
 
     class Meta:
         verbose_name = "Увозен Продукт"
@@ -301,32 +274,18 @@ class ReservedStockItem(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         if not self.pk:
+            if self.initial_quantity > self.import_item.quantity:
+                raise ValidationError(
+                    {
+                        "error": "The reserved stock cannot be greater than the import item quantity",
+                        "order_item": self.order_item,
+                    }
+                )
             self.quantity = self.initial_quantity
+            self.import_item.quantity -= self.initial_quantity
+            self.import_item.save()
 
-        self.import_item.reserved_stock = self.calculate_reserved_stock()
-        if self.import_item.reserved_stock > self.import_item.quantity:
-            raise ValidationError(
-                {
-                    "error": "The reserved stock cannot be greater than the import item quantity",
-                    "order_item": self.order_item,
-                }
-            )
-
-        self.import_item.save()
         if self.quantity == 0:
             self.status = self.Status.DEPLETED
 
         super().save(*args, **kwargs)
-
-    def calculate_reserved_stock(self):
-        reserved_stocks = ReservedStockItem.objects.filter(
-            import_item=self.import_item, status=self.Status.PENDING
-        ).exclude(pk=self.pk)
-        reserved_stock = sum(
-            [reserved_stock.quantity for reserved_stock in reserved_stocks]
-        )
-
-        if self.status == self.Status.PENDING:
-            reserved_stock += self.quantity
-
-        return reserved_stock

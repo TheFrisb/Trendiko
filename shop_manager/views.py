@@ -2,7 +2,6 @@ from django.db.models import (
     Sum,
     DecimalField,
     F,
-    ExpressionWrapper,
     IntegerField,
 )
 from django.http import FileResponse, HttpResponse, Http404
@@ -267,34 +266,19 @@ class ImportAnalytics(AnalyticsManagerRequiredMixin, BaseDashboardView):
         queryset = Import.objects.annotate(
             total_number_of_items_imported=Sum("import_items__initial_quantity"),
             total_number_of_items_sold=Sum("import_items__initial_quantity")
-            - (Sum("import_items__quantity") - Sum(F("import_items__reserved_stock"))),
-            total_number_of_items_on_stock=Sum(
-                ExpressionWrapper(
-                    F("import_items__quantity") - F("import_items__reserved_stock"),
-                    output_field=IntegerField(),
-                )
-            ),
+            - (Sum("import_items__quantity")),
+            total_number_of_items_on_stock=Sum(F("import_items__quantity")),
             total_import_price=Sum(
                 F("import_items__initial_quantity")
                 * F("import_items__price_vat_and_customs"),
                 output_field=IntegerField(),
             ),
             total_import_price_for_all_available_stock=Sum(
-                ExpressionWrapper(
-                    F("import_items__quantity") - F("import_items__reserved_stock"),
-                    output_field=IntegerField(),
-                )
-                * F("import_items__price_vat_and_customs"),
+                F("import_items__quantity") * F("import_items__price_vat_and_customs"),
                 output_field=IntegerField(),
             ),
             total_import_price_for_all_sold_items=Sum(
-                (
-                    F("import_items__initial_quantity")
-                    - ExpressionWrapper(
-                        F("import_items__quantity") - F("import_items__reserved_stock"),
-                        output_field=IntegerField(),
-                    )
-                )
+                (F("import_items__initial_quantity") - F("import_items__quantity"))
                 * F("import_items__price_vat_and_customs"),
                 output_field=DecimalField(max_digits=10, decimal_places=2),
             ),
