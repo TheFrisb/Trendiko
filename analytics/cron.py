@@ -73,9 +73,8 @@ def populate_imports_ad_spend(ad_spend_per_campaign: dict):
                     "ad_spend": 0,
                     "quantity": 0,
                 }
-
-            imports_to_save[import_id]["ad_spend"] += ad_spend_data["spend_mkd"]
-            imports_to_save[import_id]["quantity"] += reserved_stock_item.quantity
+                imports_to_save[import_id]["ad_spend"] += ad_spend_data["spend_mkd"]
+                imports_to_save[import_id]["quantity"] += reserved_stock_item.quantity
 
     for import_id, data in imports_to_save.items():
         import_item = Import.objects.get(id=import_id)
