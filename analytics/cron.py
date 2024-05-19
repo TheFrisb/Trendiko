@@ -10,10 +10,12 @@ from facebook.services.api_connection import FacebookApi
 from stock.models import ReservedStockItem, Import
 
 
-def create_campaign_summaries():
+def create_campaign_summaries(start_time: datetime = None, end_time: datetime = None):
     logging.info("Analytics cron job started")
 
-    start_time, end_time = get_yesterday_time_ranges()
+    if not start_time or not end_time:
+        start_time, end_time = get_yesterday_time_ranges()
+
     dollar_to_mkd = get_dollar_value_in_mkd()
 
     logging.info(
