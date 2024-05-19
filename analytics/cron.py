@@ -62,19 +62,26 @@ def populate_imports_ad_spend(ad_spend_per_campaign: dict):
     # loop over dict getting key and value
     imports_to_save = {}
     for campaign_id, ad_spend_data in ad_spend_per_campaign.items():
-        reserved_stock_items = ReservedStockItem.objects.filter(
-            order_item__product__facebook_campaigns__campaign_id=campaign_id
-        ).prefetch_related("import_item", "import_item__parentImport")
+        reserved_stock_items = (
+            ReservedStockItem.objects.filter(
+                order_item__product__facebook_campaigns__campaign_id=campaign_id
+            )
+            .prefetch_related("import_item", "import_item__parentImport")
+            .group_by("import_item__parentImport")
+        )
         print(reserved_stock_items)
+        updated_imports = set()
+
         for reserved_stock_item in reserved_stock_items:
             import_id = reserved_stock_item.import_item.parentImport.id
             if import_id not in imports_to_save:
                 imports_to_save[import_id] = {
                     "ad_spend": 0,
-                    "quantity": 0,
                 }
+
+            if import_id not in updated_imports:
                 imports_to_save[import_id]["ad_spend"] += ad_spend_data["spend_mkd"]
-                imports_to_save[import_id]["quantity"] += reserved_stock_item.quantity
+                updated_imports.add(import_id)
 
     for import_id, data in imports_to_save.items():
         import_item = Import.objects.get(id=import_id)
