@@ -40,12 +40,3 @@ Cost: 3 hours
 
 Cost: 4 hours
 + - - - - - - - - - - - - - - - - - +
-6. Stock item
-* Slika od proizvodot pred imeto na stock item
-* Momentalna zaliha vonka kolona u admin list, so filter najnogo zaliha, najmalku zaliha
-* Nabavna cena da ima kolona u admin list
-* Golemoprodazna cena da ima u admin list i u detail view so e ednakva na nabavna * 2
-* Malo prodzazna cena so e ednakva na product page sale price, kolona u admin list, i vo detail view
-* Da se izbrishat "vistinska zaliha bez rezervirana" i "vkupna rezervirana zaliha" i "reserved stock items"
-* Da se izbrise kopce "otstrani" od qr skenerot
-* Dodadi zaliha so scan si ostanuva i dodava na "dostapna kolicina za prodazba"

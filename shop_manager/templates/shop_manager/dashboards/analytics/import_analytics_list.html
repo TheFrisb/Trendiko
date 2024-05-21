@@ -22,6 +22,7 @@
                     <th class="font-normal align-top text-center">Продажна вредност</br> вкупно</th>
                     <th class="font-normal align-top text-center">Продадени </br>продажна вредност</th>
                     <th class="font-normal align-top text-center">Достапни на залиха </br>продажна вредност</th>
+                    <th class="font-normal align-top text-center">Ad Spend</th>
                     <th class="font-normal align-top text-center">Профит</th>
                 </tr>
                 </thead>
@@ -45,7 +46,8 @@
                             <td class="font-normal text-center">{{ import_sale_data.total_sale_price_for_all_items }}</td>
                             <td class="font-normal text-center">{{ import_sale_data.total_sale_price_for_all_sold_items }}</td>
                             <td class="font-normal text-center">{{ import_sale_data.total_sale_price_for_all_available_stock }}</td>
-                            <td class="font-normal text-center">{{ import_sale_data.profit }}</td>
+                            <td class="font-normal text-center">{{ import_sale_data.ad_spend|floatformat: 2 }}</td>
+                            <td class="font-normal text-center">{{ import_sale_data.profit|floatformat: 2 }}</td>
                         {% endwith %}
                     </tr>
                 {% endfor %}

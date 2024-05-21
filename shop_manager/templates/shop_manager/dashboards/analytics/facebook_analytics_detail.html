@@ -16,9 +16,6 @@
                     <th class="font-normal">Количина</th>
                     <th class="font-normal">Цена (AOB)</th>
                     <th class="font-normal">Набавна цена</th>
-                    <th class="font-normal">ДДВ вкупно</th>
-                    <th class="font-normal">ДДВ набавна</th>
-                    <th class="font-normal">ДДВ за плаќање</th>
                     <th class="font-normal">Реклама</th>
                     <th class="font-normal">Нето профит</th>
                     <th class="font-normal">BE ROAS</th>
@@ -32,15 +29,13 @@
                     <tr class="border-b-2 border-gray-200 {% if entry.total_neto_profit < 0 %}bg-red-600 text-white{% endif %} rounded">
                         <td class="table_field">
                             {% timezone "Europe/Berlin" %}
-                                {{ entry.created_at|date:"d.m.Y" }}
+                                {{ entry.for_date|date:"d.m.Y" }}
                             {% endtimezone %}
                         </td>
                         <td class="table_field">{{ entry.quantity_ordered }}</td>
                         <td class="table_field">{{ entry.product_sale_price }}</td>
                         <td class="table_field">{{ entry.product_cost_price }}</td>
-                        <td class="table_field">{{ entry.total_tax_neto|floatformat:2 }}</td>
-                        <td class="table_field">{{ entry.total_tax|floatformat:2 }}</td>
-                        <td class="table_field">{{ entry.tax_to_pay|floatformat:2 }}</td>
+
                         <td class="table_field">{{ entry.advertisement_cost }}</td>
                         <td class="table_field">{{ entry.total_neto_profit }}</td>
                         <td class="table_field">{{ entry.break_even_return_on_ad_spend|floatformat:2 }}</td>

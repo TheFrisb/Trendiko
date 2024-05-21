@@ -57,7 +57,7 @@ class StockItem(BaseProduct):
 class Import(TimeStampedModel):
     title = models.CharField(max_length=255, verbose_name="Име на увоз")
     description = models.TextField(blank=True, null=True, verbose_name="Опис")
-    ad_spend = models.IntegerField(default=0, verbose_name="Ad Spend")
+    ad_spend = models.FloatField(default=0, verbose_name="Ad Spend")
 
     def get_sales_data(self):
         stock_item_ids = self.import_items.values_list(

@@ -52,7 +52,9 @@ def create_campaign_summaries(start_time: datetime = None, end_time: datetime = 
         )
         logging.info("Found %s order items", order_items.count())
 
-        summary.populate_entry(order_items, ad_spend_per_campaign[summary.campaign_id])
+        summary.populate_entry(
+            order_items, ad_spend_per_campaign[summary.campaign_id], start_time
+        )
 
     populate_imports_ad_spend(ad_spend_per_campaign)
 
