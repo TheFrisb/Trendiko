@@ -72,7 +72,9 @@ class CampaignEntry(TimeStampedModel):
     product_stock_left = models.IntegerField(
         verbose_name="Product Stock Left After Campaign", default=0
     )
-    for_date = models.DateTimeField(verbose_name="Date for which the data is collected")
+    for_date = models.DateTimeField(
+        verbose_name="Date for which the data is collected", db_index=True
+    )
 
     import_item_data = models.JSONField()
 

@@ -248,7 +248,7 @@ class FacebookAnalyticsDetailDashboard(
         context = super().get_context_data(**kwargs)
         context["title"] = self.object.name
         context["listable_items"] = CampaignSummary.objects.all().order_by(
-            "-modified_at"
+            "-entries__for_date"
         )
         context["current_entry"] = self.object
         context["dashboard_fullscreen"] = True
