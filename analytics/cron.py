@@ -101,7 +101,11 @@ def get_yesterday_time_ranges():
     return start_time, end_time
 
 
-def create_campaign_summaries_for_time_range(start_time: datetime, end_time: datetime):
-    while start_time < end_time:
-        create_campaign_summaries(start_time, start_time + timedelta(days=1))
+def create_campaign_summaries_for_time_range(start_date: datetime, end_date: datetime):
+    current_date = start_date
+    while current_date <= end_date:
+        start_time = datetime.combine(current_date, datetime.min.time())
+        end_time = datetime.combine(current_date, datetime.max.time())
+        print(start_time, end_time)
+        create_campaign_summaries(start_time, end_time)
         start_time += timedelta(days=1)
