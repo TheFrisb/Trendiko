@@ -43,7 +43,10 @@ def create_campaign_summaries(start_time: datetime = None, end_time: datetime = 
         order_items = OrderItem.objects.filter(
             created_at__range=(start_time, end_time),
             product__facebook_campaigns__campaign_id=summary.campaign_id,
-            order__status__in=[Order.OrderStatus.CONFIRMED, Order.OrderStatus.PENDING],
+            order_item__order__status__in=[
+                Order.OrderStatus.CONFIRMED,
+                Order.OrderStatus.PENDING,
+            ],
         ).prefetch_related(
             "reserved_stock_items",
             "reserved_stock_items__import_item",
@@ -69,7 +72,10 @@ def populate_imports_ad_spend(
         reserved_stock_items = ReservedStockItem.objects.filter(
             created_at__range=(start_time, end_time),
             product__facebook_campaigns__campaign_id=campaign_id,
-            order__status__in=[Order.OrderStatus.CONFIRMED, Order.OrderStatus.PENDING],
+            order_item__order__status__in=[
+                Order.OrderStatus.CONFIRMED,
+                Order.OrderStatus.PENDING,
+            ],
         ).prefetch_related("import_item", "import_item__parentImport")
         print(reserved_stock_items)
         updated_imports = set()
