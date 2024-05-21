@@ -43,7 +43,7 @@ def create_campaign_summaries(start_time: datetime = None, end_time: datetime = 
         order_items = OrderItem.objects.filter(
             created_at__range=(start_time, end_time),
             product__facebook_campaigns__campaign_id=summary.campaign_id,
-            order_item__order__status__in=[
+            order__status__in=[
                 Order.OrderStatus.CONFIRMED,
                 Order.OrderStatus.PENDING,
             ],
