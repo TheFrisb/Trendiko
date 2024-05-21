@@ -46,8 +46,8 @@
                         <td class="table_field">{{ entry.product_sale_price }}</td>
                         <td class="table_field">{{ entry.product_cost_price }}</td>
 
-                        <td class="table_field">{{ entry.advertisement_cost }}</td>
-                        <td class="table_field">{{ entry.total_neto_profit }}</td>
+                        <td class="table_field">{{ entry.advertisement_cost|floatformat:2 }}</td>
+                        <td class="table_field">{{ entry.total_neto_profit|floatformat:2 }}</td>
                         <td class="table_field">{{ entry.break_even_return_on_ad_spend|floatformat:2 }}</td>
                         <td class="table_field">{{ entry.return_on_ad_spend|floatformat:2 }}</td>
                         <td class="table_field">{{ entry.return_on_investment|floatformat:2 }}</td>
