@@ -1,7 +1,6 @@
 celery -A trendiko worker --loglevel=info
 + - - - - - - - - - - - - - - - - - +
-7. Staj tooltip ka se ode na pole da mu prikazuva formulata
-
+3. Davi aktivni proizvodi u list
 --------------------------------------------------------------------------------------------------------------------
 Facebook campaigns creation: Total should be 8 hours
 1. Implement UI - 3

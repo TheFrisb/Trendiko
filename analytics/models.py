@@ -1,11 +1,16 @@
 import datetime
 
+from decouple import config, Csv
+from django.conf import settings
 from django.db import models
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.text import slugify
 from transliterate import translit
+from weasyprint import HTML
 
-from common.models import TimeStampedModel
+from common.mailer.SendGridClient import SendGridClient
+from common.models import TimeStampedModel, StoredCounter
 from stock.models import ImportItem
 
 
@@ -185,3 +190,84 @@ class CampaignEntry(TimeStampedModel):
                     }
 
         self.import_item_data = import_item_data
+
+
+class PriceChange(TimeStampedModel):
+    product = models.ForeignKey(
+        "shop.Product", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    attribute = models.ForeignKey(
+        "shop.ProductAttribute", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    product_name = models.TextField()
+    old_price = models.IntegerField()
+    new_price = models.IntegerField()
+    for_date = models.DateTimeField()
+    counter = models.IntegerField(default=-1)
+
+    def send_mail(self):
+        if not self.product and not self.attribute:
+            raise ValueError("Product or Attribute must be set")
+
+        sendgrid_client = SendGridClient()
+
+        pdf = self.generate_pdf()
+
+        sendgrid_client.send_mail(
+            self.get_mail_recipients(),
+            f"{self.get_product_title_for_accountant_invoice()} - Промена на цена",
+            "<strong>Во attachment</strong>",
+            pdf,
+        )
+
+    def get_stock_item(self):
+        if self.product:
+            return self.product.stock_item
+        return self.attribute.stock_item
+
+    def generate_pdf(self):
+        if self.counter == -1:
+            stored_counter = StoredCounter.objects.get(
+                type=StoredCounter.CounterType.PRODUCT_PRICE_CHANGE
+            )
+            self.counter = stored_counter.get_counter()
+            stored_counter.increment_counter()
+
+        stock_item = self.get_stock_item()
+
+        old_stock = stock_item.stock
+        old_total = self.old_price * old_stock
+        new_stock = stock_item.stock
+        new_total = self.new_price * new_stock
+
+        context = {
+            "old_price": self.old_price,
+            "old_stock": stock_item.stock,
+            "old_total": self.old_price * stock_item.stock,
+            "new_price": self.new_price,
+            "new_stock": stock_item.stock,
+            "new_total": self.new_price * stock_item.stock,
+            "price_difference": abs(old_total - new_total),
+            "product_title": self.get_product_title_for_accountant_invoice(),
+            "counter": self.get_formatted_counter(),
+            "current_date": self.for_date.strftime("%d.%m.%Y"),
+        }
+
+        html_string = render_to_string("shop_manager/accountant_pdf.html", context)
+        return HTML(string=html_string, base_url=settings.WEBSITE_BASE_URL).write_pdf()
+
+    def get_formatted_counter(self):
+        date = self.for_date.strftime("%y")
+        return f"{self.counter}/{date}"
+
+    def get_product_title_for_accountant_invoice(self):
+        if self.product:
+            return self.product.get_product_title_for_accountant_invoice()
+
+        return self.attribute.get_product_title_for_accountant_invoice()
+
+    def get_mail_recipients(self):
+        return config("ACCOUNTANT_EMAIL_RECIPIENTS", cast=Csv())
+
+    def __str__(self):
+        return f"{self.product_name} - {self.created_at}"

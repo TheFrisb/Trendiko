@@ -119,10 +119,10 @@ def get_user_agent(request):
     return request.META.get("HTTP_USER_AGENT", "None")
 
 
-def get_dollar_value_in_mkd(exchange_rate=None, value=1):
+def get_euro_value_in_mkd(exchange_rate=None, value=1):
     if exchange_rate is None:
         response = requests.get(
-            f"https://api.exchangerate-api.com/v6/{settings.EXCHANGE_RATE_API_KEY}/latest/USD"
+            f"https://api.exchangerate-api.com/v6/{settings.EXCHANGE_RATE_API_KEY}/latest/EUR"
         )
 
         try:
@@ -130,6 +130,6 @@ def get_dollar_value_in_mkd(exchange_rate=None, value=1):
             exchange_rate = data["rates"]["MKD"]
         except Exception as e:
             logging.error("Error fetching exchange rate data: %s", e)
-            exchange_rate = 56.8
+            exchange_rate = 61.58
 
     return float(value * exchange_rate)

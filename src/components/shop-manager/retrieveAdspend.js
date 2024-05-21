@@ -34,7 +34,7 @@ function initializeRetrieveAdSpend() {
 
     if (response.ok) {
       console.log(responseData)
-      let message = `USD: ${responseData.ad_spend_usd} | MKD: ${responseData.ad_spend_mkd}`;
+      let message = `EUR: ${responseData.ad_spend_eur} | MKD: ${responseData.ad_spend_mkd}`;
       notyf.success(message);
     } else {
       notyf.error("Се случи грешка, ве молиме обидете се повторно.");

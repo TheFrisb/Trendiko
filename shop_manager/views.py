@@ -4,6 +4,7 @@ from django.db.models import (
     F,
     IntegerField,
     Prefetch,
+    Max,
 )
 from django.http import FileResponse, HttpResponse, Http404
 from django.shortcuts import render
@@ -221,7 +222,13 @@ class FacebookAnalyticsDashboard(AnalyticsManagerRequiredMixin, BaseDashboardVie
     template_name = f"{dashboards_dir}/analytics/facebook_analytics_list.html"
 
     def get_queryset(self):
-        return CampaignSummary.objects.all().order_by("-created_at")
+        return (
+            CampaignSummary.objects.annotate(
+                latest_entry_date=Max("entries__for_date"),
+            )
+            .order_by("-latest_entry_date")
+            .distinct()
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -249,8 +256,12 @@ class FacebookAnalyticsDetailDashboard(
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = self.object.name
-        context["listable_items"] = CampaignSummary.objects.all().order_by(
-            "-created_at"
+        context["listable_items"] = (
+            CampaignSummary.objects.annotate(
+                latest_entry_date=Max("entries__for_date"),
+            )
+            .order_by("-latest_entry_date")
+            .distinct()
         )
         context["current_entry"] = self.object
         context["dashboard_fullscreen"] = True
@@ -292,5 +303,4 @@ class ImportAnalytics(AnalyticsManagerRequiredMixin, BaseDashboardView):
         context = super().get_context_data(**kwargs)
         context["title"] = "Import Analytics"
         context["dashboard_fullscreen"] = True
-        self.object_list.first().get_sales_data()
         return context

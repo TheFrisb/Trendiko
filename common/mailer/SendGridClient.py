@@ -17,7 +17,9 @@ class SendGridClient:
         self.apiKey = config("SENDGRID_API_KEY")
         self.client = SendGridAPIClient(self.apiKey)
 
-    def send_mail(self, to_email, subject, html_content, attachment=None):
+    def send_mail(
+        self, to_email: list, subject: str, html_content: str, attachment=None
+    ):
         message = Mail(
             from_email="hello@trendiko.mk",
             to_emails=to_email,

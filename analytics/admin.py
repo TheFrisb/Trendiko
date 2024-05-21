@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from analytics.models import CampaignSummary, CampaignEntry
+from analytics.models import CampaignSummary, CampaignEntry, PriceChange
 
 
 # Register your models here.
@@ -11,4 +11,9 @@ class CampaignSummaryAdmin(admin.ModelAdmin):
 
 @admin.register(CampaignEntry)
 class CampaignEntryAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(PriceChange)
+class PriceChangeAdmin(admin.ModelAdmin):
     pass

@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from analytics.models import CampaignSummary
 from cart.models import OrderItem, Order
-from common.utils import get_dollar_value_in_mkd
+from common.utils import get_euro_value_in_mkd
 from facebook.services.api_connection import FacebookApi
 from stock.models import ReservedStockItem, Import
 
@@ -16,7 +16,7 @@ def create_campaign_summaries(start_time: datetime = None, end_time: datetime = 
     if not start_time or not end_time:
         start_time, end_time = get_yesterday_time_ranges()
 
-    dollar_to_mkd = get_dollar_value_in_mkd()
+    euro_to_mkd = get_euro_value_in_mkd()
 
     logging.info(
         "Fetching ad spend per campaign for dates %s - %s", start_time, end_time
@@ -25,8 +25,8 @@ def create_campaign_summaries(start_time: datetime = None, end_time: datetime = 
     fb_api = FacebookApi()
     ad_spend_per_campaign = {
         campaign["campaign_id"]: {
-            "spend_usd": float(campaign["spend"]),
-            "spend_mkd": float(campaign["spend"]) * dollar_to_mkd,
+            "spend_eur": float(campaign["spend"]),
+            "spend_mkd": float(campaign["spend"]) * euro_to_mkd,
         }
         for campaign in fb_api.get_adspend_per_campaigns(start_time, end_time)
     }

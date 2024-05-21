@@ -113,7 +113,8 @@ class Import(TimeStampedModel):
 
         reserved_stock_items = (
             ReservedStockItem.objects.filter(
-                import_item__stock_item__id__in=stock_item_ids
+                import_item__stock_item__id__in=stock_item_ids,
+                order_item__order__status__in=["confirmed", "pending"],
             )
             .annotate(
                 total_sale_price_for_all_sold_items=Sum(

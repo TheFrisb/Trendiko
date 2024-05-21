@@ -128,7 +128,7 @@
                     </p>
                     <div class="flex gap-3 justify-start items-center productAttributesContainer">
                         {% for attribute in product.attributes.all %}
-                            <div class="min-w-[50px] min-h-[50px] border border-black/60 rounded-lg cursor-pointer hover:opacity-80 flex justify-center items-center font-bold productAttribute {% if attribute == product.attributes.first %} selected {% endif %}"
+                            <div class="min-w-[50px] min-h-[50px] border border-black/60 rounded-lg cursor-pointer hover:opacity-80 flex justify-center items-center font-bold {% if not attribute.stock_item.stock == 0 %}productAttribute{% else %}opacity-20 pointer-events-none {% endif %} {% if attribute == product.attributes.first %} selected {% endif %}"
 
                                     {% if attribute.type == 'color' %}
                                  style="background-color: {{ attribute.value }}"

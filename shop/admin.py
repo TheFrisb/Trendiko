@@ -5,11 +5,11 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.core.exceptions import ValidationError
 from django.forms import BaseInlineFormSet
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.html import format_html
 
-from common.mailer.SendGridClient import SendGridClient
+from analytics.models import PriceChange
 from facebook.admin import FacebookCampaignsInline
-from .invoices.accountant_notification import AccountantInvoicer
 from .models import (
     Product,
     ProductAttribute,
@@ -159,48 +159,33 @@ class ProductAdmin(admin.ModelAdmin):
             old_obj = Product.objects.get(id=obj.id)
 
             if old_obj.sale_price != obj.sale_price:
-                accountant_invoicer = AccountantInvoicer()
-                sendgrid_client = SendGridClient()
-
-                pdf = accountant_invoicer.generate_product_price_change_notification(
-                    old_obj, obj, request.build_absolute_uri()
+                price_change = PriceChange.objects.create(
+                    product=obj,
+                    attribute=None,
+                    product_name=obj.get_product_title_for_accountant_invoice(),
+                    old_price=old_obj.sale_price,
+                    new_price=obj.sale_price,
+                    for_date=timezone.now(),
                 )
-
-                sendgrid_client.send_mail(
-                    [
-                        "lilanikolova963@gmail.com",
-                        "info@trendiko.mk",
-                    ],
-                    f"{obj.get_product_title_for_accountant_invoice()} - Промена на цена",
-                    "<strong>Во attachment</strong>",
-                    pdf,
-                )
+                price_change.send_mail()
 
         super().save_model(request, obj, form, change)
 
     def save_formset(self, request, form, formset, change):
         instances = formset.save(commit=False)
         for instance in instances:
-            if isinstance(instance, ProductAttribute):
+            if isinstance(instance, ProductAttribute) and instance.id:
                 old_instance = ProductAttribute.objects.get(id=instance.id)
                 if old_instance.sale_price != instance.sale_price:
-                    accountant_invoicer = AccountantInvoicer()
-                    sendgrid_client = SendGridClient()
-
-                    pdf = (
-                        accountant_invoicer.generate_product_price_change_notification(
-                            old_instance, instance, request.build_absolute_uri()
-                        )
+                    price_change = PriceChange.objects.create(
+                        product=None,
+                        attribute=instance,
+                        product_name=instance.get_product_title_for_accountant_invoice(),
+                        old_price=old_instance.sale_price,
+                        new_price=instance.sale_price,
+                        for_date=timezone.now(),
                     )
-                    sendgrid_client.send_mail(
-                        [
-                            "lilanikolova963@gmail.com",
-                            "info@trendiko.mk",
-                        ],
-                        f"{instance.get_product_title_for_accountant_invoice()} - Промена на цена",
-                        "<strong>Во attachment</strong>",
-                        pdf,
-                    )
+                    price_change.send_mail()
             instance.save()
         formset.save_m2m()
 

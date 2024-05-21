@@ -1,6 +1,6 @@
 from django import forms
 
-from common.utils import get_dollar_value_in_mkd
+from common.utils import get_euro_value_in_mkd
 from facebook.services.api_connection import FacebookApi
 
 
@@ -32,13 +32,13 @@ class RetrieveAdspendForm(forms.Form):
 
         fb_api = FacebookApi()
 
-        ad_spend_usd = float(
+        ad_spend_eur = float(
             fb_api.get_total_adspend_for_time_range(from_date, to_date)[0]["spend"]
         )
-        ad_spend_mkd = get_dollar_value_in_mkd(value=ad_spend_usd)
+        ad_spend_mkd = get_euro_value_in_mkd(value=ad_spend_eur)
 
         return {
-            "ad_spend_usd": ad_spend_usd,
+            "ad_spend_eur": ad_spend_eur,
             "ad_spend_mkd": ad_spend_mkd,
         }
 
