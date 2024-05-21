@@ -56,16 +56,20 @@ def create_campaign_summaries(start_time: datetime = None, end_time: datetime = 
             order_items, ad_spend_per_campaign[summary.campaign_id], start_time
         )
 
-    populate_imports_ad_spend(ad_spend_per_campaign)
+    populate_imports_ad_spend(ad_spend_per_campaign, start_time, end_time)
 
 
-def populate_imports_ad_spend(ad_spend_per_campaign: dict):
+def populate_imports_ad_spend(
+    ad_spend_per_campaign: dict, start_time: datetime, end_time: datetime
+):
     logging.info("Populating ad spend for imports")
     # loop over dict getting key and value
     imports_to_save = {}
     for campaign_id, ad_spend_data in ad_spend_per_campaign.items():
         reserved_stock_items = ReservedStockItem.objects.filter(
-            order_item__product__facebook_campaigns__campaign_id=campaign_id
+            created_at__range=(start_time, end_time),
+            product__facebook_campaigns__campaign_id=campaign_id,
+            order__status__in=[Order.OrderStatus.CONFIRMED, Order.OrderStatus.PENDING],
         ).prefetch_related("import_item", "import_item__parentImport")
         print(reserved_stock_items)
         updated_imports = set()
