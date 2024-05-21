@@ -3,13 +3,14 @@ from django.db.models import (
     DecimalField,
     F,
     IntegerField,
+    Prefetch,
 )
 from django.http import FileResponse, HttpResponse, Http404
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView, DetailView
 
-from analytics.models import CampaignSummary
+from analytics.models import CampaignSummary, CampaignEntry
 from cart.models import Order, Cart
 from stock.models import StockItem, Import
 from .forms.export_invoices import ExportInvoicesForm
@@ -240,15 +241,16 @@ class FacebookAnalyticsDetailDashboard(
 
     # Fetch the campaign by slug and also prefetch its entries ordered by date
     def get_queryset(self):
-        return CampaignSummary.objects.prefetch_related("entries").order_by(
-            "entries__for_date"
+        prefetch = Prefetch(
+            "entries", queryset=CampaignEntry.objects.order_by("for_date")
         )
+        return CampaignSummary.objects.prefetch_related(prefetch)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = self.object.name
         context["listable_items"] = CampaignSummary.objects.all().order_by(
-            "-entries__for_date"
+            "-created_at"
         )
         context["current_entry"] = self.object
         context["dashboard_fullscreen"] = True
