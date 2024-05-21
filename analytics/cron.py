@@ -70,8 +70,8 @@ def populate_imports_ad_spend(
     imports_to_save = {}
     for campaign_id, ad_spend_data in ad_spend_per_campaign.items():
         reserved_stock_items = ReservedStockItem.objects.filter(
-            created_at__range=(start_time, end_time),
-            product__facebook_campaigns__campaign_id=campaign_id,
+            order_item__created_at__range=(start_time, end_time),
+            order_item__product__facebook_campaigns__campaign_id=campaign_id,
             order_item__order__status__in=[
                 Order.OrderStatus.CONFIRMED,
                 Order.OrderStatus.PENDING,
