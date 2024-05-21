@@ -114,4 +114,4 @@ def create_campaign_summaries_for_time_range(start_date: datetime, end_date: dat
         end_time = datetime.combine(current_date, datetime.max.time())
         print(start_time, end_time)
         create_campaign_summaries(start_time, end_time)
-        start_time += timedelta(days=1)
+        current_date += timedelta(days=1)
