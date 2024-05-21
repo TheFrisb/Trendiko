@@ -163,3 +163,23 @@
 .isDoingNothing {
     @apply hidden;
 }
+
+.autoComplete_wrapper > ul > li {
+    @apply py-2;
+    @apply px-4;
+    @apply cursor-pointer;
+    @apply hover:bg-dashboard-blue;
+    @apply bg-dashboard-item-active;
+    @apply hover:text-white;
+    @apply font-bold;
+    @apply rounded-lg;
+    @apply text-white;
+}
+
+#toolTipContainer {
+    @apply hidden;
+}
+
+#toolTipContainer.active {
+    @apply block;
+}

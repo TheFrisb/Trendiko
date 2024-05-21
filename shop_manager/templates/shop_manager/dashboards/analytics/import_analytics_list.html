@@ -46,8 +46,8 @@
                             <td class="font-normal text-center">{{ import_sale_data.total_sale_price_for_all_items }}</td>
                             <td class="font-normal text-center">{{ import_sale_data.total_sale_price_for_all_sold_items }}</td>
                             <td class="font-normal text-center">{{ import_sale_data.total_sale_price_for_all_available_stock }}</td>
-                            <td class="font-normal text-center">{{ import_sale_data.ad_spend|floatformat: 2 }}</td>
-                            <td class="font-normal text-center">{{ import_sale_data.profit|floatformat: 2 }}</td>
+                            <td class="font-normal text-center">{{ import.ad_spend|floatformat:2 }}</td>
+                            <td class="font-normal text-center">{{ import_sale_data.profit|floatformat:2 }}</td>
                         {% endwith %}
                     </tr>
                 {% endfor %}

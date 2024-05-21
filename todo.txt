@@ -1,10 +1,5 @@
 celery -A trendiko worker --loglevel=info
 + - - - - - - - - - - - - - - - - - +
-
-1. Popravi out of stock update za attribute products
-3. Search bar po proizvod za fb kampanjite
-5. Net profit e greska
-6. Staj adspend u import analytics
 7. Staj tooltip ka se ode na pole da mu prikazuva formulata
 
 --------------------------------------------------------------------------------------------------------------------

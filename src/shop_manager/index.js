@@ -3,6 +3,7 @@ import {initializeQRScanner} from "../components/shop-manager/htmlQRcodeScanner"
 import {initializeRemoveAbandonedCartButtons} from "../components/shop-manager/removeAbandonedCart";
 import {initializeListableItems} from "../components/shop-manager/horizotallyScrollableDiv";
 import {initializeRetrieveAdSpend} from "../components/shop-manager/retrieveAdspend";
+import {initializeToolTips} from "../components/toolTip";
 
 document.addEventListener('DOMContentLoaded', function () {
     const openMenuIcon = document.querySelector('#dashboard__menuIcon');
@@ -30,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeQRScanner();
     initializeListableItems()
     initializeRetrieveAdSpend();
+    initializeToolTips();
 
   }
 );

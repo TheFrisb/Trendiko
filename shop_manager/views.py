@@ -241,14 +241,14 @@ class FacebookAnalyticsDetailDashboard(
     # Fetch the campaign by slug and also prefetch its entries ordered by date
     def get_queryset(self):
         return CampaignSummary.objects.prefetch_related("entries").order_by(
-            "created_at"
+            "entries__for_date"
         )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = self.object.name
         context["listable_items"] = CampaignSummary.objects.all().order_by(
-            "-created_at"
+            "-modified_at"
         )
         context["current_entry"] = self.object
         context["dashboard_fullscreen"] = True

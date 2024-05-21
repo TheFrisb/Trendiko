@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
@@ -24,8 +26,13 @@ class CampaignSummary(TimeStampedModel):
     def __str__(self):
         return f"{self.name} - {self.campaign_id}"
 
-    def populate_entry(self, order_items: models.QuerySet, ad_spend_data: dict):
-        entry = CampaignEntry(parent=self)
+    def populate_entry(
+        self,
+        order_items: models.QuerySet,
+        ad_spend_data: dict,
+        for_date: datetime.datetime,
+    ):
+        entry = CampaignEntry(parent=self, for_date=for_date)
         entry.populate_data(order_items, ad_spend_data["spend_mkd"])
         return entry
 
@@ -52,8 +59,9 @@ class CampaignEntry(TimeStampedModel):
     total_cost_price = models.IntegerField(
         verbose_name="Total Cost Price of all OrderItems", default=0
     )
-    advertisement_cost = models.IntegerField(
-        verbose_name="Total Advertisement Cost", default=0
+    advertisement_cost = models.FloatField(
+        verbose_name="Total Advertisement Cost",
+        default=0,
     )
     product_sale_price = models.IntegerField(
         verbose_name="Product Sale Price", default=0
@@ -64,6 +72,7 @@ class CampaignEntry(TimeStampedModel):
     product_stock_left = models.IntegerField(
         verbose_name="Product Stock Left After Campaign", default=0
     )
+    for_date = models.DateTimeField(verbose_name="Date for which the data is collected")
 
     import_item_data = models.JSONField()
 
@@ -102,22 +111,8 @@ class CampaignEntry(TimeStampedModel):
         return self.product_sale_price / self.product_profit
 
     @property
-    def total_tax(self):
-        return (self.product_sale_price * self.product_cost_price) - (
-            (self.product_sale_price * self.quantity_ordered) / 1.18
-        )
-
-    @property
-    def total_tax_neto(self):
-        return (self.product_cost_price * self.quantity_ordered) / 1.18
-
-    @property
-    def tax_to_pay(self):
-        return self.total_tax - self.total_tax_neto
-
-    @property
     def total_neto_profit(self):
-        return self.total_profit - self.total_cost_price
+        return self.total_profit - self.advertisement_cost
 
     def __str__(self):
         return f"CampaignEntry for {self.parent.name} - {self.created_at}"

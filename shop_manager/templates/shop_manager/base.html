@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{% static 'shop_manager/css/shop_manager.css' %}">
     <link rel="stylesheet" href="{% static 'shop_manager/css/notyf.css' %}">
     <title>{{ title }}</title>
-
     <style>
         .nowrap {
             white-space: nowrap;
@@ -57,13 +56,24 @@
                         <a href="{{ entry.get_absolute_url }}"
                            class="nowrap text-sm font-bold cursor-pointer hover:text-brand-action {% if entry == current_entry %}text-brand-action{% endif %}">{{ entry.name }}</a>
 
-
                     {% endfor %}
                 </div>
+
+                <input
+                        name="listableItems"
+                        id="dashboard__listableItems"
+                        class="isAutoComplete w-full p-2 rounded-lg my-4 text-brand-action border border-dashboard-blue/20 focus:border-dashboard-blue/50 focus:outline-none"
+                        placeholder="Одбери кампања..."
+                >
             </div>
         {% endif %}
         {% block dashboard %}
         {% endblock dashboard %}
+    </div>
+
+    <div id="toolTipContainer"
+         class="fixed left-2 bottom-2 right-2 rounded-lg bg-dashboard-blue text-white font-bold p-3">
+        <p id="toolTipContainer__text"></p>
     </div>
 </div>
 
@@ -71,5 +81,37 @@
 {% endblock extra_content %}
 
 <script src="{% static 'bundles/shop_manager_v2.bundle.js' %}"></script>
+
+{% if listable_items %}
+    <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
+
+
+    <script>
+      const cityAutocompleteJs = new autoComplete({
+        selector: "#dashboard__listableItems",
+        data: {
+          src: [
+            {% for entry in listable_items %}
+              {
+                key: "{{ entry.name }}",
+                link: "{{ entry.get_absolute_url }}"
+              },
+            {% endfor %}
+          ],
+          keys: ["key"],
+        },
+
+        events: {
+          input: {
+            selection: (event) => {
+              const selection = event.detail.selection.value.link;
+              window.location.href = selection;
+            }
+          }
+        }
+      });
+    </script>
+{% endif %}
+
 </body>
 </html>
