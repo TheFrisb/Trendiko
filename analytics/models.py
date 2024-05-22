@@ -270,4 +270,4 @@ class PriceChange(TimeStampedModel):
         return config("ACCOUNTANT_EMAIL_RECIPIENTS", cast=Csv())
 
     def __str__(self):
-        return f"{self.product_name} - {self.created_at}"
+        return f"{self.product_name} - {self.for_date}"
