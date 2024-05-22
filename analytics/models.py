@@ -243,10 +243,10 @@ class PriceChange(TimeStampedModel):
         context = {
             "old_price": self.old_price,
             "old_stock": old_stock,
-            "old_total": self.old_price * old_stock,
+            "old_total": old_total,
             "new_price": self.new_price,
             "new_stock": new_stock,
-            "new_total": self.new_price * new_stock,
+            "new_total": new_total,
             "price_difference": abs(old_total - new_total),
             "product_title": self.get_product_title_for_accountant_invoice(),
             "counter": self.get_formatted_counter(),
