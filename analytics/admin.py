@@ -17,3 +17,4 @@ class CampaignEntryAdmin(admin.ModelAdmin):
 @admin.register(PriceChange)
 class PriceChangeAdmin(admin.ModelAdmin):
     autocomplete_fields = ["product", "attribute"]
+    list_display = ["product", "attribute", "old_price", "new_price", "for_date"]
