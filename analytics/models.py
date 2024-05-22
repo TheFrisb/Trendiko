@@ -202,6 +202,8 @@ class PriceChange(TimeStampedModel):
     product_name = models.TextField()
     old_price = models.IntegerField()
     new_price = models.IntegerField()
+    old_stock = models.IntegerField()
+    new_stock = models.IntegerField()
     for_date = models.DateTimeField()
     counter = models.IntegerField(default=-1)
 
@@ -233,20 +235,18 @@ class PriceChange(TimeStampedModel):
             self.counter = stored_counter.get_counter()
             stored_counter.increment_counter()
 
-        stock_item = self.get_stock_item()
-
-        old_stock = stock_item.stock
+        old_stock = self.old_stock
         old_total = self.old_price * old_stock
-        new_stock = stock_item.stock
+        new_stock = self.new_stock
         new_total = self.new_price * new_stock
 
         context = {
             "old_price": self.old_price,
-            "old_stock": stock_item.stock,
-            "old_total": self.old_price * stock_item.stock,
+            "old_stock": old_stock,
+            "old_total": self.old_price * old_stock,
             "new_price": self.new_price,
-            "new_stock": stock_item.stock,
-            "new_total": self.new_price * stock_item.stock,
+            "new_stock": new_stock,
+            "new_total": self.new_price * new_stock,
             "price_difference": abs(old_total - new_total),
             "product_title": self.get_product_title_for_accountant_invoice(),
             "counter": self.get_formatted_counter(),
