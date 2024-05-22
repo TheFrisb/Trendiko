@@ -209,7 +209,7 @@ class PriceChange(TimeStampedModel):
     for_date = models.DateTimeField()
     counter = models.IntegerField(default=-1)
 
-    def send_mail(self):
+    def send_mail(self, mail_to: list[str] = None):
         if not self.product and not self.attribute:
             raise ValueError("Product or Attribute must be set")
 
@@ -217,8 +217,11 @@ class PriceChange(TimeStampedModel):
 
         pdf = self.generate_pdf()
 
+        if not mail_to:
+            mail_to = self.get_mail_recipients()
+
         sendgrid_client.send_mail(
-            self.get_mail_recipients(),
+            mail_to,
             f"{self.get_product_title_for_accountant_invoice()} - Промена на цена",
             "<strong>Во attachment</strong>",
             pdf,
