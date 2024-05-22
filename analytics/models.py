@@ -138,7 +138,9 @@ class CampaignEntry(TimeStampedModel):
         else:
             self.product_stock_left = sum(
                 attribute.stock_item.stock
-                for attribute in self.parent.product.attributes.all()
+                for attribute in self.parent.product.attributes.all().distinct(
+                    "stock_item"
+                )
             )
         self.product_sale_price = self.parent.product.sale_price
         self.product_cost_price = self.calculate_product_cost_price()
