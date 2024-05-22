@@ -163,6 +163,8 @@ class ProductAdmin(admin.ModelAdmin):
                     product=obj,
                     attribute=None,
                     product_name=obj.get_product_title_for_accountant_invoice(),
+                    old_stock=old_obj.stock_item.stock,
+                    new_stock=obj.stock_item.stock,
                     old_price=old_obj.sale_price,
                     new_price=obj.sale_price,
                     for_date=timezone.now(),
@@ -184,6 +186,8 @@ class ProductAdmin(admin.ModelAdmin):
                         old_price=old_instance.sale_price,
                         new_price=instance.sale_price,
                         for_date=timezone.now(),
+                        old_stock=old_instance.stock_item.stock,
+                        new_stock=instance.stock_item.stock,
                     )
                     price_change.send_mail()
             instance.save()
