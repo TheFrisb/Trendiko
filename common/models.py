@@ -116,3 +116,6 @@ class StoredCounter(TimeStampedModel):
     def increment_counter(self, amount_to_increment=1):
         self.value += amount_to_increment
         self.save()
+
+    def get_counter(self):
+        return self.value
