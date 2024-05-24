@@ -54,7 +54,7 @@
                      id="listable_items">
                     {% for entry in listable_items %}
                         <a href="{{ entry.get_absolute_url }}"
-                           class="nowrap text-sm font-bold cursor-pointer hover:text-brand-action {% if entry == current_entry %}text-brand-action{% endif %}">{{ entry.name }}</a>
+                           class="nowrap text-sm font-bold cursor-pointer hover:text-brand-action {% if entry == current_entry %}text-brand-action scrollTo{% endif %}">{{ entry.name }}</a>
 
                     {% endfor %}
                 </div>

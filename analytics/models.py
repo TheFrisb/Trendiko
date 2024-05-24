@@ -238,6 +238,7 @@ class PriceChange(TimeStampedModel):
                 type=StoredCounter.CounterType.PRODUCT_PRICE_CHANGE
             )
             self.counter = stored_counter.get_counter()
+            self.save()
             stored_counter.increment_counter()
 
         old_stock = self.old_stock

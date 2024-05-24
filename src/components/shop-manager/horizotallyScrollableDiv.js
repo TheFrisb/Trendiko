@@ -6,6 +6,12 @@ function initializeListableItems() {
   if (!listable_items) {
     return;
   }
+
+  let scrollToElement = listable_items.querySelector(".scrollTo");
+  if (scrollToElement) {
+    listable_items.scrollLeft = scrollToElement.offsetLeft;
+  }
+
   let isDown = false;
   let startX;
   let scrollLeft;
