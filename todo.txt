@@ -14,7 +14,7 @@ Optimization:
 2. Use Caching more effectively
 --------------------------------------------------------------------------------------------------------------------
 Refactoring:
-1. Refactor bad code
+1. Refactor bad code xd
 
 
 
