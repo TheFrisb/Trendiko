@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib import admin
+from django.db.models import Subquery, OuterRef, DecimalField, Sum
 
+from shop.models import Product, ProductAttribute
 # Register your models here.
 from .models import StockItem, ImportItem, Import, ReservedStockItem
 
@@ -67,7 +69,76 @@ class ImportAdmin(admin.ModelAdmin):
 class StockItemAdmin(admin.ModelAdmin):
     search_fields = ["label", "sku", "title"]
     readonly_fields = ["stock", "qr_code"]
-    list_display = ["title", "sku", "label"]
+    list_display = [
+        "title",
+        "sku",
+        "label",
+        "stock_price",
+        "sale_price",
+        "stock",
+        "imported_stock",
+    ]
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+
+        latest_import_price = (
+            ImportItem.objects.filter(stock_item=OuterRef("pk"))
+            .order_by("-created_at")
+            .values("price_vat_and_customs")[:1]
+        )
+
+        queryset = queryset.annotate(
+            annotated_stock_price=Subquery(
+                latest_import_price, output_field=DecimalField()
+            )
+        )
+
+        product_sale_price = Product.objects.filter(stock_item=OuterRef("pk")).values(
+            "sale_price"
+        )[:1]
+
+        product_attribute_sale_price = ProductAttribute.objects.filter(
+            stock_item=OuterRef("pk")
+        ).values("sale_price")[:1]
+
+        queryset = (
+            queryset.annotate(
+                annotated_sale_price=Subquery(
+                    product_sale_price, output_field=DecimalField()
+                )
+            )
+            .annotate(
+                annotated_attribute_sale_price=Subquery(
+                    product_attribute_sale_price, output_field=DecimalField()
+                )
+            )
+            .annotate(total_imported_stock=Sum("import_items__initial_quantity"))
+        )
+
+        return queryset
+
+    def stock_price(self, obj):
+        return obj.annotated_stock_price
+
+    stock_price.short_description = "Набавна цена"
+    stock_price.admin_order_field = "annotated_stock_price"
+
+    def sale_price(self, obj):
+        return (
+            obj.annotated_sale_price
+            if obj.annotated_sale_price is not None
+            else obj.annotated_attribute_sale_price
+        )
+
+    sale_price.short_description = "Продажна цена"
+    sale_price.admin_order_field = "annotated_sale_price"
+
+    def imported_stock(self, obj):
+        return obj.total_imported_stock
+
+    imported_stock.short_description = "Увезена залиха"
+    imported_stock.admin_order_field = "total_imported_stock"
 
     form = StockItemForm
 

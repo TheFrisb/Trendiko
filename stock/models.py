@@ -19,7 +19,7 @@ class StockItem(BaseProduct):
         max_length=255, unique=True, verbose_name="SKU", db_index=True
     )
     label = models.CharField(max_length=255, verbose_name="Label")
-    stock = models.PositiveIntegerField(default=0, verbose_name="Вистинска залиха")
+    stock = models.PositiveIntegerField(default=0, verbose_name="Залиха")
 
     def save(self, *args, **kwargs):
         if not self.qr_code:
