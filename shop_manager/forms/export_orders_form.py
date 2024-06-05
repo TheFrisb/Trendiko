@@ -71,7 +71,7 @@ class ExportOrdersForm(forms.Form):
         online_orders, offline_orders = self.get_orders()
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {"in_memory": True})
-        worksheet = workbook.add_worksheet()
+        worksheet = workbook.add_worksheet("Online")
 
         centered_cell_format = workbook.add_format()
         centered_cell_format.set_align("center")
