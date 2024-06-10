@@ -104,7 +104,10 @@ class CatalogueManager:
         return string[:-1]
 
     def get_availability(self, product):
-        if product.status == Product.ProductStatus.ARCHIVED:
+        if product.status in [
+            Product.ProductStatus.ARCHIVED,
+            Product.ProductStatus.OUT_OF_STOCK,
+        ]:
             return "out of stock"
         else:
             return "in stock"
