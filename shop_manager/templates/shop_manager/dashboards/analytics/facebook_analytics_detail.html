@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                 {% for entry in campaign_summary.entries.all %}
-                    <tr class="border-b-2 border-gray-200 {% if entry.total_neto_profit < 0 %}bg-red-600 text-white{% endif %} rounded">
+                    <tr class="border-b-2 border-gray-200 rounded">
                         <td class="table_field">
                             {% timezone "Europe/Berlin" %}
                                 {{ entry.for_date|date:"d.m.Y" }}
@@ -47,7 +47,7 @@
                         <td class="table_field">{{ entry.product_cost_price }}</td>
 
                         <td class="table_field">{{ entry.advertisement_cost|floatformat:2 }}</td>
-                        <td class="table_field">{{ entry.total_neto_profit|floatformat:2 }}</td>
+                        <td class="table_field {% if entry.total_neto_profit < 0 %}bg-red-600 text-white{% endif %}">{{ entry.total_neto_profit|floatformat:2 }}</td>
                         <td class="table_field">{{ entry.break_even_return_on_ad_spend|floatformat:2 }}</td>
                         <td class="table_field">{{ entry.return_on_ad_spend|floatformat:2 }}</td>
                         <td class="table_field">{{ entry.return_on_investment|floatformat:2 }}</td>
