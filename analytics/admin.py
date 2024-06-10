@@ -14,6 +14,7 @@ class CampaignEntryAdmin(admin.ModelAdmin):
     pass
 
 
+@admin.register()
 @admin.register(PriceChange)
 class PriceChangeAdmin(admin.ModelAdmin):
     autocomplete_fields = ["product", "attribute"]
