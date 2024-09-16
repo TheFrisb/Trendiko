@@ -143,6 +143,9 @@ class ProductAdmin(admin.ModelAdmin):
 
     def get_stock_item_stock(self, obj):
         # get object stock item if not get the sum of attributes stock items
+        if obj.stock_item is None:
+            return 0
+
         if obj.isVariable():
             stock = sum(
                 [attribute.stock_item.stock for attribute in obj.attributes.all()]
