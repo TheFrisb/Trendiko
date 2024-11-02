@@ -6,4 +6,4 @@ def update_facebook_catalogue_feed():
     Update the Facebook catalogue feed.
     """
     catalogue_management = CatalogueManager()
-    catalogue_management.make_xlsx_catalogue_feed()
+    catalogue_management.make_csv_catalogue_feed()

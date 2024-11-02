@@ -1,4 +1,5 @@
 import os
+import csv  # Import the csv module
 
 import xlsxwriter
 from decouple import config
@@ -18,15 +19,18 @@ class CatalogueManager:
         self.brand = "Trendiko"
         self.base_url = config("BASE_URL")
         self.delimiter = ","
-        self.output_file_path = os.path.join(
+        self.output_file_xlsx = os.path.join(
             settings.MEDIA_ROOT, "facebook_catalogue_feed.xlsx"
         )
+        self.output_file_csv = os.path.join(
+            settings.MEDIA_ROOT, "facebook_catalogue_feed.csv"
+        )  # Define CSV output path
 
     def make_xlsx_catalogue_feed(self):
-        if os.path.exists(self.output_file_path):
-            os.remove(self.output_file_path)
+        if os.path.exists(self.output_file_xlsx):
+            os.remove(self.output_file_xlsx)
 
-        workbook = xlsxwriter.Workbook(self.output_file_path)
+        workbook = xlsxwriter.Workbook(self.output_file_xlsx)
         worksheet = workbook.add_worksheet()
 
         row = 0
@@ -42,7 +46,42 @@ class CatalogueManager:
                 row += 1
 
         workbook.close()
-        return self.output_file_path
+        return self.output_file_xlsx
+
+    def make_csv_catalogue_feed(self):
+        if os.path.exists(self.output_file_csv):
+            os.remove(self.output_file_csv)
+
+        headers = [
+            "id",
+            "title",
+            "description",
+            "availability",
+            "condition",
+            "price",
+            "link",
+            "image_link",
+            "brand",
+            "sale_price",
+            "additional_image_link",
+            "gender",
+            "rich_text_description",
+        ]
+
+        with open(self.output_file_csv, mode='w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(headers)  # Write the header row
+
+            for product in self.products:
+                if product.type == Product.ProductType.VARIABLE:
+                    for attribute in product.attributes.all():
+                        row = self.get_attribute_row(product, attribute)
+                        writer.writerow(row)
+                else:
+                    row = self.get_product_row(product)
+                    writer.writerow(row)
+
+        return self.output_file_csv
 
     def make_headers(self, worksheet, row, col):
         headers = [
@@ -75,8 +114,8 @@ class CatalogueManager:
         condition = "new"
         price = f"{attribute.regular_price} {self.currency}"
         link = f"{self.base_url}{product.get_absolute_url()}"
-        # check if attribute has thumbnail
-        image_link = self.base_url + attribute.get_thumbnails()["jpg"]
+        # Check if attribute has thumbnail
+        image_link = self.base_url + attribute.get_thumbnails().get("jpg", "")
         brand = self.brand
         sale_price = f"{attribute.sale_price} {self.currency}"
         additional_image_link = self.get_additional_images(product)
@@ -95,6 +134,36 @@ class CatalogueManager:
         worksheet.write(row, 10, additional_image_link)
         worksheet.write(row, 11, "unisex")
         worksheet.write(row, 12, rich_text_description)
+
+    def get_attribute_row(self, product, attribute):
+        id_key = f"{product.id}-{attribute.id}"
+        title = f"{product.title} - {attribute.title}"
+        description = self.get_short_description(product)
+        availability = self.get_availability(product)
+        condition = "new"
+        price = f"{attribute.regular_price} {self.currency}"
+        link = f"{self.base_url}{product.get_absolute_url()}"
+        image_link = self.base_url + attribute.get_thumbnails().get("jpg", "")
+        brand = self.brand
+        sale_price = f"{attribute.sale_price} {self.currency}"
+        additional_image_link = self.get_additional_images(product)
+        rich_text_description = product.description
+
+        return [
+            id_key,
+            title,
+            description,
+            availability,
+            condition,
+            price,
+            link,
+            image_link,
+            brand,
+            sale_price,
+            additional_image_link,
+            "unisex",
+            rich_text_description,
+        ]
 
     def get_additional_images(self, product):
         string = f"{self.base_url}{product.thumbnail_as_jpeg.url}{self.delimiter}"
@@ -145,3 +214,33 @@ class CatalogueManager:
         worksheet.write(row, 10, additional_image_link)
         worksheet.write(row, 11, "unisex")
         worksheet.write(row, 12, rich_text_description)
+
+    def get_product_row(self, product):
+        id_key = product.id
+        title = product.title
+        description = self.get_short_description(product)
+        availability = self.get_availability(product)
+        condition = "new"
+        price = f"{product.regular_price} {self.currency}"
+        link = f"{self.base_url}{product.get_absolute_url()}"
+        image_link = self.base_url + product.thumbnail_as_jpeg.url
+        brand = self.brand
+        sale_price = f"{product.sale_price} {self.currency}"
+        additional_image_link = self.get_additional_images(product)
+        rich_text_description = product.description
+
+        return [
+            id_key,
+            title,
+            description,
+            availability,
+            condition,
+            price,
+            link,
+            image_link,
+            brand,
+            sale_price,
+            additional_image_link,
+            "unisex",
+            rich_text_description,
+        ]
