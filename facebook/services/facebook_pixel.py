@@ -32,7 +32,7 @@ class FacebookPixel:
             quantity=1,
             brand=self.brand_name,
             item_price=product.sale_price,
-            delivery_category=DeliveryCategory.HOME_DELIVERY.value,
+            delivery_category=DeliveryCategory.HOME_DELIVERY,
         )
         custom_data = CustomData(
             contents=[content],
@@ -62,8 +62,8 @@ class FacebookPixel:
         event_response = event_request.execute()
 
     def add_to_cart(
-        self,
-        cart_item,
+            self,
+            cart_item,
     ):
         if self.is_opted_in() is False:
             return
@@ -75,7 +75,7 @@ class FacebookPixel:
             quantity=cart_item.quantity,
             brand=self.brand_name,
             item_price=cart_item.sale_price,
-            delivery_category=DeliveryCategory.HOME_DELIVERY.value,
+            delivery_category=DeliveryCategory.HOME_DELIVERY,
         )
 
         custom_data = CustomData(
