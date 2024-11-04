@@ -10,74 +10,75 @@ from .models import (
     AbandonedCartDetails,
 )
 
-SUPPORTED_CITIES = [
-    {"latin": "Aerodrom", "cyrillic": "Аеродром"},
-    {"latin": "Aracinovo", "cyrillic": "Арачиново"},
-    {"latin": "Berovo", "cyrillic": "Берово"},
-    {"latin": "Bitola", "cyrillic": "Битола"},
-    {"latin": "Bogdanci", "cyrillic": "Богданци"},
-    {"latin": "Butel", "cyrillic": "Бутел"},
-    {"latin": "Valandovo", "cyrillic": "Валандово"},
-    {"latin": "Veles", "cyrillic": "Велес"},
-    {"latin": "Vinica", "cyrillic": "Виница"},
-    {"latin": "Gazi Baba", "cyrillic": "Гази Баба"},
-    {"latin": "Gevgelija", "cyrillic": "Гевгелија"},
-    {"latin": "Gostivar", "cyrillic": "Гостивар"},
-    {"latin": "Debar", "cyrillic": "Дебар"},
-    {"latin": "Delcevo", "cyrillic": "Делчево"},
-    {"latin": "Demir Kapija", "cyrillic": "Демир Капија"},
-    {"latin": "Demir Hisar", "cyrillic": "Демир Хисар"},
-    {"latin": "Dojran", "cyrillic": "Дојран"},
-    {"latin": "Gjorce Petrov", "cyrillic": "Ѓорче Петров"},
-    {"latin": "Zelenikovo", "cyrillic": "Зелениково"},
-    {"latin": "Ilinden", "cyrillic": "Илинден"},
-    {"latin": "Kavadarci", "cyrillic": "Кавадарци"},
-    {"latin": "Karpos", "cyrillic": "Карпош"},
-    {"latin": "Kisela Voda", "cyrillic": "Кисела Вода"},
-    {"latin": "Kichevo", "cyrillic": "Кичево"},
-    {"latin": "Kocani", "cyrillic": "Кочани"},
-    {"latin": "Kratovo", "cyrillic": "Кратово"},
-    {"latin": "Kriva Palanka", "cyrillic": "Крива Паланка"},
-    {"latin": "Krusevo", "cyrillic": "Крушево"},
-    {"latin": "Kumanovo", "cyrillic": "Куманово"},
-    {"latin": "Mavrovo", "cyrillic": "Маврово"},
-    {"latin": "Makedonska Kamenica", "cyrillic": "Македонска Каменица"},
-    {"latin": "Makedonski Brod", "cyrillic": "Македонски Брод"},
-    {"latin": "Negotino", "cyrillic": "Неготино"},
-    {"latin": "Ohrid", "cyrillic": "Охрид"},
-    {"latin": "Petrovec", "cyrillic": "Петровец"},
-    {"latin": "Pehcevo", "cyrillic": "Пехчево"},
-    {"latin": "Prilep", "cyrillic": "Прилеп"},
-    {"latin": "Probistip", "cyrillic": "Пробиштип"},
-    {"latin": "Radovis", "cyrillic": "Радовиш"},
-    {"latin": "Resen", "cyrillic": "Ресен"},
-    {"latin": "Saraj", "cyrillic": "Сарај"},
-    {"latin": "Sveti Nikole", "cyrillic": "Свети Николе"},
-    {"latin": "Skopje", "cyrillic": "Скопје"},
-    {"latin": "Sopiste", "cyrillic": "Сопиште"},
-    {"latin": "Struga", "cyrillic": "Струга"},
-    {"latin": "Strumica", "cyrillic": "Струмица"},
-    {"latin": "Studenicani", "cyrillic": "Студеничани"},
-    {"latin": "Tetovo", "cyrillic": "Тетово"},
-    {"latin": "Centar", "cyrillic": "Центар"},
-    {"latin": "Cair", "cyrillic": "Чаир"},
-    {"latin": "Cucer Sandevo", "cyrillic": "Чучер-Сандево"},
-    {"latin": "Stip", "cyrillic": "Штип"},
-    {"latin": "Suto Orizari", "cyrillic": "Шуто Оризари"},
-]
 
-SUPPORTED_MUNICIPALITIES = [
-    {"latin": "Aerodrom", "cyrillic": "Аеродром"},
-    {"latin": "Butel", "cyrillic": "Бутел"},
-    {"latin": "Gazi Baba", "cyrillic": "Гази Баба"},
-    {"latin": "Gjorce Petrov", "cyrillic": "Ѓорче Петров"},
-    {"latin": "Kisela Voda", "cyrillic": "Кисела Вода"},
-    {"latin": "Karpos", "cyrillic": "Карпош"},
-    {"latin": "Centar", "cyrillic": "Центар"},
-    {"latin": "Cair", "cyrillic": "Чаир"},
-    {"latin": "Suto Orizari", "cyrillic": "Шуто Оризари"},
-    {"latin": "Saraj", "cyrillic": "Сарај"},
-]
+# SUPPORTED_CITIES = [
+#     {"latin": "Aerodrom", "cyrillic": "Аеродром"},
+#     {"latin": "Aracinovo", "cyrillic": "Арачиново"},
+#     {"latin": "Berovo", "cyrillic": "Берово"},
+#     {"latin": "Bitola", "cyrillic": "Битола"},
+#     {"latin": "Bogdanci", "cyrillic": "Богданци"},
+#     {"latin": "Butel", "cyrillic": "Бутел"},
+#     {"latin": "Valandovo", "cyrillic": "Валандово"},
+#     {"latin": "Veles", "cyrillic": "Велес"},
+#     {"latin": "Vinica", "cyrillic": "Виница"},
+#     {"latin": "Gazi Baba", "cyrillic": "Гази Баба"},
+#     {"latin": "Gevgelija", "cyrillic": "Гевгелија"},
+#     {"latin": "Gostivar", "cyrillic": "Гостивар"},
+#     {"latin": "Debar", "cyrillic": "Дебар"},
+#     {"latin": "Delcevo", "cyrillic": "Делчево"},
+#     {"latin": "Demir Kapija", "cyrillic": "Демир Капија"},
+#     {"latin": "Demir Hisar", "cyrillic": "Демир Хисар"},
+#     {"latin": "Dojran", "cyrillic": "Дојран"},
+#     {"latin": "Gjorce Petrov", "cyrillic": "Ѓорче Петров"},
+#     {"latin": "Zelenikovo", "cyrillic": "Зелениково"},
+#     {"latin": "Ilinden", "cyrillic": "Илинден"},
+#     {"latin": "Kavadarci", "cyrillic": "Кавадарци"},
+#     {"latin": "Karpos", "cyrillic": "Карпош"},
+#     {"latin": "Kisela Voda", "cyrillic": "Кисела Вода"},
+#     {"latin": "Kichevo", "cyrillic": "Кичево"},
+#     {"latin": "Kocani", "cyrillic": "Кочани"},
+#     {"latin": "Kratovo", "cyrillic": "Кратово"},
+#     {"latin": "Kriva Palanka", "cyrillic": "Крива Паланка"},
+#     {"latin": "Krusevo", "cyrillic": "Крушево"},
+#     {"latin": "Kumanovo", "cyrillic": "Куманово"},
+#     {"latin": "Mavrovo", "cyrillic": "Маврово"},
+#     {"latin": "Makedonska Kamenica", "cyrillic": "Македонска Каменица"},
+#     {"latin": "Makedonski Brod", "cyrillic": "Македонски Брод"},
+#     {"latin": "Negotino", "cyrillic": "Неготино"},
+#     {"latin": "Ohrid", "cyrillic": "Охрид"},
+#     {"latin": "Petrovec", "cyrillic": "Петровец"},
+#     {"latin": "Pehcevo", "cyrillic": "Пехчево"},
+#     {"latin": "Prilep", "cyrillic": "Прилеп"},
+#     {"latin": "Probistip", "cyrillic": "Пробиштип"},
+#     {"latin": "Radovis", "cyrillic": "Радовиш"},
+#     {"latin": "Resen", "cyrillic": "Ресен"},
+#     {"latin": "Saraj", "cyrillic": "Сарај"},
+#     {"latin": "Sveti Nikole", "cyrillic": "Свети Николе"},
+#     {"latin": "Skopje", "cyrillic": "Скопје"},
+#     {"latin": "Sopiste", "cyrillic": "Сопиште"},
+#     {"latin": "Struga", "cyrillic": "Струга"},
+#     {"latin": "Strumica", "cyrillic": "Струмица"},
+#     {"latin": "Studenicani", "cyrillic": "Студеничани"},
+#     {"latin": "Tetovo", "cyrillic": "Тетово"},
+#     {"latin": "Centar", "cyrillic": "Центар"},
+#     {"latin": "Cair", "cyrillic": "Чаир"},
+#     {"latin": "Cucer Sandevo", "cyrillic": "Чучер-Сандево"},
+#     {"latin": "Stip", "cyrillic": "Штип"},
+#     {"latin": "Suto Orizari", "cyrillic": "Шуто Оризари"},
+# ]
+#
+# SUPPORTED_MUNICIPALITIES = [
+#     {"latin": "Aerodrom", "cyrillic": "Аеродром"},
+#     {"latin": "Butel", "cyrillic": "Бутел"},
+#     {"latin": "Gazi Baba", "cyrillic": "Гази Баба"},
+#     {"latin": "Gjorce Petrov", "cyrillic": "Ѓорче Петров"},
+#     {"latin": "Kisela Voda", "cyrillic": "Кисела Вода"},
+#     {"latin": "Karpos", "cyrillic": "Карпош"},
+#     {"latin": "Centar", "cyrillic": "Центар"},
+#     {"latin": "Cair", "cyrillic": "Чаир"},
+#     {"latin": "Suto Orizari", "cyrillic": "Шуто Оризари"},
+#     {"latin": "Saraj", "cyrillic": "Сарај"},
+# ]
 
 
 class AddProductToCartSerializer(serializers.Serializer):
@@ -384,36 +385,40 @@ class ShippingDetailsSerializer(serializers.ModelSerializer):
         if not value or value == "":
             raise ValueError({"city": "Полето град е задолжително поле"})
 
-        # Create a dictionary to map Latin names to Cyrillic names for cities
-        latin_to_cyrillic = {c["latin"]: c["cyrillic"] for c in SUPPORTED_CITIES}
+        return value
 
-        # Retrieve the Cyrillic name using the provided Latin name
-        city_cyrillic = latin_to_cyrillic.get(value)
-        if not city_cyrillic:
-            raise ValueError({"city": "Одберете го вашиот град од листата"})
-
-        return city_cyrillic
+        # # Create a dictionary to map Latin names to Cyrillic names for cities
+        # latin_to_cyrillic = {c["latin"]: c["cyrillic"] for c in SUPPORTED_CITIES}
+        #
+        # # Retrieve the Cyrillic name using the provided Latin name
+        # city_cyrillic = latin_to_cyrillic.get(value)
+        # if not city_cyrillic:
+        #     raise ValueError({"city": "Одберете го вашиот град од листата"})
+        #
+        # return city_cyrillic
 
     def validate_and_set_municipality(self, value):
-        """
-        Validate the municipality
-        :param value: the municipality to be validated
-        :return: the validated municipality
-        """
-        if not value or value == "":
-            return None
+        return None
 
-        # Create a dictionary to map Latin names to Cyrillic names
-        latin_to_cyrillic = {
-            m["latin"]: m["cyrillic"] for m in SUPPORTED_MUNICIPALITIES
-        }
-
-        # Check if the provided Latin name is in the dictionary
-        municipality_cyrillic = latin_to_cyrillic.get(value)
-        if not municipality_cyrillic:
-            raise ValueError({"municipality": "Одберете ја вашата општина од листата"})
-
-        return municipality_cyrillic
+        # """
+        # Validate the municipality
+        # :param value: the municipality to be validated
+        # :return: the validated municipality
+        # """
+        # if not value or value == "":
+        #     return None
+        #
+        # # Create a dictionary to map Latin names to Cyrillic names
+        # latin_to_cyrillic = {
+        #     m["latin"]: m["cyrillic"] for m in SUPPORTED_MUNICIPALITIES
+        # }
+        #
+        # # Check if the provided Latin name is in the dictionary
+        # municipality_cyrillic = latin_to_cyrillic.get(value)
+        # if not municipality_cyrillic:
+        #     raise ValueError({"municipality": "Одберете ја вашата општина од листата"})
+        #
+        # return municipality_cyrillic
 
     def validate_and_set_email(self, value):
         """

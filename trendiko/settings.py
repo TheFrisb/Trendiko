@@ -248,7 +248,8 @@ CKEDITOR_CONFIGS = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CRONJOBS = [
-    ("10 23 * * *", "facebook.cron.update_facebook_catalogue_feed"),
+    ("0 * * * *", "facebook.cron.update_facebook_catalogue_feed"),
+    ("0 0 */28 * *", "facebook.cron.refresh_facebook_access_token"),
     ("0 0 * * *", "cart.cron.make_carts_abandoned"),
     ("0 4 * * *", "analytics.cron.create_campaign_summaries"),
 ]

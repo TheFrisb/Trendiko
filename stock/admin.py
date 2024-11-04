@@ -2,8 +2,8 @@ from django import forms
 from django.contrib import admin
 from django.db.models import Subquery, OuterRef, DecimalField, Sum
 
+from common.admin import CommonSiteSettings
 from shop.models import Product, ProductAttribute
-
 # Register your models here.
 from .models import StockItem, ImportItem, Import, ReservedStockItem
 
@@ -18,9 +18,14 @@ class StockItemForm(forms.ModelForm):
         instance = getattr(self, "instance", None)
         if instance and instance.pk:
             if instance.sku != sku:
-                raise forms.ValidationError(
-                    "Changing the SKU of an existing StockItem is not allowed."
-                )
+                can_change_sku_setting = CommonSiteSettings.objects.filter(
+                    key="Allow SKU change"
+                ).first()
+
+                if not can_change_sku_setting.enabled:
+                    raise forms.ValidationError(
+                        "Changing the SKU of an existing StockItem is not allowed."
+                    )
         return sku
 
 

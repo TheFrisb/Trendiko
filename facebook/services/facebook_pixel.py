@@ -32,7 +32,7 @@ class FacebookPixel:
             quantity=1,
             brand=self.brand_name,
             item_price=product.sale_price,
-            delivery_category=DeliveryCategory.HOME_DELIVERY,
+            delivery_category=DeliveryCategory.HOME_DELIVERY.value,
         )
         custom_data = CustomData(
             contents=[content],
@@ -75,7 +75,7 @@ class FacebookPixel:
             quantity=cart_item.quantity,
             brand=self.brand_name,
             item_price=cart_item.sale_price,
-            delivery_category=DeliveryCategory.HOME_DELIVERY,
+            delivery_category=DeliveryCategory.HOME_DELIVERY.value,
         )
 
         custom_data = CustomData(

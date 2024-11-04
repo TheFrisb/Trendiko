@@ -5,7 +5,6 @@ import {initializeQuantityActions} from "../components/shop/quantityInput";
 import {initializeCart} from "../components/shop/cart";
 import {initializeProductAttributesListeners} from "../components/product-attributes/attribute";
 import {initializeFAQItems} from "../components/faq/faq";
-import {initCheckoutCityListeners} from "../components/checkout/cityAutoComplete";
 import {initializeAddToOrderButtons} from "../components/shop/addToOrder";
 import {makeCountDownByMinutesAndSeconds} from "../components/timer/timer";
 import {initializeCookieConsent} from "../components/cookies/cookieconsent-config";
@@ -24,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
   initializeFAQItems();
   initializeAddToOrderButtons();
   makeCountDownByMinutesAndSeconds();
-  initCheckoutCityListeners();
   initializeCookieConsent();
   initializeSearchBar();
   sendViewContentFacebookPixelEvent();

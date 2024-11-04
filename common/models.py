@@ -119,3 +119,23 @@ class StoredCounter(TimeStampedModel):
 
     def get_counter(self):
         return self.value
+
+
+class CommonSiteSettings(TimeStampedModel):
+    key = models.CharField(max_length=255, unique=True, verbose_name="Име")
+    enabled = models.BooleanField(default=True, verbose_name="Овозможено")
+
+    class Meta:
+        verbose_name = "Глобална поставка"
+        verbose_name_plural = "Глобални поставки"
+
+
+class FacebookAccessToken(TimeStampedModel):
+    token = models.CharField(max_length=500)
+
+    class Meta:
+        verbose_name = "Facebook Access Token"
+        verbose_name_plural = "Facebook Access Tokens"
+
+    def __str__(self):
+        return f"Facebook Access Token: {self.updated_at}"

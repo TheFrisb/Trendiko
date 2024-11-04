@@ -22,8 +22,8 @@ class StockItem(BaseProduct):
     stock = models.PositiveIntegerField(default=0, verbose_name="Залиха")
 
     def save(self, *args, **kwargs):
-        if not self.qr_code:
-            self.qr_code = self.generate_qr_code()
+        self.qr_code = self.generate_qr_code()
+
         super().save(*args, **kwargs)
 
     def generate_qr_code(self):
