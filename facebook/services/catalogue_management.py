@@ -83,6 +83,7 @@ class CatalogueManager:
 
         return [
             id_key,
+            "",
             title,
             description,
             availability,
