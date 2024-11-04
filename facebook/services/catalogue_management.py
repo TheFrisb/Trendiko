@@ -56,10 +56,11 @@ class CatalogueManager:
 
             for product in self.products:
                 if product.type == Product.ProductType.VARIABLE:
-                    row = self.get_attribute_product_row(product)
+                    group_id = f"group-{product.id}"
+                    row = self.get_attribute_product_row(product, group_id)
                     writer.writerow(row)
                     for attribute in product.attributes.all():
-                        row = self.get_attribute_row(product, attribute)
+                        row = self.get_attribute_row(product, attribute, group_id)
                         writer.writerow(row)
                 else:
                     row = self.get_product_row(product)
