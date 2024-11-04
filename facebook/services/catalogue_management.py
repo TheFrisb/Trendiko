@@ -101,18 +101,18 @@ class CatalogueManager:
             "",
         ]
 
-    def get_attribute_product_row(self, product):
-        id_key = ""
-        item_group_id = product.id
+    def get_attribute_product_row(self, product, group_id):
+        id_key = product.id
+        item_group_id = group_id
         title = product.title
         description = self.get_short_description(product)
         availability = ""
         condition = "new"
-        price = ""
+        price = f"{product.regular_price} {self.currency}"
         link = f"{self.base_url}{product.get_absolute_url()}"
         image_link = self.base_url + product.thumbnail_as_jpeg.url
         brand = self.brand
-        sale_price = ""
+        sale_price = f"{product.sale_price} {self.currency}"
         additional_image_link = self.get_additional_images(product)
         rich_text_description = product.description
 
@@ -136,9 +136,9 @@ class CatalogueManager:
             "",
         ]
 
-    def get_attribute_row(self, product, attribute):
+    def get_attribute_row(self, product, attribute, group_id):
         id_key = f"{product.id}-{attribute.id}"
-        item_group_id = product.id
+        item_group_id = group_id
         title = f"{product.title} - {attribute.title}"
         description = self.get_short_description(product)
         availability = self.get_availability(product)
