@@ -482,4 +482,4 @@ class CartOffers(TimeStampedModel):
         ordering = ["display_order"]
 
     def __str__(self):
-        return f"{self.product.title} - {self.offer_price}"
+        return f"{self.product.title} - {self.sale_price}"
