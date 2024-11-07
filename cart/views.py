@@ -18,6 +18,7 @@ from .serializers import (
     AddOrderItemToOrderSerializer,
     OrderItemSerializer,
     AbandonedCartDetailsSerializer,
+    AddCartOfferToCartSerializer,
 )
 
 
@@ -103,6 +104,28 @@ class CartItemView(APIView):
         request.cart.refresh_from_db()
 
         return Response(CartSerializer(request.cart).data, status=status.HTTP_200_OK)
+
+
+class CartOfferView(APIView):
+    def post(self, request):
+        serializer = AddCartOfferToCartSerializer(data=request.data)
+        if serializer.is_valid():
+            cart_service = CartService(request.cart, ProductService())
+            cart_item = cart_service.add_cart_offer_to_cart(serializer.data)
+
+            try:
+                fb_pixel = FacebookPixel(request)
+                fb_pixel.add_to_cart(cart_item)
+            except Exception as e:
+                logging.error(
+                    f"[Facebook Pixel] Error when sending add to cart event: {e}"
+                )
+
+            return Response(
+                CartItemSerializer(cart_item).data, status=status.HTTP_200_OK
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CheckoutView(APIView):

@@ -2,6 +2,7 @@ from rest_framework.exceptions import NotFound
 
 from cart.models import CartItem, Cart, AbandonedCartDetails
 from common.exceptions import OutOfStockException
+from shop.models import CartOffers
 from shop.services.product_service import ProductService
 from stock.services.stock_validator import StockValidator
 
@@ -61,6 +62,7 @@ class CartService:
             product=product,
             type=product_type,
             attribute=attribute,
+            cart_offer=None,
             defaults={"quantity": quantity},
         )
         if not created:
@@ -92,10 +94,10 @@ class CartService:
         """
         cart_item = self.fetch_cart_item_or_throw(pk)
         if (
-            not self.stock_validator.check_stock_item_stock(
-                cart_item.get_stock_item(), quantity
-            )
-            and quantity > cart_item.quantity
+                not self.stock_validator.check_stock_item_stock(
+                    cart_item.get_stock_item(), quantity
+                )
+                and quantity > cart_item.quantity
         ):
             message = f"Немаме доволно парчиња на залиха од овој производ."
 
@@ -164,3 +166,35 @@ class CartService:
             abandoned_details.save()
 
         return abandoned_details
+
+    def add_cart_offer_to_cart(self, data):
+        cart_offer = CartOffers.objects.get(pk=data["cart_offer_id"])
+
+        validation_data = {
+            "product_id": cart_offer.product.id,
+            "product_type": cart_offer.product.type,
+            "quantity": 1,
+            "attribute_id": None,
+        }
+
+        (
+            product,
+            product_type,
+            attribute,
+            quantity,
+        ) = self.product_service.validate_product(validation_data)
+
+        cart_item, created = CartItem.objects.get_or_create(
+            cart=self.cart,
+            product=cart_offer.product,
+            type=product_type,
+            attribute=attribute,
+            cart_offer=cart_offer,
+            quantity=1,
+        )
+
+        if not created:
+            cart_item.quantity += quantity
+            cart_item.save()
+
+        return cart_item

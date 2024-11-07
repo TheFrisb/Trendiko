@@ -2,6 +2,7 @@ import {attachCartItemInputListeners, removeCartItem} from "./quantityInput";
 import {formatNumberToLocale, parseLocaleNumber} from "../../utils/numberFormatter";
 import {sendInitiateCheckoutFacebookPixelEvent} from "../facebook/pixelEvents";
 import {checkout} from "./checkout";
+import {restoreAddCartOfferButtons} from "./addCartOffer";
 
 const body = document.querySelector("body");
 const cartOverlay = document.getElementById("sideCartOverlay");
@@ -9,7 +10,7 @@ const cartEl = document.getElementById("sideCart");
 const cartIcon = document.getElementById("cartIcon");
 const closeCartIcon = document.getElementById("closeCartIcon");
 const cartQuantity = document.getElementById("cartIcon__currentQuantity");
-const cartBody = document.getElementById("cartBody");
+const cartBody = document.getElementById("cartBody--cartItems");
 const cartTotal = document.getElementById("cartTotal");
 const cartGoBackButton = document.getElementById("sideCart__goBackButon");
 const cartGoToCheckoutButton = document.getElementById("sideCart__goToCheckoutBtn");
@@ -155,6 +156,11 @@ function updateCartQuantityAndTotal(hasFreeShipping) {
 function removeCartItemElement(cartItemId, hasFreeShipping) {
   const cartItem = cartBody.querySelector(`[data-cart-item-id="${cartItemId}"]`);
   const checkoutItem = checkoutBody.querySelector(`[data-cart-item-id="${cartItemId}"]`);
+
+  if (cartItem.hasAttribute("data-cart-offer-id")) {
+    restoreAddCartOfferButtons(cartItem.getAttribute("data-cart-offer-id"));
+  }
+
   cartItem.remove();
   checkoutItem.remove();
   updateCartQuantityAndTotal(hasFreeShipping);
@@ -166,6 +172,7 @@ function createSideCartItem(cartItem) {
   const attributeTitleParagraph = cartItem.attribute_title ? `<p class="text-sm text-black/60">${cartItem.attribute_title}</p>` : "";
   sideCartItemDiv.classList.add("flex", "gap-2", "items-start", "py-4", "border-b-2", "p-5", "cartItem");
   sideCartItemDiv.setAttribute("data-cart-item-id", cartItem.id);
+  sideCartItemDiv.setAttribute("data-cart-offer-id", cartItem.cart_offer_id);
   sideCartItemDiv.innerHTML = `
                                 <picture class="">
                                   <source srcset="${thumbnails.webp}" type="image/webp">
@@ -215,6 +222,7 @@ function createCheckoutItem(cartItem) {
   const attributeTitleParagraph = cartItem.attribute_title ? `<p class="text-sm text-black/60">${cartItem.attribute_title}</p>` : "";
   checkoutCartItemDiv.classList.add("flex", "gap-2", "items-start", "py-4", "border-b", "cartItem", "first-of-type:pt-0");
   checkoutCartItemDiv.setAttribute("data-cart-item-id", cartItem.id);
+  checkoutCartItemDiv.setAttribute("data-cart-offer-id", cartItem.cart_offer_id);
   checkoutCartItemDiv.innerHTML = `
                                 <picture class="">
                                   <source srcset="${thumbnails.webp}" type="image/webp">

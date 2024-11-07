@@ -27,7 +27,7 @@ class FacebookApi:
             print(campaign)
 
     def get_total_adspend_for_time_range(
-            self, start_date: datetime, end_date: datetime
+        self, start_date: datetime, end_date: datetime
     ):
         params = {
             "time_range": {

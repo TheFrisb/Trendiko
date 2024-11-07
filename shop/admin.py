@@ -19,6 +19,7 @@ from .models import (
     BrandPage,
     FrequentlyAskedQuestion,
     ShopClient,
+    CartOffers,
 )
 
 
@@ -312,6 +313,16 @@ class ShopClient(SortableAdminMixin, admin.ModelAdmin):
 
     class Meta:
         model = ShopClient
+
+
+@admin.register(CartOffers)
+class CartOffersAdmin(SortableAdminMixin, admin.ModelAdmin):
+    search_fields = [
+        "product__title",
+    ]
+
+    class Meta:
+        model = CartOffers
 
 
 admin.site.register(BrandPage)

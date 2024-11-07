@@ -49,7 +49,7 @@ class CatalogueManager:
         ]
 
         with open(
-                self.output_file_csv, mode="w", newline="", encoding="utf-8"
+            self.output_file_csv, mode="w", newline="", encoding="utf-8"
         ) as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(headers)  # Write the header row

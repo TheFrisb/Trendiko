@@ -113,49 +113,108 @@
             <div class="relative flex-auto overflow-hidden w-full h-full">
                 <div class="absolute top-0 right-0 left-0 bottom-0 overflow-auto overflow-x-hidden" id="cartBody">
                     <!-- Cart Item -->
-                    {% for cart_item in cart.cart_items.all %}
-                        <div class="flex gap-2 items-start py-4 border-b-2 p-5 cartItem"
-                             data-cart-item-id="{{ cart_item.id }}">
-                            {% with currentThumbnails=cart_item.thumbnails %}
-                                <picture class="">
-                                    <source srcset="{{ currentThumbnails.webp }}" type="image/webp">
-                                    <source srcset="{{ currentThumbnails.jpg }}" type="image/png">
-                                    <img src="{{ currentThumbnails.jpg }}" alt=""
-                                         class="rounded-lg min-w-[120px]" width="120" height="120">
-                                </picture>
-                            {% endwith %}
+                    <div id="cartBody--cartItems">
+                        {% for cart_item in cart.cart_items.all %}
+                            <div class="flex gap-2 items-start py-4 border-b-2 p-5 cartItem"
+                                 data-cart-item-id="{{ cart_item.id }}" {% if cart_item.cart_offer is not None %}
+                                 data-cart-offer-id="{{ cart_item.cart_offer.id }}"{% endif %}>
+                                {% with currentThumbnails=cart_item.thumbnails %}
+                                    <picture class="">
+                                        <source srcset="{{ currentThumbnails.webp }}" type="image/webp">
+                                        <source srcset="{{ currentThumbnails.jpg }}" type="image/png">
+                                        <img src="{{ currentThumbnails.jpg }}" alt=""
+                                             class="rounded-lg min-w-[120px]" width="120" height="120">
+                                    </picture>
+                                {% endwith %}
 
-                            <div class="flex-grow">
-                                <div>
-                                    <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem float-right"
-                                         width="22"
-                                         height="22"
-                                         fill="currentColor">
-                                        <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
-                                    </svg>
-                                    <p class="font-semibold line-clamp-2">{{ cart_item.title }}</p>
-                                </div>
-                                {% if cart_item.attribute %}
-                                    <p class="text-sm text-black/60">{{ cart_item.attribute.title }}</p>
-                                {% endif %}
-                                <p class="font-semibold text-brand-action my-2 leading-5"><span
-                                        class="cartItem__salePrice">{{ cart_item.sale_price|intcomma }}</span>
-                                    ден</p>
-                                <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
-                                    <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
-                                        -
-                                    </button>
-                                    <input type="number" value="{{ cart_item.quantity }}" min="1"
-                                           class="w-6/12 h-full text-center cartItem__quantityInput border-t border-b border-black/60 focus:outline-0"
-                                           readonly>
-                                    <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
-                                        +
-                                    </button>
+                                <div class="flex-grow">
+                                    <div>
+                                        <svg class="text-black cursor-pointer hover:text-black/60 cartItem__removeItem float-right"
+                                             width="22"
+                                             height="22"
+                                             fill="currentColor">
+                                            <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#trash"></use>
+                                        </svg>
+                                        <p class="font-semibold line-clamp-2">{{ cart_item.title }}</p>
+                                    </div>
+                                    {% if cart_item.attribute %}
+                                        <p class="text-sm text-black/60">{{ cart_item.attribute.title }}</p>
+                                    {% endif %}
+                                    <p class="font-semibold text-brand-action my-2 leading-5"><span
+                                            class="cartItem__salePrice">{{ cart_item.sale_price|intcomma }}</span>
+                                        ден</p>
+                                    <div class="flex items-center w-9/12 h-9 bg-white rounded-lg mb-4">
+                                        <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-l-lg border border-r-0 border-black/60">
+                                            -
+                                        </button>
+                                        <input type="number" value="{{ cart_item.quantity }}" min="1"
+                                               class="w-6/12 h-full text-center cartItem__quantityInput border-t border-b border-black/60 focus:outline-0"
+                                               readonly>
+                                        <button class="w-3/12 h-full hover:bg-brand-primary hover:text-white rounded-r-lg border border-l-0 border-black/60">
+                                            +
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                     <p class="text-sm text-black/60 p-5 sideCart__emptyAction">Вашата кошничка е празна.</p>
+                    {% if cart_offers %}
+                        <div class="bg-brand-primary/20 cart__cartOfferSection">
+                            <p class="pt-4 px-5 text-brand-action text-sm font-bold">Може да ви се допадне</p>
+                            {% for cart_offer in cart_offers %}
+                                <div class="flex gap-2 items-start py-4 px-5 cartOffer border-b-2"
+                                     data-cart-offer-id="{{ cart_offer.id }}">
+                                    {% with currentThumbnails=cart_offer.thumbnails %}
+                                        <picture class="">
+                                            <source srcset="{{ currentThumbnails.webp }}" type="image/webp">
+                                            <source srcset="{{ currentThumbnails.jpg }}" type="image/png">
+                                            <img src="{{ currentThumbnails.jpg }}" alt=""
+                                                 class="rounded-lg min-w-[90px]" width="90" height="90">
+                                        </picture>
+                                    {% endwith %}
+
+                                    <div class="flex items-end justify-between relative w-full flex-wrap">
+                                        <div class="flex-grow basis-8/12 h-full">
+                                            <p class="font-semibold line-clamp-2">{{ cart_offer.product.title }}</p>
+                                            <p class="font-semibold text-brand-action my-2 leading-5 text-sm"><span
+                                            >1 x {{ cart_offer.sale_price|intcomma }}</span>
+                                                ден</p>
+                                            <p class="text-xs">{{ cart_offer.sale_text }}</p>
+
+                                        </div>
+                                        <button class="text-sm bg-brand-primary rounded-lg text-white font-bold p-2 hover:bg-brand-action transition-all duration-100 ease-in-out text-center ml-auto addCartOfferBtn"
+                                                data-cart-offer-id="{{ cart_offer.id }}"
+                                                {% if cart_offer.id in request.cart.get_cart_offer_ids %}
+                                                disabled
+                                                {% endif %}
+                                        >
+                                        <span class="buttonText">
+                                            {% if cart_offer.id in request.cart.get_cart_offer_ids %}
+                                                Додаден
+                                            {% else %}
+                                                Додади
+                                            {% endif %}
+                                        </span>
+                                            <div class="buttonSpinner w-full hidden items-center justify-center"
+                                                 role="status">
+                                                <svg aria-hidden="true"
+                                                     class="w-6 h-6 text-gray-200 animate-spin dark:text-gray-600 fill-brand-action"
+                                                     viewBox="0 0 100 101" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                                          fill="currentColor"/>
+                                                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                                          fill="currentFill"/>
+                                                </svg>
+                                                <span class="sr-only">Loading...</span>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     <!-- End Cart Item -->
                 </div>
             </div>
@@ -205,7 +264,11 @@
             <div id="checkoutBody">
                 {% for cart_item in cart.cart_items.all %}
                     <div class="flex gap-2 items-start py-4 border-b cartItem first-of-type:pt-0"
-                         data-cart-item-id="{{ cart_item.id }}">
+                         data-cart-item-id="{{ cart_item.id }}"
+                            {% if cart_item.cart_offer is not None %}
+                         data-cart-offer-id="{{ cart_item.cart_offer.id }}"
+                            {% endif %}
+                    >
                         {% with currentThumbnails=cart_item.thumbnails %}
                             <picture class="">
                                 <source srcset="{{ currentThumbnails.webp }}" type="image/webp">
@@ -301,6 +364,64 @@
                 </div>
 
             </div>
+
+            {% if cart_offers %}
+                <div class="cart__cartOfferSection">
+                    <p class="pt-4 text-brand-action text-sm font-bold">Често купувани заедно</p>
+                    {% for cart_offer in cart_offers %}
+                        <div class="flex gap-2 items-start py-4 cartOffer border-b-2"
+                             data-cart-offer-id="{{ cart_offer.id }}">
+                            {% with currentThumbnails=cart_offer.thumbnails %}
+                                <picture class="">
+                                    <source srcset="{{ currentThumbnails.webp }}" type="image/webp">
+                                    <source srcset="{{ currentThumbnails.jpg }}" type="image/png">
+                                    <img src="{{ currentThumbnails.jpg }}" alt=""
+                                         class="rounded-lg min-w-[90px]" width="90" height="90">
+                                </picture>
+                            {% endwith %}
+
+                            <div class="flex items-end justify-between relative w-full flex-wrap">
+                                <div class="flex-grow basis-8/12 h-full">
+                                    <p class="font-semibold line-clamp-2">{{ cart_offer.product.title }}</p>
+                                    <p class="font-semibold text-brand-action my-2 leading-5 text-sm"><span
+                                    >1 x {{ cart_offer.sale_price|intcomma }}</span>
+                                        ден</p>
+                                    <p class="text-xs">{{ cart_offer.sale_text }}</p>
+
+                                </div>
+
+                                <button
+                                        class="text-sm bg-brand-primary rounded-lg text-white font-bold p-2 hover:bg-brand-action transition-all duration-100 ease-in-out text-center ml-auto addCartOfferBtn"
+                                        data-cart-offer-id="{{ cart_offer.id }}"
+                                        {% if cart_offer.id in request.cart.get_cart_offer_ids %}
+                                        disabled
+                                        {% endif %}
+                                >
+                                <span class="buttonText">
+                                    {% if cart_offer.id in request.cart.get_cart_offer_ids %}
+                                        Додаден
+                                    {% else %}
+                                        Додади
+                                    {% endif %}
+                                </span>
+                                    <div class="buttonSpinner w-full hidden items-center justify-center"
+                                         role="status">
+                                        <svg aria-hidden="true"
+                                             class="w-6 h-6 text-gray-200 animate-spin dark:text-gray-600 fill-brand-action"
+                                             viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                                  fill="currentColor"/>
+                                            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                                  fill="currentFill"/>
+                                        </svg>
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <div>
                 <p class="text-center text-xl font-bold text-brand-action pb-1">Податоци за испорака</p>
                 <p class="text-sm text-center pb-2">Плаќање на врата</p>

@@ -4,6 +4,7 @@ from django.db.models import Subquery, OuterRef, DecimalField, Sum
 
 from common.admin import CommonSiteSettings
 from shop.models import Product, ProductAttribute
+
 # Register your models here.
 from .models import StockItem, ImportItem, Import, ReservedStockItem
 

@@ -19,7 +19,7 @@ from cart.tasks import calculate_revenue_and_profit_for_client
 from common.exceptions import OutOfStockException
 from common.models import TimeStampedModel, LoggableModel
 from common.storage import InvoicesStorage
-from shop.models import Product, ProductAttribute
+from shop.models import Product, ProductAttribute, CartOffers
 from stock.models import ImportItem, ReservedStockItem
 
 
@@ -113,6 +113,20 @@ class Cart(TimeStampedModel):
 
         return sum(item.quantity for item in self.cart_items.all())
 
+    @property
+    def get_cart_offer_ids(self):
+        """
+        Get the ids of all cart offers in the cart.
+
+        Returns:
+            list: The ids of all cart offers in the cart.
+        """
+        return list(
+            self.cart_items.filter(cart_offer__isnull=False).values_list(
+                "cart_offer__id", flat=True
+            )
+        )
+
     def is_empty(self):
         """
         Check if the cart is empty.
@@ -144,6 +158,13 @@ class CartItem(TimeStampedModel):
     attribute = models.ForeignKey(
         ProductAttribute, on_delete=models.CASCADE, null=True, blank=True
     )
+    cart_offer = models.ForeignKey(
+        CartOffers, on_delete=models.SET_NULL, null=True, blank=True, default=None
+    )
+
+    @property
+    def is_cart_offer(self):
+        return self.cart_offer is not None
 
     @property
     def sale_price(self):
@@ -155,6 +176,9 @@ class CartItem(TimeStampedModel):
         """
         if self.attribute:
             return self.attribute.sale_price
+
+        if self.cart_offer:
+            return self.cart_offer.sale_price
 
         return self.product.selling_price
 
@@ -168,6 +192,7 @@ class CartItem(TimeStampedModel):
         """
         if self.attribute:
             return f"{self.product.title} - {self.attribute.title}"
+
         return self.product.title
 
     @property
@@ -196,6 +221,9 @@ class CartItem(TimeStampedModel):
 
         if self.attribute:
             return self.attribute.sale_price * self.quantity
+
+        if self.cart_offer:
+            return self.cart_offer.sale_price * self.quantity
 
         return self.product.selling_price * self.quantity
 
@@ -299,7 +327,7 @@ class Order(TimeStampedModel, LoggableModel):
             return None
 
         if self.order_items.filter(
-            promotion_type=OrderItem.PromotionType.THANK_YOU
+                promotion_type=OrderItem.PromotionType.THANK_YOU
         ).exists():
             return None
 
@@ -334,7 +362,7 @@ class Order(TimeStampedModel, LoggableModel):
         """
         self.subtotal_price = sum(item.total_price for item in self.order_items.all())
         if self.subtotal_price >= 1500 or any(
-            item.product.has_free_shipping for item in self.order_items.all()
+                item.product.has_free_shipping for item in self.order_items.all()
         ):
             self.has_free_shipping = True
 
@@ -492,6 +520,7 @@ class OrderItem(TimeStampedModel):
         max_length=25, choices=PromotionType, default=None, null=True, blank=True
     )
     rabat = models.IntegerField(default=0)
+    is_cart_offer = models.BooleanField(default=False)
 
     @property
     def get_thumbnail_loops(self):
@@ -551,8 +580,8 @@ class OrderItem(TimeStampedModel):
             if quantity_to_be_reserved == 0:
                 break
             if (
-                import_item.calculate_max_available_reservation()
-                >= quantity_to_be_reserved
+                    import_item.calculate_max_available_reservation()
+                    >= quantity_to_be_reserved
             ):
                 reserved_stock_item = ReservedStockItem.objects.create(
                     order_item=self,

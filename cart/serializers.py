@@ -95,6 +95,10 @@ class AddProductToCartSerializer(serializers.Serializer):
     )
 
 
+class AddCartOfferToCartSerializer(serializers.Serializer):
+    cart_offer_id = serializers.IntegerField(min_value=1, required=True)
+
+
 class UpdateCartItemSerializer(serializers.Serializer):
     """
     Serializer for updating a cart item
@@ -111,6 +115,17 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     has_free_shipping = serializers.SerializerMethodField()
     attribute_title = serializers.SerializerMethodField()
+    cart_offer_id = serializers.SerializerMethodField()
+
+    def get_cart_offer_id(self, obj):
+        """
+        Get the cart offer id
+        :param obj:
+        :return:
+        """
+        if obj.cart_offer:
+            return obj.cart_offer.id
+        return None
 
     def get_attribute_title(self, obj):
         """
@@ -148,6 +163,7 @@ class CartItemSerializer(serializers.ModelSerializer):
             "sale_price",
             "total_price",
             "has_free_shipping",
+            "cart_offer_id",
         ]
 
 

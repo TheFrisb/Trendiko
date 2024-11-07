@@ -62,8 +62,8 @@ class FacebookPixel:
         event_response = event_request.execute()
 
     def add_to_cart(
-            self,
-            cart_item,
+        self,
+        cart_item,
     ):
         if self.is_opted_in() is False:
             return

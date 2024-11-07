@@ -12,6 +12,7 @@ import {initializeSearchBar} from "../components/searchBar";
 import {sendViewContentFacebookPixelEvent} from "../components/facebook/pixelEvents";
 import {initializeSubscribeToMailButtons} from "../components/promotions/subscribeToMailButton";
 import {initializeAbandonedCart} from "../components/abandonedCart";
+import {initializeAddCartOfferButtons} from "../components/shop/addCartOffer";
 
 document.addEventListener('DOMContentLoaded', function () {
   initializeToggles();
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
   sendViewContentFacebookPixelEvent();
   initializeSubscribeToMailButtons();
   initializeAbandonedCart();
+  initializeAddCartOfferButtons();
   const menuIcon = document.getElementById('menuIcon');
   const navbar = document.getElementById('navbar');
   const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;

@@ -145,6 +145,7 @@ class CheckoutService:
             type=cart_item.type,
             stock_item=self.get_stock_item_by_cart_item_type(cart_item),
             attribute=cart_item.attribute,
+            is_cart_offer=cart_item.is_cart_offer,
         )
 
         try:

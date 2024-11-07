@@ -459,3 +459,27 @@ class ShopClient(TimeStampedModel):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class CartOffers(TimeStampedModel):
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="cart_offers"
+    )
+    sale_price = models.PositiveIntegerField(verbose_name="Понудена цена")
+    sale_text = models.CharField(max_length=200, verbose_name="Текст за понуда")
+    display_order = models.IntegerField(default=0, db_index=True)
+
+    @property
+    def thumbnails(self):
+        return {
+            "webp": self.product.thumbnail_loop.url,
+            "jpg": self.product.thumbnail_loop_as_jpeg.url,
+        }
+
+    class Meta:
+        verbose_name = "Понуда за кошничка"
+        verbose_name_plural = "Понуди за кошничка"
+        ordering = ["display_order"]
+
+    def __str__(self):
+        return f"{self.product.title} - {self.offer_price}"

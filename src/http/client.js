@@ -5,6 +5,7 @@ let FACEBOOK_PIXEL_EVENTS_URL = INTERNAL_API_BASE_PATH + "/facebook/pixel"
 
 const URLS = {
   'ADD_TO_CART': INTERNAL_API_BASE_PATH + '/cart/cart-item/',
+  'ADD_CART_OFFER': INTERNAL_API_BASE_PATH + '/cart/cart-offer/',
   'UPDATE_CART_ITEM_QUANTITY': INTERNAL_API_BASE_PATH + '/cart/cart-item/',
   'REMOVE_CART_ITEM': INTERNAL_API_BASE_PATH + '/cart/cart-item/',
   'CHECKOUT': INTERNAL_API_BASE_PATH + '/cart/checkout/',
