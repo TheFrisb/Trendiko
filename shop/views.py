@@ -21,6 +21,9 @@ def get_seo_tags(
     if not page_image_relative_url:
         page_image_relative_url = static("common/assets/brand/logo-dark-white-bg.png")
 
+    if not page_description:
+        page_description = "Загарантирана сатисфакција и квалитет"
+
     page_image = f"{base_url}{page_image_relative_url}"
 
     return {
