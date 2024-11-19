@@ -163,7 +163,7 @@ class CategoryListView(FetchCategoriesMixin, ListView):
         context["heading"] = self.category.name
         context["seo_tags"] = get_seo_tags(
             page_title=self.category.name,
-            page_description=self.category.description,
+            page_description=self.category.promotion_text,
         )
         return context
 
