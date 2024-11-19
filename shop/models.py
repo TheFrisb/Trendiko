@@ -155,7 +155,7 @@ class Product(BaseProduct):
     )
     regular_price = models.PositiveIntegerField(verbose_name="Regular price")
     sale_price = models.PositiveIntegerField(
-        null=True, blank=True, verbose_name="Sale price"
+        verbose_name="Sale price"
     )
     stock_item = models.ForeignKey(
         "stock.StockItem",
@@ -292,9 +292,9 @@ class Product(BaseProduct):
     @property
     def get_seo_image(self):
         if (
-            hasattr(self, "seo_tags")
-            and self.seo_tags.seo_image
-            and self.seo_tags.seo_image.name
+                hasattr(self, "seo_tags")
+                and self.seo_tags.seo_image
+                and self.seo_tags.seo_image.name
         ):
             return self.seo_tags.seo_image.url
 
