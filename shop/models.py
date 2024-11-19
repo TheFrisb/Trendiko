@@ -292,13 +292,16 @@ class Product(BaseProduct):
     @property
     def get_seo_image(self):
         if (
-                hasattr(self, 'seo_tags') and
-                self.seo_tags.seo_image and
-                self.seo_tags.seo_image.name
+                hasattr(self, "seo_tags")
+                and self.seo_tags.seo_image
+                and self.seo_tags.seo_image.name
         ):
             return self.seo_tags.seo_image.url
-        else:
+
+        if self.thumbnail and self.thumbnail.name:
             return self.thumbnail.url
+
+        return None
 
     def create_seo_tags(self):
         ProductSeoTags.objects.create(
