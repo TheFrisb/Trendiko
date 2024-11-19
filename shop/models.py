@@ -295,10 +295,11 @@ class Product(BaseProduct):
                 hasattr(self, "seo_tags")
                 and self.seo_tags.seo_image
                 and self.seo_tags.seo_image.name
+                and self.seo_tags.seo_image.url is not None
         ):
             return self.seo_tags.seo_image.url
 
-        if self.thumbnail and self.thumbnail.name:
+        if self.thumbnail and self.thumbnail.name and self.thumbnail.url is not None:
             return self.thumbnail.url
 
         return None
