@@ -327,7 +327,7 @@ class Order(TimeStampedModel, LoggableModel):
             return None
 
         if self.order_items.filter(
-                promotion_type=OrderItem.PromotionType.THANK_YOU
+            promotion_type=OrderItem.PromotionType.THANK_YOU
         ).exists():
             return None
 
@@ -362,7 +362,7 @@ class Order(TimeStampedModel, LoggableModel):
         """
         self.subtotal_price = sum(item.total_price for item in self.order_items.all())
         if self.subtotal_price >= 1500 or any(
-                item.product.has_free_shipping for item in self.order_items.all()
+            item.product.has_free_shipping for item in self.order_items.all()
         ):
             self.has_free_shipping = True
 
@@ -580,8 +580,8 @@ class OrderItem(TimeStampedModel):
             if quantity_to_be_reserved == 0:
                 break
             if (
-                    import_item.calculate_max_available_reservation()
-                    >= quantity_to_be_reserved
+                import_item.calculate_max_available_reservation()
+                >= quantity_to_be_reserved
             ):
                 reserved_stock_item = ReservedStockItem.objects.create(
                     order_item=self,

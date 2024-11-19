@@ -270,6 +270,44 @@ class Product(BaseProduct):
     def get_product_title_for_accountant_invoice(self):
         return self.title
 
+    def get_thumbnail_absolute_url(self):
+        return self.thumbnail.url
+
+    @property
+    def get_seo_title(self):
+        return (
+            self.seo_tags.seo_title
+            if hasattr(self, "seo_tags") and self.seo_tags.seo_title
+            else self.title
+        )
+
+    @property
+    def get_seo_description(self):
+        return (
+            self.seo_tags.seo_description
+            if hasattr(self, "seo_tags") and self.seo_tags.seo_description
+            else self.short_description
+        )
+
+    @property
+    def get_seo_image(self):
+        if (
+                hasattr(self, 'seo_tags') and
+                self.seo_tags.seo_image and
+                self.seo_tags.seo_image.name
+        ):
+            return self.seo_tags.seo_image.url
+        else:
+            return self.thumbnail.url
+
+    def create_seo_tags(self):
+        ProductSeoTags.objects.create(
+            product=self,
+            seo_title=self.title,
+            seo_description=self.short_description,
+            seo_image=self.thumbnail,
+        )
+
     class Meta:
         verbose_name = "Производ"
         verbose_name_plural = "Производи"
@@ -483,3 +521,19 @@ class CartOffers(TimeStampedModel):
 
     def __str__(self):
         return f"{self.product.title} - {self.sale_price}"
+
+
+class ProductSeoTags(TimeStampedModel):
+    product = models.OneToOneField(
+        Product, on_delete=models.CASCADE, related_name="seo_tags"
+    )
+    seo_title = models.CharField(max_length=200, verbose_name="SEO Title")
+    seo_description = models.TextField(verbose_name="SEO Description")
+    seo_image = ProcessedImageField(
+        upload_to="products/%Y/%m/%d/",
+        format="PNG",
+        options={"quality": IMAGE_QUALITY},
+        null=True,
+        blank=True,
+        verbose_name="SEO Image",
+    )

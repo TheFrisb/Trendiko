@@ -1,11 +1,7 @@
-Po prioritet
-
-
-5. List of restock items
-* Nov tab za prikaz na stock items ili produkti deka so kolicinata e <20% od pocetnata uvozna kolicina
-* Soritranje po uvoz
-
-Dali da e sortiranjeto za produkti ili stock items?
-
-Cost: 3 hours
-+ - - - - - - - - - - - - - - - - - +
+1. HTML
+- HTML u sidecart
+- HTML u checkout
+2. SEO & Meta tags
+- Proper SEO Tags so open graph za stranata
+- Generiri meta tags per product
+- Edit meta tags u admin

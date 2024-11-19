@@ -1,5 +1,7 @@
+from decouple import config
 from django.db.models import Prefetch, Q
 from django.http import Http404
+from django.templatetags.static import static
 from django.views.generic import TemplateView, DetailView, ListView
 
 from cart.models import Order
@@ -9,6 +11,23 @@ from shop.models import Category, Product, BrandPage
 
 
 # Create your views here.
+
+
+def get_seo_tags(
+        page_title: str, page_description: str, page_image_relative_url: str = None
+) -> dict:
+    base_url = config("BASE_URL")
+
+    if not page_image_relative_url:
+        page_image_relative_url = static("common/assets/brand/logo-dark-white-bg.png")
+
+    page_image = f"{base_url}{page_image_relative_url}"
+
+    return {
+        "page_title": f"{page_title} ~ Trendiko",
+        "page_description": page_description,
+        "page_image": page_image,
+    }
 
 
 class HomeView(FetchCategoriesMixin, TemplateView):
@@ -26,9 +45,9 @@ class HomeView(FetchCategoriesMixin, TemplateView):
                 "promotion_category": promotion_category,
                 "recommended_products_promotion": {
                     "products": Product.objects.all()
-                    .filter(status=Product.ProductStatus.PUBLISHED)
-                    .prefetch_related("attributes")
-                    .order_by("-created_at")[:6],
+                                .filter(status=Product.ProductStatus.PUBLISHED)
+                                .prefetch_related("attributes")
+                                .order_by("-created_at")[:6],
                     "redirect_slug": "site-proizvodi",
                 },
                 "free_shipping_promotion": {
@@ -36,12 +55,14 @@ class HomeView(FetchCategoriesMixin, TemplateView):
                         free_shipping=True,
                         status=Product.ProductStatus.PUBLISHED,
                     )
-                    .prefetch_related("attributes")
-                    .order_by("-created_at")[:4],
+                                .prefetch_related("attributes")
+                                .order_by("-created_at")[:4],
                     "redirect_slug": "besplatna-dostava",
                 },
-                "title": "Почетна",
-                "page_description": "Загарантирана сатисфакција и квалитет",
+                "seo_tags": get_seo_tags(
+                    page_title="Почетна",
+                    page_description="Загарантирана сатисфакција и квалитет",
+                ),
             }
         )
         return context
@@ -57,7 +78,12 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
         """Override get_object to include custom prefetching and selecting."""
 
         queryset = self.get_queryset().prefetch_related(
-            "attributes", "reviews", "images", "stock_item", "attributes__stock_item"
+            "attributes",
+            "reviews",
+            "images",
+            "stock_item",
+            "attributes__stock_item",
+            "seo_tags",
         )
 
         slug = self.kwargs.get(self.slug_url_kwarg)
@@ -78,17 +104,20 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
     def get_context_data(self, **kwargs):
         """Add additional context for the template."""
         context = super().get_context_data(**kwargs)
-        context["title"] = self.object.title
         context["product_misc_data"] = self.object.get_product_misc_data()
         context["recommended_products_promotion"] = {
             "products": Product.objects.filter(status=Product.ProductStatus.PUBLISHED)
-            .prefetch_related("attributes")
-            .order_by("-created_at")[:4],
+                        .prefetch_related("attributes")
+                        .order_by("-created_at")[:4],
             "redirect_slug": "site-proizvodi",
         }
         context["show_call_button"] = True
         context["scheduled_delivery_dates"] = self.get_scheduled_delivery_dates()
-        context["page_description"] = self.object.title
+        context["seo_tags"] = get_seo_tags(
+            page_title=self.object.get_seo_title,
+            page_description=self.object.get_seo_description,
+            page_image_relative_url=self.object.get_seo_image,
+        )
         return context
 
     def get_scheduled_delivery_dates(self):
@@ -111,7 +140,7 @@ class CategoryListView(FetchCategoriesMixin, ListView):
                     Product.ProductStatus.OUT_OF_STOCK,
                 ]
             )
-            .prefetch_related("attributes")
+            .prefetch_related("attributes", "seo_tags")
             .order_by("created_at")
         )
 
@@ -127,13 +156,15 @@ class CategoryListView(FetchCategoriesMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = self.category.name
         context["category"] = self.category
         context[
             "empty_message"
         ] = f"Немаме производи на залиха од оваа категорија во моментот."
         context["heading"] = self.category.name
-        context["page_description"] = self.category.name
+        context["seo_tags"] = get_seo_tags(
+            page_title=self.category.name,
+            page_description=self.category.description,
+        )
         return context
 
 
@@ -149,9 +180,9 @@ class SearchView(FetchCategoriesMixin, ListView):
             return Product.objects.none()
 
         product_filter = (
-            Q(title__icontains=query)
-            | Q(stock_item__title__icontains=query)
-            | Q(stock_item__label__icontains=query)
+                Q(title__icontains=query)
+                | Q(stock_item__title__icontains=query)
+                | Q(stock_item__label__icontains=query)
         )
 
         # Filter products that match any of the conditions and are published
@@ -172,11 +203,14 @@ class SearchView(FetchCategoriesMixin, ListView):
         context = super().get_context_data(**kwargs)
         query = self.request.GET.get("q", "")
 
-        context["title"] = f"Пребарување: {self.request.GET.get('q', ' ')}"
         context[
             "empty_message"
         ] = f"Не се пронајдени производи за пребарувањето: {query}."
         context["heading"] = f"Пребарување: {query}"
+        context["seo_tags"] = get_seo_tags(
+            page_title=f"Пребарување: {query}",
+            page_description=f"Пребарувајте производи на Trendiko.mk",
+        )
         return context
 
 
@@ -203,9 +237,11 @@ class ThankYouDetailView(FetchCategoriesMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Ви благодариме"
         context["promotion_product"] = self.object.make_thank_you_product()
-        context["page_description"] = "Ви благодариме на порачката!"
+        context["seo_tags"] = get_seo_tags(
+            page_title="Ви благодариме",
+            page_description="Ви благодариме на порачката!",
+        )
         return context
 
 
@@ -226,6 +262,9 @@ class BrandPageDetailView(FetchCategoriesMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = self.object.title
-        context["page_description"] = "Trendiko.mk"
+
+        context["seo_tags"] = get_seo_tags(
+            page_title=self.object.title,
+            page_description="Trendiko.mk",
+        )
         return context

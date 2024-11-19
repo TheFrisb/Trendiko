@@ -6,21 +6,35 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="{{ page_description }}">
+
+    <meta name="description" content="{{ seo_tags.page_description }}">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="{{ seo_tags.page_title }}">
+    <meta property="og:description" content="{{ seo_tags.page_description }}">
+    <meta property="og:image" content="{{ seo_tags.page_image }}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Trendiko">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ seo_tags.page_title }}">
+    <meta name="twitter:description" content="{{ seo_tags.page_description }}">
+    <meta name="twitter:image" content="{{ seo_tags.page_image }}">
+    {#<meta name="twitter:site" content="@YourTwitterHandle">#}
+    <title>{{ seo_tags.page_title }}</title>
+
+
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'common/favicon/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'common/favicon/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'common/favicon/favicon-16x16.png' %}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
     <link rel="manifest" href="{% static 'common/favicon/site.webmanifest' %}">
+
     {% block head %}
     {% endblock head %}
 
     <link href="https://fonts.cdnfonts.com/css/century-gothic-paneuropean?styles=90072,90069,90073,90070,90065"
           rel="stylesheet">
-
-
     <link rel="stylesheet" href="{% static 'shop/css/shop.css' %}">
-
-    <title>{{ title }} ~ Trendiko</title>
 
     <style>
         #djDebug #djDebugToolbarHandle {

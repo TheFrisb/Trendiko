@@ -94,10 +94,10 @@ class CartService:
         """
         cart_item = self.fetch_cart_item_or_throw(pk)
         if (
-                not self.stock_validator.check_stock_item_stock(
-                    cart_item.get_stock_item(), quantity
-                )
-                and quantity > cart_item.quantity
+            not self.stock_validator.check_stock_item_stock(
+                cart_item.get_stock_item(), quantity
+            )
+            and quantity > cart_item.quantity
         ):
             message = f"Немаме доволно парчиња на залиха од овој производ."
 

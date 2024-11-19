@@ -20,10 +20,18 @@ from .models import (
     FrequentlyAskedQuestion,
     ShopClient,
     CartOffers,
+    ProductSeoTags,
 )
 
 
 # Register your models here.
+
+
+class ProductSeoTagsInline(admin.TabularInline):
+    model = ProductSeoTags
+    extra = 1
+
+
 class ProductAdminForm(forms.ModelForm):
     categories = forms.ModelMultipleChoiceField(
         queryset=Category.objects.all(),
@@ -95,7 +103,7 @@ class ProductAttributeInlineFormSet(BaseInlineFormSet):
 
             # if attribute doesn't have a stock item assigned to it, raise an error
             if not form.cleaned_data.get("stock_item") and not form.cleaned_data.get(
-                "DELETE"
+                    "DELETE"
             ):
                 raise ValidationError("Stock item must be selected for each attribute.")
 
@@ -139,6 +147,7 @@ class ProductAdmin(admin.ModelAdmin):
         ProductAttributeInline,
         FAQInline,
         FacebookCampaignsInline,
+        ProductSeoTagsInline,
     ]
     readonly_fields = ["slug"]
 
@@ -196,6 +205,12 @@ class ProductAdmin(admin.ModelAdmin):
                     price_change.send_mail()
             instance.save()
         formset.save_m2m()
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        product = form.instance
+        if not ProductSeoTags.objects.filter(product=product).exists():
+            product.create_seo_tags()
 
 
 @admin.register(Category)
