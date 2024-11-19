@@ -14,7 +14,7 @@ from shop.models import Category, Product, BrandPage
 
 
 def get_seo_tags(
-        page_title: str, page_description: str, page_image_relative_url: str = None
+    page_title: str, page_description: str, page_image_relative_url: str = None
 ) -> dict:
     base_url = config("BASE_URL")
 
@@ -48,9 +48,9 @@ class HomeView(FetchCategoriesMixin, TemplateView):
                 "promotion_category": promotion_category,
                 "recommended_products_promotion": {
                     "products": Product.objects.all()
-                                .filter(status=Product.ProductStatus.PUBLISHED)
-                                .prefetch_related("attributes")
-                                .order_by("-created_at")[:6],
+                    .filter(status=Product.ProductStatus.PUBLISHED)
+                    .prefetch_related("attributes")
+                    .order_by("-created_at")[:6],
                     "redirect_slug": "site-proizvodi",
                 },
                 "free_shipping_promotion": {
@@ -58,8 +58,8 @@ class HomeView(FetchCategoriesMixin, TemplateView):
                         free_shipping=True,
                         status=Product.ProductStatus.PUBLISHED,
                     )
-                                .prefetch_related("attributes")
-                                .order_by("-created_at")[:4],
+                    .prefetch_related("attributes")
+                    .order_by("-created_at")[:4],
                     "redirect_slug": "besplatna-dostava",
                 },
                 "seo_tags": get_seo_tags(
@@ -110,8 +110,8 @@ class ProductDetailView(FetchCategoriesMixin, DetailView):
         context["product_misc_data"] = self.object.get_product_misc_data()
         context["recommended_products_promotion"] = {
             "products": Product.objects.filter(status=Product.ProductStatus.PUBLISHED)
-                        .prefetch_related("attributes")
-                        .order_by("-created_at")[:4],
+            .prefetch_related("attributes")
+            .order_by("-created_at")[:4],
             "redirect_slug": "site-proizvodi",
         }
         context["show_call_button"] = True
@@ -183,9 +183,9 @@ class SearchView(FetchCategoriesMixin, ListView):
             return Product.objects.none()
 
         product_filter = (
-                Q(title__icontains=query)
-                | Q(stock_item__title__icontains=query)
-                | Q(stock_item__label__icontains=query)
+            Q(title__icontains=query)
+            | Q(stock_item__title__icontains=query)
+            | Q(stock_item__label__icontains=query)
         )
 
         # Filter products that match any of the conditions and are published

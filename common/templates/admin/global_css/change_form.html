@@ -15,13 +15,49 @@
 {% block extrahead %}
     {{ block.super }}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/codemirror.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/xml/xml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/javascript/javascript.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.4/mode/css/css.js"></script>
+
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         var cssEditor = CodeMirror.fromTextArea(document.getElementById("id_css"), {
           lineNumbers: true,
           mode: 'css',
-          theme: 'material',
+          theme: 'dracula',
+          smartIndent: true,
+          indentWithTabs: true,
+          lineWrapping: true,
+          styleActiveLine: true,
+
+        });
+
+        const textAreas = [
+          "id_cart_section_one",
+          "id_cart_section_two",
+          "id_cart_section_three",
+          "id_cart_section_four",
+          "id_cart_section_five",
+          "id_checkout_section_one",
+          "id_checkout_section_two",
+          "id_checkout_section_three",
+        ];
+
+        textAreas.forEach(id => {
+          const textArea = document.getElementById(id);
+          if (textArea) {
+            CodeMirror.fromTextArea(textArea, {
+              lineNumbers: true,
+              mode: 'htmlmixed',
+              theme: 'material',
+              smartIndent: true,
+              indentWithTabs: true,
+              lineWrapping: true,
+              styleActiveLine: true,
+
+            });
+          }
         });
       });
 

@@ -108,12 +108,20 @@
                     </svg>
                 </div>
             </div>
+            <!-- Cart Section One -->
+            {% if global_css %}
+                {{ global_css.cart_section_one|safe }}
+            {% endif %}
         </div>
         <div class="h-full flex flex-col flex-auto items-stretch justify-between">
             <div class="relative flex-auto overflow-hidden w-full h-full">
                 <div class="absolute top-0 right-0 left-0 bottom-0 overflow-auto overflow-x-hidden" id="cartBody">
                     <!-- Cart Item -->
                     <div id="cartBody--cartItems">
+                        <!-- Cart Section Two -->
+                        {% if global_css %}
+                            {{ global_css.cart_section_two|safe }}
+                        {% endif %}
                         {% for cart_item in cart.cart_items.all %}
                             <div class="flex gap-2 items-start py-4 border-b-2 p-5 cartItem"
                                  data-cart-item-id="{{ cart_item.id }}" {% if cart_item.cart_offer is not None %}
@@ -217,9 +225,17 @@
                     {% endif %}
                     <!-- End Cart Item -->
                 </div>
+                <!-- Cart Section Three -->
+                {% if global_css %}
+                    {{ global_css.cart_section_three|safe }}
+                {% endif %}
             </div>
-            <div class="p-5 border-t-2">
 
+            <div class="p-5 border-t-2">
+                <!-- Cart Section Four -->
+                {% if global_css %}
+                    {{ global_css.cart_section_four|safe }}
+                {% endif %}
                 <div class="flex justify-between items-center text-lg mb-2 sideCart__buyableAction--flex">
                     <p class="font-semibold">Вкупно</p>
                     <p><span id="cartTotal">{{ cart.get_items_total }}</span> ден</p>
@@ -237,6 +253,10 @@
                         id="sideCart__goBackButon">
                     Назад
                 </button>
+                <!-- Cart Section Five -->
+                {% if global_css %}
+                    {{ global_css.cart_section_five|safe }}
+                {% endif %}
 
             </div>
         </div>
@@ -260,6 +280,11 @@
                     <use xlink:href="{% static 'common/assets/svg_sprite.svg' %}#close"></use>
                 </svg>
             </div>
+
+            <!-- Checkout Section One -->
+            {% if global_css %}
+                {{ global_css.checkout_section_one|safe }}
+            {% endif %}
 
             <div id="checkoutBody">
                 {% for cart_item in cart.cart_items.all %}
@@ -364,8 +389,12 @@
                 </div>
 
             </div>
-
+            <!-- Checkout Section Two -->
+            {% if global_css %}
+                {{ global_css.checkout_section_two|safe }}
+            {% endif %}
             {% if cart_offers %}
+
                 <div class="cart__cartOfferSection">
                     <p class="pt-4 text-brand-action text-sm font-bold">Често купувани заедно</p>
                     {% for cart_offer in cart_offers %}
@@ -421,6 +450,10 @@
                         </div>
                     {% endfor %}
                 </div>
+            {% endif %}
+            <!-- Checkout Section Three -->
+            {% if global_css %}
+                {{ global_css.checkout_section_three|safe }}
             {% endif %}
             <div>
                 <p class="text-center text-xl font-bold text-brand-action pb-1">Податоци за испорака</p>

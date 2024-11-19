@@ -97,6 +97,31 @@ class MailSubscription(TimeStampedModel):
 
 class GlobalCSS(TimeStampedModel):
     css = models.TextField(verbose_name="CSS")
+    cart_section_one = models.TextField(
+        verbose_name="Cart Section 1", blank=True, null=True
+    )
+    cart_section_two = models.TextField(
+        verbose_name="Cart Section 2", blank=True, null=True
+    )
+    cart_section_three = models.TextField(
+        verbose_name="Cart Section 3", blank=True, null=True
+    )
+    cart_section_four = models.TextField(
+        verbose_name="Cart Section 4", blank=True, null=True
+    )
+    cart_section_five = models.TextField(
+        verbose_name="Cart Section 5", blank=True, null=True
+    )
+
+    checkout_section_one = models.TextField(
+        verbose_name="Checkout Section 1", blank=True, null=True
+    )
+    checkout_section_two = models.TextField(
+        verbose_name="Checkout Section 2", blank=True, null=True
+    )
+    checkout_section_three = models.TextField(
+        verbose_name="Checkout Section 3", blank=True, null=True
+    )
 
     class Meta:
         verbose_name = "CSS"

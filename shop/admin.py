@@ -103,7 +103,7 @@ class ProductAttributeInlineFormSet(BaseInlineFormSet):
 
             # if attribute doesn't have a stock item assigned to it, raise an error
             if not form.cleaned_data.get("stock_item") and not form.cleaned_data.get(
-                    "DELETE"
+                "DELETE"
             ):
                 raise ValidationError("Stock item must be selected for each attribute.")
 
