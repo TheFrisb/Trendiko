@@ -337,16 +337,6 @@ class CartOffersAdmin(SortableAdminMixin, admin.ModelAdmin):
     ]
     autocomplete_fields = ["product"]
 
-    def get_search_results(self, request, queryset, search_term):
-        # Call the superclass implementation to get search results
-        queryset, use_distinct = super().get_search_results(
-            request, queryset, search_term
-        )
-
-        queryset = queryset.exclude(product__status=Product.ProductStatus.OUT_OF_STOCK)
-
-        return queryset, use_distinct
-
     class Meta:
         model = CartOffers
 
