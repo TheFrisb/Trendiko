@@ -103,7 +103,7 @@ class ProductAttributeInlineFormSet(BaseInlineFormSet):
 
             # if attribute doesn't have a stock item assigned to it, raise an error
             if not form.cleaned_data.get("stock_item") and not form.cleaned_data.get(
-                "DELETE"
+                    "DELETE"
             ):
                 raise ValidationError("Stock item must be selected for each attribute.")
 
@@ -335,6 +335,17 @@ class CartOffersAdmin(SortableAdminMixin, admin.ModelAdmin):
     search_fields = [
         "product__title",
     ]
+    autocomplete_fields = ["product"]
+
+    def get_search_results(self, request, queryset, search_term):
+        # Call the superclass implementation to get search results
+        queryset, use_distinct = super().get_search_results(
+            request, queryset, search_term
+        )
+
+        queryset = queryset.exclude(product__status=Product.ProductStatus.OUT_OF_STOCK)
+
+        return queryset, use_distinct
 
     class Meta:
         model = CartOffers
