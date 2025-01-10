@@ -337,6 +337,15 @@ class CartOffersAdmin(SortableAdminMixin, admin.ModelAdmin):
     ]
     autocomplete_fields = ["product"]
 
+    def get_search_results(self, request, queryset, search_term):
+        """
+        Customize the queryset to only include products with status PUBLISHED.
+        """
+        # Use the related model's field for filtering
+        queryset, use_distinct = super().get_search_results(request, queryset, search_term)
+        queryset = queryset.filter(product__status=Product.ProductStatus.PUBLISHED)
+        return queryset, use_distinct
+
     class Meta:
         model = CartOffers
 
