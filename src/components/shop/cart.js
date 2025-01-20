@@ -140,14 +140,14 @@ function updateCartQuantityAndTotal(hasFreeShipping) {
 
   checkoutSubtotal.innerHTML = formatNumberToLocale(cartTotalPrice);
   if (hasFreeShipping) {
-    cartTotalPrice += 20;
+    cartTotalPrice += 30;
     checkoutShipping.innerHTML = "бесплатна достава";
     checkoutShipping2.innerHTML = "бесплатна достава";
     checkoutTotal.innerHTML = formatNumberToLocale(cartTotalPrice)
   } else {
-    cartTotalPrice += 20 + 130;
-    checkoutShipping.innerHTML = "130 ден";
-    checkoutShipping2.innerHTML = "130 ден";
+    cartTotalPrice += 30 + 140;
+    checkoutShipping.innerHTML = "140 ден";
+    checkoutShipping2.innerHTML = "140 ден";
     checkoutTotal.innerHTML = formatNumberToLocale(cartTotalPrice)
   }
 

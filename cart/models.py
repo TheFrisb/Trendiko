@@ -95,12 +95,12 @@ class Cart(TimeStampedModel):
         :return:
         """
         has_free_shipping = self.has_free_shipping
-        items_total = self.get_items_total + 20
+        items_total = self.get_items_total + 30
 
         if has_free_shipping:
             return items_total
 
-        return items_total + 130
+        return items_total + 140
 
     @property
     def get_total_quantity(self):
@@ -273,7 +273,7 @@ class Order(TimeStampedModel, LoggableModel):
         default=OrderStatus.PENDING,
         db_index=True,
     )
-    shipping_price = models.IntegerField(default=130)
+    shipping_price = models.IntegerField(default=140)
     subtotal_price = models.IntegerField(default=0)
     total_price = models.IntegerField(default=0)
     tracking_number = models.CharField(max_length=100, unique=True, db_index=True)
@@ -319,7 +319,7 @@ class Order(TimeStampedModel, LoggableModel):
         """
         if self.has_free_shipping:
             return "Бесплатна достава"
-        return "130 ден"
+        return "140 ден"
 
     def make_thank_you_product(self):
         # check if order is not older than 5 minutes
@@ -327,7 +327,7 @@ class Order(TimeStampedModel, LoggableModel):
             return None
 
         if self.order_items.filter(
-            promotion_type=OrderItem.PromotionType.THANK_YOU
+                promotion_type=OrderItem.PromotionType.THANK_YOU
         ).exists():
             return None
 
@@ -353,7 +353,7 @@ class Order(TimeStampedModel, LoggableModel):
         """
         if self.has_free_shipping:
             return 0
-        return 130
+        return 140
 
     def recalculate_order(self, add_provision=True):
         """
@@ -362,7 +362,7 @@ class Order(TimeStampedModel, LoggableModel):
         """
         self.subtotal_price = sum(item.total_price for item in self.order_items.all())
         if self.subtotal_price >= 1500 or any(
-            item.product.has_free_shipping for item in self.order_items.all()
+                item.product.has_free_shipping for item in self.order_items.all()
         ):
             self.has_free_shipping = True
 
@@ -370,7 +370,7 @@ class Order(TimeStampedModel, LoggableModel):
             self.total_price = self.subtotal_price
             self.shipping_price = 0
         else:
-            self.total_price = self.subtotal_price + 130
+            self.total_price = self.subtotal_price + 140
 
         if add_provision:
             self.total_price += 20
@@ -580,8 +580,8 @@ class OrderItem(TimeStampedModel):
             if quantity_to_be_reserved == 0:
                 break
             if (
-                import_item.calculate_max_available_reservation()
-                >= quantity_to_be_reserved
+                    import_item.calculate_max_available_reservation()
+                    >= quantity_to_be_reserved
             ):
                 reserved_stock_item = ReservedStockItem.objects.create(
                     order_item=self,
