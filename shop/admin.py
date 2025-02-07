@@ -204,6 +204,10 @@ class ProductAdmin(admin.ModelAdmin):
                     )
                     price_change.send_mail()
             instance.save()
+
+        for obj in formset.deleted_objects:
+            obj.delete()
+
         formset.save_m2m()
 
     def save_related(self, request, form, formsets, change):
