@@ -15,3 +15,9 @@ def create_campaign_summary(sender, instance, created, **kwargs):
             product=instance.product,
             campaign_id=instance.campaign_id,
         )
+
+    else:
+        # Update the campaign id if it has changed
+        summary = CampaignSummary.objects.get(product=instance.product)
+        summary.campaign_id = instance.campaign_id
+        summary.save()
