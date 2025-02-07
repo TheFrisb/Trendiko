@@ -4,7 +4,6 @@ from django.db.models import Subquery, OuterRef, DecimalField, Sum
 
 from common.admin import CommonSiteSettings
 from shop.models import Product, ProductAttribute
-
 # Register your models here.
 from .models import StockItem, ImportItem, Import, ReservedStockItem
 
@@ -152,4 +151,4 @@ class StockItemAdmin(admin.ModelAdmin):
 
 @admin.register(ReservedStockItem)
 class ReservedStockItemAdmin(admin.ModelAdmin):
-    search_fields = ["import_item__stock_item__title", "order_item__stock_item_title"]
+    search_fields = ["import_item__stock_item__title", "order_item__stock_item__title"]
