@@ -157,6 +157,13 @@ LOGGING = {
             "filename": BASE_DIR / "error.log",
             "formatter": "detailed",
         },
+
+        "file_info": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "info.log",
+            "formatter": "detailed",
+        },
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
@@ -168,8 +175,8 @@ LOGGING = {
     },
     "loggers": {
         "": {
-            "handlers": ["file_warn", "file_error", "console"],
-            "level": "WARNING",
+            "handlers": ["file_warn", "file_error", "file_info", "console"],
+            "level": "INFO",
             "propagate": True,
         },
     },
