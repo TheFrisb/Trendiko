@@ -60,7 +60,7 @@ class CampaignSummary(TimeStampedModel):
 
     @property
     def total_cost_price(self):
-        return sum(entry.total_cost_price for entry in self.entries.all())
+        return sum(entry.total_cost for entry in self.entries.all())
 
     def get_absolute_url(self):
         return reverse(
