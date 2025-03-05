@@ -41,6 +41,27 @@ class CampaignSummary(TimeStampedModel):
         entry.populate_data(order_items, ad_spend_data["spend_mkd"])
         return entry
 
+
+    @property
+    def total_quantity_ordered(self):
+        return sum(entry.quantity_ordered for entry in self.entries.all())
+
+    @property
+    def total_advertisement_cost(self):
+        return sum(entry.advertisement_cost for entry in self.entries.all())
+
+    @property
+    def total_neto_profit(self):
+        return sum(entry.total_neto_profit for entry in self.entries.all())
+
+    @property
+    def total_sales_price(self):
+        return sum(entry.total_sales_price for entry in self.entries.all())
+
+    @property
+    def total_cost_price(self):
+        return sum(entry.total_cost_price for entry in self.entries.all())
+
     def get_absolute_url(self):
         return reverse(
             "shop_manager:facebook_campaign_detail_view", kwargs={"slug": self.slug}
@@ -82,6 +103,10 @@ class CampaignEntry(TimeStampedModel):
     )
 
     import_item_data = models.JSONField()
+
+    @property
+    def total_cost(self):
+        return self.total_cost_price + self.advertisement_cost
 
     @property
     def total_profit(self):

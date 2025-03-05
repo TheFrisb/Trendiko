@@ -9,6 +9,35 @@
                         class="text-xs font-normal ">{{ campaign_summary.created_at|date:"d.m.Y H:i:s" }}</span>
                 </h4>
             </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex flex-col gap-2 p-2 rounded-lg bg-gray-100">
+                    <p class="font-bold text text xl">Вкупна количина</p>
+                    <p>{{ campaign_summary.total_quantity_ordered }}</p>
+                </div>
+
+                <div class="flex flex-col gap-2 p-2 rounded-lg bg-gray-100">
+                    <p class="font-bold text text xl">Вкупна реклама</p>
+                    <p>{{ campaign_summary.total_advertisement_cost }}</p>
+                </div>
+
+                <div class="flex flex-col gap-2 p-2 rounded-lg bg-gray-100">
+                    <p class="font-bold text text xl">Вкупно нето профит</p>
+                    <p>{{ campaign_summary.total_neto_profit }}</p>
+                </div>
+
+                <div class="flex flex-col gap-2 p-2 rounded-lg bg-gray-100">
+                    <p class="font-bold text text xl">Вкупен приход</p>
+                    <p>{{ campaign_summary.total_sales_price }}</p>
+                </div>
+
+                <div class="flex flex-col gap-2 p-2 rounded-lg bg-gray-100">
+                    <p class="font-bold text text xl">Вкупна набавка</p>
+                    <p>{{ campaign_summary.total_cost_price }}</p>
+                </div>
+            </div>
+
+
             <table class="table-auto w-full text-left">
                 <thead class="border-b border-gray-200">
                 <tr>
@@ -22,6 +51,7 @@
                     </th>
                     <th class="font-normal">Реклама
                     </th>
+                    <th>Вкупна набавка</th>
                     <th class="font-normal">Нето профит
                     </th>
                     <th class="font-normal">BE ROAS
@@ -47,6 +77,7 @@
                         <td class="table_field">{{ entry.product_cost_price }}</td>
 
                         <td class="table_field">{{ entry.advertisement_cost|floatformat:2 }}</td>
+                        <td class="table_field">{{ entry.total_cost|floatformat:2 }}</td>
                         <td class="table_field {% if entry.total_neto_profit < 0 %}bg-red-600 text-white{% endif %}">{{ entry.total_neto_profit|floatformat:2 }}</td>
                         <td class="table_field">{{ entry.break_even_return_on_ad_spend|floatformat:2 }}</td>
                         <td class="table_field">{{ entry.return_on_ad_spend|floatformat:2 }}</td>
