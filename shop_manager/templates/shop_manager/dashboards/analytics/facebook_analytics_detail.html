@@ -18,16 +18,16 @@
 
                 <div class="flex flex-col gap-2 p-2 rounded-lg bg-dashboard-blue/20 text-center">
                     <p class="font-bold text text xl">Вкупна реклама</p>
-                    <p>{{ campaign_summary.total_advertisement_cost }}</p>
+                    <p>{{ campaign_summary.total_advertisement_cost|floatformat:2 }}</p>
                 </div>
 
                 <div class="flex flex-col gap-2 p-2 rounded-lg bg-dashboard-blue/20 text-center">
                     <p class="font-bold text text xl">Вкупно нето профит</p>
-                    <p>{{ campaign_summary.total_neto_profit }}</p>
+                    <p>{{ campaign_summary.total_neto_profit|floatformat:2 }}</p>
                 </div>
 
                 <div class="flex flex-col gap-2 p-2 rounded-lg bg-dashboard-blue/20 text-center">
-                    <p class="font-bold text text xl">Вкупен приход</p> text-center
+                    <p class="font-bold text text xl">Вкупен приход</p>
                     <p>{{ campaign_summary.total_sales_price }}</p>
                 </div>
 
@@ -51,7 +51,7 @@
                     </th>
                     <th class="font-normal">Реклама
                     </th>
-                    <th>Вкупна набавка</th>
+                    <th class="font-normal">Вкупна набавка</th>
                     <th class="font-normal">Нето профит
                     </th>
                     <th class="font-normal">BE ROAS
